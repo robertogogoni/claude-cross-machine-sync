@@ -27,6 +27,7 @@ cp -r ~/claude-cross-machine-sync/skills/* ~/.claude/skills/
 
 - **CLAUDE.md** - Project memory with solutions and fixes
 - **.claude/settings.json** - Shared permission and tool configurations
+- **.claude/machine-info.json** - Machine identification and system specs
 - **skills/** - Custom Claude Code skills (tool-discovery)
 - **docs/ssh-setup.md** - SSH remote access guide
 
@@ -82,19 +83,21 @@ claude
 
 ```
 ~/claude-cross-machine-sync/
-├── README.md               # This file
-├── CLAUDE.md              # Project memory (auto-loaded)
+├── README.md                    # This file
+├── CLAUDE.md                    # Project memory (auto-loaded)
 ├── .claude/
-│   └── settings.json      # Shared settings
+│   ├── settings.json           # Shared settings
+│   └── machine-info.json       # System configuration & identification
 ├── skills/
-│   └── tool-discovery/    # Custom skills
+│   └── tool-discovery/          # Custom skills
 └── docs/
-    └── ssh-setup.md       # SSH configuration guide
+    └── ssh-setup.md             # SSH configuration guide
 ```
 
 ## Machines
 
-- **Linux Notebook 1** (Main) - Arch Linux
+- **MacBook Air** (Main) - Apple MacBookAir7,2 running Arch Linux (hostname: omarchy)
+  - See `.claude/machine-info.json` for detailed specs
 - **Linux Notebook 2** - TBD
 - **Windows Desktop** - TBD
 

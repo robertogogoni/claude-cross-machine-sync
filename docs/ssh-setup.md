@@ -7,7 +7,7 @@ This guide helps you set up SSH access between your 3 machines for remote Claude
 **Goal**: Execute commands on Linux notebooks from Windows (and vice-versa)
 
 **Machines**:
-- Linux Notebook 1 (Main) - Arch Linux
+- MacBook Air (Main) - Apple MacBookAir7,2 running Arch Linux (hostname: omarchy)
 - Linux Notebook 2
 - Windows Desktop
 
@@ -89,7 +89,7 @@ echo "ssh-ed25519 AAAA... user@other-machine" >> ~/.ssh/authorized_keys
 Edit `~/.ssh/config`:
 
 ```bash
-# Linux Notebook 1
+# MacBook Air (Main)
 Host linux-notebook-2
     HostName 192.168.1.X  # Replace with actual IP
     User rob
@@ -109,7 +109,7 @@ Edit `%USERPROFILE%\.ssh\config` (create if doesn't exist):
 
 ```
 # Windows config
-Host linux-notebook-1
+Host macbook-air
     HostName 192.168.1.X
     User rob
     Port 22
@@ -168,13 +168,13 @@ New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled Tru
 
 ```bash
 # Test connection
-ssh linux-notebook-1
+ssh macbook-air
 
 # If successful, you should see:
 # Welcome to Arch Linux!
 
 # Test with Claude Code
-ssh linux-notebook-1 "claude --version"
+ssh macbook-air "claude --version"
 
 # Should output: Claude Code version X.X.X
 ```
@@ -187,12 +187,12 @@ ssh linux-notebook-1 "claude --version"
 
 ```bash
 # From Windows
-ssh linux-notebook-1
+ssh macbook-air
 cd ~/project
 claude
 
-# You're now running Claude Code on the Linux machine
-# Commands execute on Linux, results appear in your Windows terminal
+# You're now running Claude Code on the MacBook Air
+# Commands execute on the MacBook, results appear in your Windows terminal
 ```
 
 ### Workflow 2: VS Code Remote SSH
@@ -200,7 +200,7 @@ claude
 **Setup**:
 1. Install "Remote - SSH" extension in VS Code
 2. Press F1, type "Remote-SSH: Connect to Host"
-3. Select your configured host (e.g., `linux-notebook-1`)
+3. Select your configured host (e.g., `macbook-air`)
 4. VS Code opens a new window connected to remote machine
 
 **Use Claude Code**:
@@ -215,13 +215,13 @@ claude
 
 ```bash
 # Execute a single command remotely
-ssh linux-notebook-1 "cd ~/project && ls -la"
+ssh macbook-air "cd ~/project && ls -la"
 
 # Run Claude in non-interactive mode
-ssh linux-notebook-1 "cd ~/project && claude -p 'List all Python files'"
+ssh macbook-air "cd ~/project && claude -p 'List all Python files'"
 
 # Background task
-ssh linux-notebook-1 "cd ~/project && nohup npm run dev > output.log 2>&1 &"
+ssh macbook-air "cd ~/project && nohup npm run dev > output.log 2>&1 &"
 ```
 
 ### Workflow 4: Git-Based Collaboration
@@ -254,7 +254,7 @@ If your machines don't have static IPs:
 sudo nano /etc/hosts
 
 # Add entries:
-192.168.1.100  linux-notebook-1
+192.168.1.100  macbook-air
 192.168.1.101  linux-notebook-2
 192.168.1.102  windows-desktop
 ```
@@ -291,11 +291,11 @@ sudo zerotier-cli join <NETWORK_ID>
 
 If you want to access MCP servers remotely:
 
-### Forward Beeper MCP from Linux to Windows
+### Forward Beeper MCP from MacBook Air to Windows
 
 ```bash
 # On Windows, create tunnel
-ssh -L 23373:localhost:23373 linux-notebook-1
+ssh -L 23373:localhost:23373 macbook-air
 
 # Now Beeper MCP is accessible on Windows at localhost:23373
 # Configure in ~/.claude.json:
@@ -375,7 +375,7 @@ ssh -R 9999:localhost:8080 windows-desktop
 ### Connect to Machines
 ```bash
 # From any machine
-ssh linux-notebook-1
+ssh macbook-air
 ssh linux-notebook-2
 ssh windows-desktop
 ```
@@ -383,28 +383,28 @@ ssh windows-desktop
 ### Run Claude Remotely
 ```bash
 # Interactive
-ssh linux-notebook-1 -t "cd ~/project && claude"
+ssh macbook-air -t "cd ~/project && claude"
 
 # Non-interactive
-ssh linux-notebook-1 "cd ~/project && claude -p 'your prompt'"
+ssh macbook-air "cd ~/project && claude -p 'your prompt'"
 ```
 
 ### Copy Files
 ```bash
 # From remote to local
-scp linux-notebook-1:~/project/file.txt ./
+scp macbook-air:~/project/file.txt ./
 
 # From local to remote
-scp ./file.txt linux-notebook-1:~/project/
+scp ./file.txt macbook-air:~/project/
 
 # Entire directory
-scp -r linux-notebook-1:~/project/ ./local-copy/
+scp -r macbook-air:~/project/ ./local-copy/
 ```
 
 ### Sync Files with rsync
 ```bash
 # Sync project directory
-rsync -avz --delete linux-notebook-1:~/project/ ./project/
+rsync -avz --delete macbook-air:~/project/ ./project/
 
 # Sync Claude settings
 rsync -avz ~/.claude/ linux-notebook-2:~/.claude/

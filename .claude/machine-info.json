@@ -1,0 +1,86 @@
+{
+  "machineName": "MacBook Air",
+  "machineId": "macbook-air-main",
+  "hardware": {
+    "vendor": "Apple Inc.",
+    "model": "MacBookAir7,2",
+    "chassis": "laptop",
+    "cpu": {
+      "model": "Intel(R) Core(TM) i5-5250U CPU @ 1.60GHz",
+      "architecture": "x86_64",
+      "cores": 2,
+      "threads": 4,
+      "vendor": "GenuineIntel"
+    },
+    "memory": {
+      "total": "7.7Gi",
+      "available": "2.3Gi"
+    },
+    "disk": {
+      "total": "111G",
+      "used": "53G",
+      "available": "55G",
+      "usage": "49%"
+    },
+    "firmware": {
+      "version": "489.0.0.0.0",
+      "date": "2023-10-07"
+    }
+  },
+  "system": {
+    "os": "Arch Linux",
+    "osId": "arch",
+    "prettyName": "Arch Linux",
+    "buildId": "rolling",
+    "kernel": "Linux 6.18.3-arch1-1",
+    "hostname": "omarchy",
+    "machineId": "cf8a2b5b5e754d27a86f158090bf5f8d"
+  },
+  "software": {
+    "claudeCode": {
+      "version": "2.0.76",
+      "installMethod": "global"
+    },
+    "shell": "/bin/bash",
+    "git": "2.52.0",
+    "node": "v25.1.0",
+    "npm": "11.6.2"
+  },
+  "claude": {
+    "configDir": "~/.claude",
+    "projectDir": "/home/rob",
+    "mcpServers": [
+      {
+        "name": "beeper",
+        "type": "http",
+        "url": "http://0.0.0.0:23373/v0/mcp",
+        "status": "configured"
+      },
+      {
+        "name": "claude-in-chrome",
+        "type": "built-in",
+        "status": "extension-pending"
+      }
+    ],
+    "installedPlugins": [
+      "superpowers@superpowers-marketplace",
+      "episodic-memory@superpowers-marketplace"
+    ],
+    "customSkills": [
+      "tool-discovery"
+    ],
+    "permissions": "full-access"
+  },
+  "network": {
+    "primaryUser": "rob",
+    "homeDir": "/home/rob"
+  },
+  "lastUpdated": "2026-01-06T18:36:00Z",
+  "notes": [
+    "MacBook Air 7,2 (Early 2015) running Arch Linux",
+    "Hostname: omarchy",
+    "Full permissive Claude Code configuration",
+    "Tool discovery skill installed",
+    "Episodic memory enabled for cross-machine history search"
+  ]
+}

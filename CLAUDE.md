@@ -1,7 +1,16 @@
 # Claude Code Cross-Machine Setup
 
 **Last Updated**: 2026-01-06
-**Machines**: Linux Notebook 1 (Main), Linux Notebook 2, Windows Desktop
+**Machines**: MacBook Air (Main), Linux Notebook 2, Windows Desktop
+
+## Machine Identification
+
+This repository syncs configuration across:
+- **MacBook Air** (Main) - Apple MacBookAir7,2 running Arch Linux (hostname: omarchy)
+- **Linux Notebook 2** - To be configured
+- **Windows Desktop** - To be configured
+
+See `.claude/machine-info.json` for detailed system configuration.
 
 ## Purpose
 This repository synchronizes Claude Code settings, project memory, and solutions across all 3 machines.
@@ -18,7 +27,7 @@ This repository synchronizes Claude Code settings, project memory, and solutions
 ### 2026-01-06: Fixed Invalid Settings
 
 **Problem**: Claude Code showed "invalid settings" error
-**Machine**: Linux Notebook 1
+**Machine**: MacBook Air (Main)
 **Location**: `~/.claude/settings.local.json`
 
 **Issue Found**:
@@ -47,7 +56,7 @@ Removed invalid shell syntax entries and replaced with proper command patterns:
 ### 2026-01-06: Simplified Permissions to Full Access
 
 **Problem**: Too many specific permission entries making maintenance difficult
-**Machine**: Linux Notebook 1
+**Machine**: MacBook Air (Main)
 **Location**: `~/.claude/settings.local.json`
 
 **Solution**:
@@ -81,7 +90,7 @@ Replaced 93 specific permission entries with broad tool access:
 ### 2026-01-06: Created Tool Discovery Skill
 
 **Problem**: Needed proactive tool suggestions and auto-search for missing tools
-**Machine**: Linux Notebook 1
+**Machine**: MacBook Air (Main)
 **Location**: `~/.claude/skills/tool-discovery/SKILL.md`
 
 **Features**:
@@ -103,7 +112,7 @@ Replaced 93 specific permission entries with broad tool access:
 ### 2026-01-06: Chrome Extension Not Connecting
 
 **Problem**: Chrome extension installed but not connecting to Claude Code
-**Machine**: Linux Notebook 1
+**Machine**: MacBook Air (Main)
 **Status**: ⚠️ Pending installation
 
 **Diagnosis**:
@@ -123,19 +132,31 @@ Replaced 93 specific permission entries with broad tool access:
 
 ## Machine-Specific Notes
 
-### Linux Notebook 1 (Main - Arch Linux)
-- **OS**: Arch Linux, Kernel 6.18.3
+### MacBook Air (Main)
+- **Hardware**: Apple MacBookAir7,2 (Early 2015)
+- **CPU**: Intel Core i5-5250U @ 1.60GHz (2 cores, 4 threads)
+- **Memory**: 8GB RAM (7.7Gi total, 2.3Gi available)
+- **Disk**: 111GB SSD (53GB used, 55GB free)
+- **OS**: Arch Linux (rolling), Kernel 6.18.3-arch1-1
+- **Hostname**: omarchy
+- **User**: rob
 - **Location**: /home/rob
-- **Claude Version**: 2.0.74+
+- **Claude Version**: 2.0.76
 - **Installed MCP Servers**:
   - Beeper (http://0.0.0.0:23373/v0/mcp)
   - Claude in Chrome (pending extension install)
-  - Episodic Memory
+  - Episodic Memory (plugin-based)
 - **Installed Plugins**:
   - superpowers@superpowers-marketplace
   - episodic-memory@superpowers-marketplace
 - **Custom Skills**:
-  - tool-discovery (~/. claude/skills/tool-discovery/)
+  - tool-discovery (~/.claude/skills/tool-discovery/)
+- **Development Tools**:
+  - Git 2.52.0
+  - Node.js v25.1.0
+  - npm 11.6.2
+  - Shell: Bash
+- **Configuration**: Full permissive access enabled
 
 ### Linux Notebook 2
 - **Status**: To be configured
@@ -186,8 +207,8 @@ git pull
 
 ### Workflow 3: Remote Execution (SSH)
 ```bash
-# From Windows to Linux Notebook 1
-ssh rob@<linux-notebook-1-ip>
+# From Windows to MacBook Air
+ssh rob@<macbook-air-ip>
 cd ~/project
 claude
 
@@ -228,7 +249,11 @@ cp ~/claude-cross-machine-sync/.claude/settings.json ~/.claude/settings.local.js
 # 4. Copy custom skills
 cp -r ~/claude-cross-machine-sync/skills/* ~/.claude/skills/
 
-# 5. Restart Claude Code
+# 5. Create machine-specific config (copy and edit .claude/machine-info.json)
+cp ~/claude-cross-machine-sync/.claude/machine-info.json ~/.claude/machine-info.json
+nano ~/.claude/machine-info.json  # Update with your machine's details
+
+# 6. Restart Claude Code
 claude
 ```
 
