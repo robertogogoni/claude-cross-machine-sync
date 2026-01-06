@@ -1,0 +1,28 @@
+# Machine-specific files (don't sync)
+*.local.json
+*.local.md
+CLAUDE.local.md
+.claude/*.local.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Credentials
+.env
+.credentials.json
+**/credentials.json
+
+# Temporary files
+tmp/
+temp/
