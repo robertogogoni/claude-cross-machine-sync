@@ -96,7 +96,7 @@ claude
 
 ## Machines
 
-- **MacBook Air** (Main) - Apple MacBookAir7,2 running Arch Linux (hostname: omarchy)
+- **MacBook Air** (Main) - Apple MacBookAir7,2 running Arch Linux (hostname: macbook-air)
   - See `.claude/machine-info.json` for detailed specs
 - **Linux Notebook 2** - TBD
 - **Windows Desktop** - TBD

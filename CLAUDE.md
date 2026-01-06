@@ -6,7 +6,7 @@
 ## Machine Identification
 
 This repository syncs configuration across:
-- **MacBook Air** (Main) - Apple MacBookAir7,2 running Arch Linux (hostname: omarchy)
+- **MacBook Air** (Main) - Apple MacBookAir7,2 running Arch Linux (hostname: macbook-air)
 - **Linux Notebook 2** - To be configured
 - **Windows Desktop** - To be configured
 
@@ -138,7 +138,7 @@ Replaced 93 specific permission entries with broad tool access:
 - **Memory**: 8GB RAM (7.7Gi total, 2.3Gi available)
 - **Disk**: 111GB SSD (53GB used, 55GB free)
 - **OS**: Arch Linux (rolling), Kernel 6.18.3-arch1-1
-- **Hostname**: omarchy
+- **Hostname**: macbook-air
 - **User**: rob
 - **Location**: /home/rob
 - **Claude Version**: 2.0.76

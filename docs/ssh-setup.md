@@ -7,7 +7,7 @@ This guide helps you set up SSH access between your 3 machines for remote Claude
 **Goal**: Execute commands on Linux notebooks from Windows (and vice-versa)
 
 **Machines**:
-- MacBook Air (Main) - Apple MacBookAir7,2 running Arch Linux (hostname: omarchy)
+- MacBook Air (Main) - Apple MacBookAir7,2 running Arch Linux (hostname: macbook-air)
 - Linux Notebook 2
 - Windows Desktop
 
