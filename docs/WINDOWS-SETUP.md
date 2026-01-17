@@ -1,6 +1,8 @@
-# Windows Setup Guide
+# Windows Setup Guide 🪟
 
 Complete guide for setting up Claude Code cross-machine sync on Windows.
+
+> **Platform**: This guide is **Windows-specific**. For Linux/macOS setup, see `LINUX-SETUP.md` (coming soon) or adapt the commands using Bash equivalents.
 
 ## Prerequisites
 
@@ -110,7 +112,55 @@ $machineInfo = @{
 $machineInfo | ConvertTo-Json -Depth 10 | Out-File "$env:USERPROFILE\.claude\machine-info.json" -Encoding utf8
 ```
 
-## Step 7: Test the Setup
+## Step 7: Set Up "Jarvis Mode" (Optional - Full Autonomy) 🪟
+
+If you want Claude Code to run without permission prompts ("yolo mode"), set up the jarvis alias.
+
+> **Note**: This section is Windows/PowerShell-specific. For Bash/Zsh equivalents, see `learnings/claude-code-permissions.md`.
+
+### Add to PowerShell Profile
+
+```powershell
+# Open your PowerShell profile for editing
+notepad $PROFILE
+
+# Or for both PowerShell versions:
+notepad "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
+notepad "$env:USERPROFILE\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+```
+
+Add these lines:
+
+```powershell
+# Claude Code "Jarvis Mode" - auto-approve all permissions
+function jarvis { claude --dangerously-skip-permissions @args }
+
+# Alias for convenience
+Set-Alias -Name j -Value jarvis
+
+Write-Host "Jarvis mode ready. Use 'jarvis' or 'j' to launch Claude Code with full autonomy." -ForegroundColor Cyan
+```
+
+### Reload Profile
+
+```powershell
+# Either restart PowerShell or run:
+. $PROFILE
+```
+
+### Usage
+
+```powershell
+jarvis          # Full autonomy mode
+j               # Short alias
+j --resume      # Resume with autonomy (args pass through)
+```
+
+> **Warning**: In jarvis mode, Claude can edit/delete any file and run any command without asking. Only use in trusted environments.
+
+---
+
+## Step 8: Test the Setup
 
 1. **Start Claude Code**:
    ```powershell
@@ -214,9 +264,23 @@ dir $env:USERPROFILE\.claude
 2. [ ] Set up symlinks or copy files
 3. [ ] Install plugins
 4. [ ] Create machine-info.json
-5. [ ] Test episodic memory
-6. [ ] Set up SSH for remote access to MacBook Air (see docs/ssh-setup.md)
+5. [ ] Set up "Jarvis Mode" alias (optional)
+6. [ ] Test episodic memory
+7. [ ] Set up SSH for remote access to MacBook Air (see docs/ssh-setup.md)
 
 ---
 
 *Updated: 2026-01-17*
+
+---
+
+## Platform Reference
+
+| Section | Platform |
+|---------|----------|
+| All steps | 🪟 Windows |
+| Jarvis Mode alias | 🪟 PowerShell-specific |
+| Git/Git LFS commands | 🔄 Cross-platform (same syntax) |
+| Path conventions | 🪟 Windows (`%USERPROFILE%`, backslashes) |
+
+**Legend**: 🪟 Windows | 🐧 Linux/macOS | 🔄 Cross-platform

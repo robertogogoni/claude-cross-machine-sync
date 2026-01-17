@@ -33,6 +33,65 @@ This repository is a **comprehensive AI intelligence hub** that:
 
 ## Recent Solutions & Fixes
 
+### 2026-01-17: "Jarvis Mode" - Full Autonomy Permission Setup
+
+**Session Goal**: Eliminate permission prompts for a fully autonomous Claude Code experience
+**Machine**: Windows Desktop
+
+**Problem**: Claude Code prompts for permission on every file edit, bash command, etc. Too much friction for power users.
+
+**Solutions Explored**:
+
+| Approach | Command/Config | Safety Level | Platform |
+|----------|----------------|--------------|----------|
+| CLI Flag | `claude --dangerously-skip-permissions` | ⚠️ Full access | 🔄 All |
+| Docker Container | `claude-code-container` | ✅ Sandboxed | 🔄 All |
+| Settings Permissions | Broad `"Bash"` in settings.json | ⚠️ Medium | 🔄 All |
+| Wildcard Permissions | `Bash(npm *)`, `Bash(git *)` (v2.1.0+) | ⚠️ Scoped | 🔄 All |
+| PowerShell Alias | `jarvis` function + `j` alias | N/A | 🪟 Windows |
+| Bash/Zsh Alias | `alias jarvis=...` | N/A | 🐧 Linux/macOS |
+
+**Platform Legend**: 🪟 Windows | 🐧 Linux/macOS | 🔄 Cross-platform
+
+**Chosen Solution (Windows)**: CLI flag with PowerShell alias
+
+**Implementation** 🪟:
+```powershell
+# Added to both PowerShell profiles:
+# ~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1
+# ~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1
+
+function jarvis { claude --dangerously-skip-permissions @args }
+Set-Alias -Name j -Value jarvis
+```
+
+**Equivalent for Linux/macOS** 🐧:
+```bash
+# Add to ~/.bashrc or ~/.zshrc
+alias jarvis='claude --dangerously-skip-permissions'
+alias j='jarvis'
+```
+
+**Usage** 🔄:
+```bash
+jarvis              # Launch with full autonomy
+j                   # Short alias
+j --resume          # Resume with autonomy (args pass through)
+```
+
+**Key Learnings**:
+- 🪟 `@args` in PowerShell is "splatting" - passes all arguments through to the underlying command
+- 🐧 Bash aliases are simpler: just string substitution
+- 🔄 `--dangerously-skip-permissions` is officially nicknamed "yolo mode"
+- 🔄 Docker containers (claude-code-container, run-claude-docker) provide safe sandboxed yolo mode
+- 🔄 Claude Code 2.1.0+ supports wildcard bash permissions: `Bash(npm *)`
+
+**Resources**:
+- [Superpowers Plugin](https://github.com/obra/superpowers) - Skills framework
+- [Superpowers Marketplace](https://github.com/obra/superpowers-marketplace) - Docker containers & tools
+
+---
+
 ### 2026-01-17: Comprehensive AI History Extraction & Cross-Machine Sync
 
 **Session Goal**: Set up Claude Code on Windows with everything synced across all machines
@@ -259,8 +318,10 @@ Replaced 93 specific permission entries with broad tool access:
 - **Setup Guide**: Follow `docs/WINDOWS-SETUP.md` (Linux sections)
 
 ### Windows Desktop
-- **Status**: To be configured
+- **Status**: ✅ Configured (2026-01-17)
 - **Setup Guide**: `docs/WINDOWS-SETUP.md`
+- **Jarvis Mode**: `jarvis` or `j` aliases configured in PowerShell
+- **User**: rober
 
 ---
 
@@ -363,6 +424,7 @@ git push
 ├── learnings/                   # AI-generated knowledge
 │   ├── bash-patterns.md         # Shell patterns
 │   ├── beeper.md                # Beeper insights
+│   ├── claude-code-permissions.md # Permission modes & yolo mode
 │   ├── electron-wayland.md      # Electron fixes
 │   ├── cross-machine-sync.md    # Sync patterns
 │   └── ai-data-extraction.md    # Extraction techniques
@@ -437,4 +499,4 @@ sqlite3 ~/.local/state/warp-terminal/warp.sqlite \
 
 *This file is automatically loaded by Claude Code. Update it whenever you discover new solutions!*
 
-*Last session: 2026-01-17 - Comprehensive AI history extraction and cross-machine sync setup*
+*Last session: 2026-01-17 - Jarvis Mode setup (--dangerously-skip-permissions with PowerShell alias)*
