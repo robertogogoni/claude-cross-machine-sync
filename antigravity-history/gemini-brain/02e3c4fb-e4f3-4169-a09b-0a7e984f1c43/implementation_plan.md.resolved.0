@@ -1,0 +1,35 @@
+# Database Error Resolution Plan
+
+## Goal
+Resolve persistent `Dexie SchemaDiff` ("Schema was extended without increasing the number...") and "Blocked by other connection" errors.
+
+## User Review Required
+> [!IMPORTANT]
+> The "Blocked" error indicates that multiple tabs/extensions are holding the database open. The fix implements an auto-close mechanism, but you will still need to **Refresh All Tabs** once the update is applied.
+
+## Proposed Changes
+
+### Database Layer ([src/shared/db](file:///home/rob/cat-catch-enhanced/src/shared/db))
+
+#### [MODIFY] [index.ts](file:///home/rob/cat-catch-enhanced/src/shared/db/index.ts)
+- **Verify/Enforce Version 2**: Ensure the schema definition explicitly uses `version(2)` for the new schema including `blobs`.
+- **Add `versionchange` Handler**: Implement a listener for the `versionchange` event.
+    - When another instance tries to upgrade, this instance will automatically close its connection to unblock the upgrade.
+    - It will reload the window/context to pick up the new version.
+
+```typescript
+// New behavior
+this.on('versionchange', () => {
+  this.close();
+  window.location.reload(); // Force reload to get new code/schema
+});
+```
+
+## Verification Plan
+
+### Manual Verification
+1.  **Clean Slate**: Close all existing CatCatch tabs.
+2.  **Apply Fix**: Wait for the new code to build.
+3.  **Open Extension**: Open the popup.
+4.  **Check Console**: Verify no Dexie errors appear.
+5.  **Multi-Tab Test**: Open the extension in two tabs. Trigger an operation that might open the DB. Ensure no blocking errors occur.

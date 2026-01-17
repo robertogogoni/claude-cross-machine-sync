@@ -1,6 +1,6 @@
 # Claude Code Cross-Machine Setup
 
-**Last Updated**: 2026-01-06
+**Last Updated**: 2026-01-17
 **Machines**: MacBook Air (Main), Linux Notebook 2, Windows Desktop
 
 ## Machine Identification
@@ -334,15 +334,29 @@ Installed via plugin marketplace:
 ├── CLAUDE.md                    # This file (project memory)
 ├── .claude/
 │   ├── settings.json           # Shared settings (git-synced)
-│   └── rules/
-│       ├── permissions.md      # Permission rules
-│       └── workflows.md        # Common workflows
+│   ├── machine-info.json       # Machine identification
+│   └── rules/                  # Modular instructions
 ├── skills/
-│   └── tool-discovery/
-│       └── SKILL.md            # Tool discovery skill
-└── docs/
-    ├── ssh-setup.md            # SSH configuration guide
-    └── troubleshooting.md      # Common issues
+│   ├── tool-discovery/         # Tool discovery skill
+│   └── beeper-chat/            # Beeper chat skill
+├── docs/
+│   ├── guides/                 # Hardware/software guides
+│   ├── system/                 # System reports
+│   ├── beeper/                 # Beeper documentation
+│   ├── plans/                  # Development plans
+│   └── ssh-setup.md            # SSH configuration guide
+├── learnings/                  # AI-generated learnings
+│   ├── bash-patterns.md
+│   ├── beeper.md
+│   └── electron-wayland.md
+├── antigravity-history/        # Recovered from Antigravity IDE
+│   ├── gemini-brain/           # 15 AI task sessions (38+ files)
+│   ├── code-tracker/           # Development plans
+│   └── INDEX.md                # Session index
+└── episodic-memory/            # Conversation archive (Git LFS)
+    ├── -home-rob/              # Conversation JSONL files
+    ├── conversation-index/     # Search index
+    └── learnings/              # Additional learnings
 ```
 
 ---

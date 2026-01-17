@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary": "Updated system packages successfully with yay. Failed to rebuild paru due to resource constraints and library mismatch.",
+  "updatedAt": "2026-01-01T16:48:12.790325802Z",
+  "version": "1"
+}

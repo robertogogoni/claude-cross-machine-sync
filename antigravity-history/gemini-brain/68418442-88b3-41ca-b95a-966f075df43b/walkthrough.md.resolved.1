@@ -1,0 +1,30 @@
+# Keyboard Layout Configuration Walkthrough
+
+I have updated your Hyprland configuration to use the **US International** keyboard layout. This is the standard solution for typing Portuguese on a US physical keyboard.
+
+## Changes Made
+
+- Modified `~/.config/hypr/input.conf`:
+  - Set `kb_layout = us`
+  - Set `kb_variant = intl`
+  - Removed `kb_options = grp:alt_shift_toggle` (no longer needed)
+- Updated system-wide locale via `localectl` for reboot persistence.
+- Reloaded Hyprland configuration.
+
+## How to Verify
+
+Please run your verification script to confirm that the keys are working as expected.
+
+```bash
+/home/rob/.gemini/antigravity/scratch/verify_keyboard.py
+```
+
+### Key Combinations to Test
+
+- **ç**: Type `'` (single quote) then `c`.
+- **á**: Type `'` (single quote) then `a`.
+- **ã**: Type `~` (tilde) then `a`.
+- **â**: Type `^` (caret) then `a`.
+- **"**: Type `"` (Shift+'), then space (since `"` acts as a dead key for diaeresis like `ü`).
+
+If all tests pass, your keyboard is correctly configured!

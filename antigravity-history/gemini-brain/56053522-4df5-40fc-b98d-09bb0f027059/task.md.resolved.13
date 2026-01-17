@@ -1,0 +1,13 @@
+# Tasks
+
+- [x] Phase 2: Capture Engine <!-- id: 13 -->
+    - [x] Create [src/shared/constants/mimeTypes.ts](file:///home/rob/cat-catch-enhanced/src/shared/constants/mimeTypes.ts) <!-- id: 14 -->
+    - [x] Implement [NetworkCapture.ts](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts) (port logic from [index.ts](file:///home/rob/cat-catch-enhanced/src/content/index.ts)) <!-- id: 15 -->
+    - [x] Add CaptureRule Logic (MIME/URL filtering) <!-- id: 16 -->
+    - [x] Refactor [src/background/index.ts](file:///home/rob/cat-catch-enhanced/src/background/index.ts) to use [NetworkCapture](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts#11-247) <!-- id: 17 -->
+
+- [x] Fix Immer Error <!-- id: 18 -->
+    - [x] Analyze [src/shared/state/store.ts](file:///home/rob/cat-catch-enhanced/src/shared/state/store.ts) <!-- id: 19 -->
+    - [x] Reproduce or Identify the invalid state mutation <!-- id: 20 -->
+    - [x] Fix the store action <!-- id: 21 -->
+    - [x] Verify fix <!-- id: 22 -->

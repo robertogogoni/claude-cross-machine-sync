@@ -1,0 +1,5 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary":  "Implementation plan for setting up Obra Superpowers MCP. Details the steps to clone the repo, install dependencies, configure the MCP server for Claude Desktop, and options for fine-tuning.",
+  "updatedAt":  "2026-01-01T20:57:06.681216909Z"
+}

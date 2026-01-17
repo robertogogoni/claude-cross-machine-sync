@@ -1,0 +1,11 @@
+- [x] Check system state and package managers <!-- id: 0 -->
+- [x] Run updates <!-- id: 1 -->
+    - [x] Run yay (Repo + AUR) <!-- id: 2 -->
+    - [x] Run flatpak update <!-- id: 3 -->
+- [x] Verify updates <!-- id: 4 -->
+- [ ] Rebuild paru <!-- id: 5 -->
+    - [ ] Run yay -S paru <!-- id: 6 -->
+    - [x] Debug build failure (Low Memory detected) <!-- id: 8 -->
+    - [x] Run makepkg with -j1 (Failed/OOM) <!-- id: 9 -->
+    - [x] Install paru-bin (Incompatible Libs) <!-- id: 10 -->
+    - [x] Verify paru version (Failed) <!-- id: 7 -->

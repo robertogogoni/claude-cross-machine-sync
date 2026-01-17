@@ -1,0 +1,43 @@
+# Fix "Messages file is missing" Error
+
+## Problem
+The extension fails to load with the error: `Messages file is missing for locale. .../_locales/ar/messages.json`.
+This is caused by the presence of empty locale directories in `public/_locales/`. The extension system expects a `messages.json` file in every subdirectory of `_locales`.
+
+## User Review Required
+> [!NOTE]
+> This change will remove the empty locale folders for: `ar`, `de`, `es`, `fr`, `it`, `ja`, `ko`, `pt_BR`, `ru`, `th`, `tr`, `vi`, `zh_CN`, `zh_TW`.
+> If you intended to support these languages, you must provide the `messages.json` content for them. For now, removing them fixes the load error.
+
+## Proposed Changes
+
+### [Locale Configuration]
+
+#### [DELETE] Empty Locale Directories
+Remove the following directories from `public/_locales/`:
+- `ar`
+- `de`
+- `es`
+- `fr`
+- `it`
+- `ja`
+- `ko`
+- `pt_BR`
+- `ru`
+- `th`
+- `tr`
+- `vi`
+- `zh_CN`
+- `zh_TW`
+
+## Verification Plan
+
+### Automated Tests
+1. **Build Verification**:
+   - Run `npm run build` to ensure the build completes successfully.
+   - Verify `dist/_locales` only contains `en`.
+
+### Manual Verification
+1. **Load Extension**:
+   - The user should try to load the extension again (or we can simulate a clean build state).
+   - The error "Messages file is missing" should no longer appear.

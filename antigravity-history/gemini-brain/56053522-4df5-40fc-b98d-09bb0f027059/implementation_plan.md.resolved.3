@@ -1,0 +1,58 @@
+# Phase 4: Download Manager Implementation Plan
+
+## Goal
+Implement a robust download manager capable of handling HLS, DASH, and generic file downloads with support for resume, concurrency, and speed tracking.
+
+## Components
+
+### 1. `SpeedTracker.ts`
+- **Purpose**: Calculate real-time download speed and estimated time remaining.
+- **Features**: Moving average window.
+
+### 2. `SegmentDownloader.ts`
+- **Purpose**: Handle fetching of individual segments for stream downloads.
+- **Features**:
+  - Connection pooling (limit concurrent requests).
+  - Retry logic with exponential backoff.
+  - Progress reporting.
+
+### 3. `DownloadManager.ts`
+- **Purpose**: Central orchestrator.
+- **Features**:
+  - Queue management (pending, active, paused).
+  - Persistence via `Dexie` (already set up).
+  - State updates to `Zustand` store.
+  - Resume functionality (rehydrating state from DB).
+
+## Architecture
+
+```mermaid
+classDiagram
+    class DownloadManager {
+        +startDownload(resourceId)
+        +pauseDownload(jobId)
+        +resumeDownload(jobId)
+        +cancelDownload(jobId)
+    }
+    class SegmentDownloader {
+        +downloadSegments(segments)
+        +abort()
+    }
+    class SpeedTracker {
+        +update(bytes)
+        +getSpeed()
+        +getEta()
+    }
+
+    DownloadManager --> SegmentDownloader
+    DownloadManager --> SpeedTracker
+    DownloadManager -- Store
+```
+
+## Integration
+- **Store**: `useStore` will listen to progress updates.
+- **Storage**: `downloadsDb` will persist job status.
+
+## Verification
+- Mock download a simulated HLS stream.
+- Verify state persistence on reload.

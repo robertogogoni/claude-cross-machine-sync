@@ -1,0 +1,27 @@
+# Input Method & Layout Fix Plan
+
+## Goal Description
+Resolve the "Wayland Diagnose" warning regarding `GTK_IM_MODULE` and ensure the 'ç' character functions correctly on the user's keyboard layout.
+
+## User Review Required
+> [!IMPORTANT]
+> The fix involves modifying environment variables and keyboard layout settings which might affect other input behaviors.
+
+## Proposed Changes
+
+### Configuration
+#### [MODIFY] [envs.conf](file:///home/rob/.config/hypr/envs.conf)
+- Remove or modify `GTK_IM_MODULE`.
+- Ensure `QT_IM_MODULE` and others are set correctly for Wayland.
+
+#### [MODIFY] [input.conf](file:///home/rob/.config/hypr/input.conf)
+- Adjust `kb_layout` and `kb_variant` to ensure 'ç' support (likely `us-intl` or dedicated `br` layout).
+
+### System
+- Check [/etc/environment](file:///etc/environment) or shell profiles if variables persist outside Hyprland config (though Hyprland config is the primary suspect).
+
+## Verification Plan
+### Manual Verification
+- User to reload Hyprland.
+- User to type 'ç' (usually `AltGr + ,` or `' + c` depending on layout).
+- Verify warning no longer appears on boot.

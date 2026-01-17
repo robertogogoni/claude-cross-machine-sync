@@ -1,0 +1,21 @@
+# Walkthrough: Remap Acute Accent to Cedilla
+
+## Changes Made
+
+1. **Created Custom XKB Layout**:
+    * Created `~/.config/xkb/symbols/us_custom` which includes `us(intl)` but overrides the acute accent key to produce `ç` / `Ç`.
+2. **Updated Hyprland Configuration**:
+    * Modified `~/.config/hypr/input.conf` to use `kb_layout = us_custom` and `kb_variant = cedilla`.
+
+3.  **Disable Fcitx**:
+    *   Commented out Fcitx environment variables in `~/.config/hypr/envs.conf` to prevent interference (double characters).
+
+## Verification Steps
+1.  **Reload Hyprland**: Changes applied via `hyprctl reload`.
+2.  **Test the Key** (next to `;`):
+    *   **Press Key**: Expect `ç` (cedilla).
+    *   **Press Shift + Key**: Expect `Ç`.
+    *   **Press AltGr + Key**: Expect nothing immediately (dead acute `´`).
+        *   Then press `a` -> Expect `á`.
+        *   Then press `Space` -> Expect `'` (apostrophe).
+    *   **Press AltGr + Shift + Key**: Expect `"` (double quote).

@@ -1,0 +1,8 @@
+# Keyboard Layout Configuration
+
+- [x] Identify current input configuration <!-- id: 0 -->
+- [x] Research available layouts matching user description (ABNT/US International) <!-- id: 1 -->
+- [x] Determine correct layout (likely `us(intl)` or similar) <!-- id: 2 -->
+- [x] Apply configuration to Hyprland <!-- id: 3 -->
+- [/] Verify functioning of 'ç' and accents <!-- id: 4 -->
+- [x] Remove residual Portuguese config and ensure persistence <!-- id: 5 -->

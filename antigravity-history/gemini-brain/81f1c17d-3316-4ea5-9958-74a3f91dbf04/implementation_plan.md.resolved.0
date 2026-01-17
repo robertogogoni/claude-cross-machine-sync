@@ -1,0 +1,51 @@
+# Trackpad and Magic Mouse Optimization Plan
+
+The goal is to fix the "horrendous" trackpad feel and "unusable" Magic Mouse input on your Arch Linux + Hyprland system.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Magic Mouse Device Name**: I could not verify the Magic Mouse device name in `hyprctl devices` (it might be disconnected). I will use the common name "Apple Inc. Magic Mouse 2" in the config. If this doesn't work, you'll need to check the name when it's connected.
+
+> [!WARNING]
+> **Kernel Module Parameters**: I will create a file in `/etc/modprobe.d/`. This requires `sudo` privileges and a reboot (or module reload) to take full effect for the Magic Mouse scrolling behavior.
+
+## Proposed Changes
+
+### Configuration Updates
+
+#### [MODIFY] [input.conf](file:///home/rob/.config/hypr/input.conf)
+
+We will adjust the sensitivity and scroll factors to be more "Mac-like" (fluid and responsive).
+
+- **Global Sensitivity**: Reset to `0.0` (was `-0.55`).
+- **Touchpad**:
+    - Increase `scroll_factor` from `0.4` to `0.8` (or `1.0` if you prefer 1:1).
+    - Ensure `natural_scroll` is active.
+- **Magic Mouse**:
+    - Add a specific `device` block for the Magic Mouse with proper sensitivity.
+    - Set `scroll_factor` to `1.2` for the mouse to counter the often slow scroll on Linux.
+
+### System Changes
+
+#### [NEW] [/etc/modprobe.d/hid_magicmouse.conf](file:///etc/modprobe.d/hid_magicmouse.conf)
+
+This file will configure the kernel driver for the Magic Mouse to improve scrolling.
+
+```bash
+options hid_magicmouse scroll_acceleration=1 scroll_speed=45 emulate_scroll_wheel=1
+```
+
+## Verification Plan
+
+### Manual Verification
+1.  **Reload Configuration**: Run `hyprctl reload` to apply `input.conf` changes immediately.
+2.  **Test Trackpad**:
+    -   Move cursor: Should feel 1:1 and responsive.
+    -   Scroll: Should be smooth and follow finger direction (Natural).
+    -   Gestures: Verify workspace swipe.
+3.  **Test Magic Mouse**:
+    -   Connect the mouse.
+    -   Reload kernel module: `sudo rmmod hid_magicmouse && sudo modprobe hid_magicmouse` (or reboot).
+    -   Verify scroll momentum and speed.
+    -   Verify middle click (if mapped). - *Note: Middle click requires 3-finger tap usually or specific emulation settings.*

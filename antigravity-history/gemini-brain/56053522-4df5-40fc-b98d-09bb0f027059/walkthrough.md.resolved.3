@@ -1,0 +1,46 @@
+# Phase 3: Stream Parsers Implementation
+
+## New Components
+
+### [ParserFactory.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/ParserFactory.ts)
+- Unified entry point for parsing stream manifests.
+- Automatically detects stream type (HLS, DASH, ISM) based on URL, MIME type, or content.
+
+### [M3U8Parser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/M3U8Parser.ts)
+- **HLS Parser**: Handles Master and Media playlists.
+- Supports:
+  - Variants (Resolution, Bandwidth, Codecs).
+  - Segments with duration and titles.
+  - Encryption Keys (`#EXT-X-KEY`).
+  - Discontinuities (`#EXT-X-DISCONTINUITY`).
+  - Init Segments (`#EXT-X-MAP`).
+
+### [MPDParser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/MPDParser.ts)
+- **DASH Parser**: Wraps `mpd-parser` library.
+- Robustly handles complex XML DASH manifests.
+
+### [ISMParser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/ISMParser.ts)
+- **Smooth Streaming Parser**: Custom implementation.
+- Parses `.ism` client manifests.
+- Extracts Tracks, QualityLevels, and Fragments.
+
+### [stream.ts](file:///home/rob/cat-catch-enhanced/src/shared/types/stream.ts)
+- **Shared Interfaces**: Defines common data structures ([MasterPlaylist](file:///home/rob/cat-catch-enhanced/src/shared/types/stream.ts#5-11), [MediaPlaylist](file:///home/rob/cat-catch-enhanced/src/shared/types/stream.ts#12-32), [Segment](file:///home/rob/cat-catch-enhanced/src/shared/types/stream.ts#49-66), [Track](file:///home/rob/cat-catch-enhanced/src/shared/types/stream.ts#82-93)) used by all parsers.
+
+## Verification Results
+
+### Automated Build
+Ran `npm run build` successfully.
+- **Result**: `✓ built in 13.26s`
+- **Typing**: Validated with `tsc` (Strict Mode).
+
+### Supported Features
+| Feature | HLS (M3U8) | DASH (MPD) | Smooth (ISM) |
+| :--- | :---: | :---: | :---: |
+| Variants/Quality | ✅ | ✅ | ✅ |
+| Live Streams | ✅ | ✅ | ✅ |
+| Encryption Info | ✅ | Partial | ❌ |
+| Discontinuities | ✅ | N/A | N/A |
+
+### Bug Fixes
+- **Immer Map/Set Error**: Added explicit `enableMapSet()` calls to all entry points ([background/index.ts](file:///home/rob/cat-catch-enhanced/src/background/index.ts), [popup/main.tsx](file:///home/rob/cat-catch-enhanced/src/popup/main.tsx), [options/main.tsx](file:///home/rob/cat-catch-enhanced/src/options/main.tsx)) to ensure proper initialization of Immer middleware in all extension contexts.

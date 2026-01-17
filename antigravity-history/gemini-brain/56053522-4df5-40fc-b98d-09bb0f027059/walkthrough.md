@@ -1,0 +1,70 @@
+# Phase 3: Stream Parsers Implementation
+
+## New Components
+
+### [ParserFactory.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/ParserFactory.ts)
+- Unified entry point for parsing stream manifests.
+- Automatically detects stream type (HLS, DASH, ISM) based on URL, MIME type, or content.
+
+### [M3U8Parser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/M3U8Parser.ts)
+- **HLS Parser**: Handles Master and Media playlists.
+- Supports:
+  - Variants (Resolution, Bandwidth, Codecs).
+  - Segments with duration and titles.
+  - Encryption Keys (`#EXT-X-KEY`).
+  - Discontinuities (`#EXT-X-DISCONTINUITY`).
+  - Init Segments (`#EXT-X-MAP`).
+
+### [MPDParser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/MPDParser.ts)
+- **DASH Parser**: Wraps `mpd-parser` library.
+- Robustly handles complex XML DASH manifests.
+
+### [ISMParser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/ISMParser.ts)
+- **Smooth Streaming Parser**: Custom implementation.
+- Parses `.ism` client manifests.
+- Extracts Tracks, QualityLevels, and Fragments.
+
+### [stream.ts](file:///home/rob/cat-catch-enhanced/src/shared/types/stream.ts)
+- **Shared Interfaces**: Defines common data structures (`MasterPlaylist`, `MediaPlaylist`, `Segment`, `Track`) used by all parsers.
+
+## Verification Results
+
+### Automated Build
+Ran `npm run build` successfully.
+- **Result**: `✓ built in 13.26s`
+- **Typing**: Validated with `tsc` (Strict Mode).
+
+### Supported Features
+| Feature | HLS (M3U8) | DASH (MPD) | Smooth (ISM) |
+| :--- | :---: | :---: | :---: |
+| Variants/Quality | ✅ | ✅ | ✅ |
+| Live Streams | ✅ | ✅ | ✅ |
+| Encryption Info | ✅ | Partial | ❌ |
+| Discontinuities | ✅ | N/A | N/A |
+| Download Manager | ✅ | ✅ | ✅ |
+
+### Download Manager (Phase 4)
+- **Architecture**: Implemented `DownloadManager` orchestrator with specialized `SegmentDownloader` for concurrent fetching.
+- **Persistence**: Full state persistence via IndexedDB (`downloadsDb`), allowing downloads to survive page reloads or browser restarts.
+- **Performance**: 
+  - **Connection Pooling**: Limits concurrent segment requests.
+  - **Retry Logic**: Exponential backoff for failed segments.
+  - **Speed Tracking**: Real-time speed and ETA calculation using moving average.
+- **Integration**: 
+### Encryption & Processing (Phase 5)
+- **Decryption**: Implemented `CryptoEngine` using native Web Crypto API for efficient AES-128-CBC decryption.
+- **Key Management**: `KeyManager` handles fetching and caching encryption keys via IndexedDB.
+- **Offscreen Processing**: Configured an **Offscreen Document** (`src/offscreen`) to host `FFmpeg.wasm`.
+  - Enables execution of heavy media processing tasks (like merging segments) without blocking the extension's background service worker.
+  - Lifecycle managed by `FFmpegManager`.
+- **Integrated Download Flow**: `SegmentDownloader` now automatically decrypts segments on-the-fly if HLS keys are detected.
+
+### UI & Merging (Phase 6)
+- **Merging Logic**: Implemented `MERGE_SEGMENTS` in offscreen document to concatenate downloaded segments using FFmpeg.
+- **Large File Handling**: Used `blobs` table in IndexedDB to transfer merged files from offscreen to background for saving.
+- **UI Enhancements**: 
+  - Added **"Downloads"** tab to the Popup.
+  - created `DownloadList` and `DownloadItem` components with real-time progress bars, speed, ETA, and controls (Pause/Resume/Cancel).
+
+### Bug Fixes
+- **Immer Map/Set Error**: Added explicit `enableMapSet()` calls to all entry points (`background/index.ts`, `popup/main.tsx`, `options/main.tsx`) to ensure proper initialization of Immer middleware in all extension contexts.

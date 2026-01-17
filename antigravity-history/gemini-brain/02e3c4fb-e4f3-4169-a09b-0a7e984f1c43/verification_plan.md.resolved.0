@@ -1,0 +1,35 @@
+# Verification Plan: RedGIFs Download
+
+## Objective
+Verify that [cat-catch-enhanced](file:///home/rob/cat-catch-enhanced) correctly intercepts, parses, and decrypts video streams from `redgifs.com`.
+
+## Background
+RedGIFs uses HLS (HTTP Live Streaming) often protected by AES-128 encryption. The `EXT-X-KEY` tag in the manifest points to a key URL. Accessing this key often requires the same `Authorization` or `Referer` headers as the original page/manifest request.
+
+## Critical Fix Verification
+We have updated [DownloadManager](file:///home/rob/cat-catch-enhanced/src/background/download/DownloadManager.ts#15-314) and [KeyManager](file:///home/rob/cat-catch-enhanced/src/background/processing/KeyManager.ts#8-86) to:
+1.  **Pre-fetch keys**: Immediately upon parsing the manifest.
+2.  **Context-aware Fetch**: Use `credentials: 'include'` and replicate `Referer`/`Authorization` headers.
+
+## Manual Verification Steps
+1.  **Build & Install**:
+    -   Run `npm run build`.
+    -   Load `dist` folder extension in Chrome (`chrome://extensions` > Load Unpacked).
+2.  **Visit URL**:
+    -   Go to [https://www.redgifs.com/users/cure-for-the-itch](https://www.redgifs.com/users/cure-for-the-itch).
+    -   Open a specific video page (e.g., click on a GIF).
+3.  **Check Extension**:
+    -   Open the Side Panel (or Popup).
+    -   Switch to "Resources" tab.
+    -   You should see a `video` resource (likely [m3u8](file:///home/rob/cat-catch-enhanced/companion/server.ts#108-159) or `mp4`).
+4.  **Download**:
+    -   Click the **Download** button next to the resource.
+    -   Switch to "Downloads" tab.
+    -   **Success Criteria**: Progress bar moves, shows speed, and completes without "Decryption failed" error.
+
+## Automated Simulation (Implemented)
+I have created an integration test `src/test/redgifs_simulation.test.ts` that simulates:
+1.  A "Resource" detected with headers (simulating RedGIFs headers).
+2.  A Manifest containing an AES-128 Key.
+3.  [DownloadManager](file:///home/rob/cat-catch-enhanced/src/background/download/DownloadManager.ts#15-314) correctly extracting the key.
+4.  [KeyManager](file:///home/rob/cat-catch-enhanced/src/background/processing/KeyManager.ts#8-86) correctly using the headers to fetch the key.

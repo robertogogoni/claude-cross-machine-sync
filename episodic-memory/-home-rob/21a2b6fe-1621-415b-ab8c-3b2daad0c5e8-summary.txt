@@ -1,0 +1,1 @@
+Added and configured Beeper MCP server to Claude Code using HTTP transport. Fixed configuration by changing URL from 0.0.0.0 to localhost and added required Accept headers for content negotiation. Verified successful connection and confirmed the server can fetch messages, with access to 5+ chats and full message search capabilities.

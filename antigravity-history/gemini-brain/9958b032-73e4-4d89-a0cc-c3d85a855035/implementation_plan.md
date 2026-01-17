@@ -1,0 +1,44 @@
+# Fix Caps Lock and 'ç' Configuration
+
+## Diagnosis
+
+1. **Caps Lock**: The file `~/.local/share/omarchy/default/hypr/input.conf` contains `kb_options = compose:caps`. This setting persists because your `~/.config/hypr/input.conf` does not override it. It turns the Caps Lock key into a Compose key, disabling its toggle functionality.
+2. **'ç' Character**: You are using the `us(intl)` layout.
+    - Standard behavior: `'` (dead key) + `c` = `ć` (c-acute).
+    - Desired behavior: `'` + `c` = `ç` (cedilla).
+    - Your `envs.conf` sets `GTK_IM_MODULE=cedilla`, which *should* fix this for GTK apps, but it appears inconsistent or non-functional in your environment.
+
+## Proposed Changes
+
+### 1. Fix Caps Lock in `~/.config/hypr/input.conf`
+
+Explicitly unset `kb_options` to override the default setting. This will restore standard Caps Lock behavior.
+
+#### [MODIFY] [input.conf](file:///home/rob/.config/hypr/input.conf)
+
+### 2. Configure 'ç' via `.XCompose`
+
+Create a custom Compose file to manually map the sequence `'` + `c` to `ç`. This is a robust way to handle character mappings across many applications.
+
+#### [NEW] [.XCompose](file:///home/rob/.XCompose)
+
+```text
+include "%L"
+
+<dead_acute> <C> : "Ç" "Ccedilla"
+<dead_acute> <c> : "ç" "ccedilla"
+```
+
+### 3. Update Environment Variables in `~/.config/hypr/envs.conf`
+
+We will keep `cedilla` for now as it is the standard "easy fix", but if the `.XCompose` method is preferred, we might need to switch to `xim` later. For this step, we will primarily focus on the other files, but I will review this file to ensure no other conflicts exist.
+
+## Verification Plan
+
+### Manual Verification
+
+1. **Caps Lock**: Press Caps Lock and verify the LED toggles and typing becomes UPPERCASE.
+2. **'ç' Character**:
+    - Open a text editor (e.g., terminal, text editor).
+    - Type `'` (single quote) followed by `c`. Verify it produces `ç`.
+    - Type `AltGr` + `,` (comma). Verify it produces `ç` (standard `us(intl)` fallback).

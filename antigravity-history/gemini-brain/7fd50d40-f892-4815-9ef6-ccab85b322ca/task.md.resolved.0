@@ -1,0 +1,8 @@
+# Investigate Omarchy Startup Errors
+
+- [ ] Locate "omarchy" related files and configurations <!-- id: 0 -->
+- [ ] Check system logs for boot errors <!-- id: 1 -->
+- [ ] Identify the source of the "red box" error message <!-- id: 2 -->
+- [ ] Plan a fix for the discovered errors <!-- id: 3 -->
+- [ ] Execute the fix <!-- id: 4 -->
+- [ ] Verify the system startup is clean <!-- id: 5 -->

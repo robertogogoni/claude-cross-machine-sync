@@ -1,0 +1,38 @@
+# Hyprland Config Fix Walkthrough
+
+I have resolved the "red box" error messages appearing on startup. The issue was caused by deprecated Hyprland configuration options and syntax in the Omarchy default files.
+
+## Changes Made
+
+### 1. Removed Deprecated Option
+In `~/.local/share/omarchy/default/hypr/looknfeel.conf`, I commented out `new_window_takes_over_fullscreen` as it is no longer supported by Hyprland.
+
+```diff
+-   new_window_takes_over_fullscreen = 1
++   # new_window_takes_over_fullscreen = 1
+```
+
+### 2. Updated Window Rules Syntax
+In `~/.local/share/omarchy/default/hypr/windows.conf`, I updated the window rules to use the modern `windowrulev2` syntax, which correctly supports `suppressevent` and other features.
+
+```diff
+- windowrule = suppressevent maximize, class:.*
++ windowrulev2 = suppressevent maximize, class:.*
+
+- windowrule = opacity 0.97 0.9, class:.*
++ windowrulev2 = opacity 0.97 0.9, class:.*
+
+- windowrule = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
++ windowrulev2 = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
+```
+
+*Update 2:* `nofocus` is also not a valid rule in `windowrulev2`. I have commented it out completely.
+
+```diff
+-   windowrulev2 = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
++   # windowrulev2 = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
+```
+
+## Verification
+- Ran `hyprctl reload` to apply the changes immediately.
+- The red error box should now be gone.

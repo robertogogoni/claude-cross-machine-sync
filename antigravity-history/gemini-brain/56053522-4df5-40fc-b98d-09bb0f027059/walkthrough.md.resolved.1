@@ -1,0 +1,40 @@
+# Phase 2: Capture Engine Implementation Walkthrough
+
+## New Components
+
+### [NetworkCapture.ts](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts)
+This new class encapsulates the network interception logic previously found in [background/index.ts](file:///home/rob/cat-catch-enhanced/src/background/index.ts).
+- **Features**:
+  - [start()](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts#21-42) / [stop()](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts#43-56) lifecycle methods.
+  - Captures `webRequest.onSendHeaders` and `webRequest.onResponseStarted`.
+  - Implements resource size filtering (`minFileSize`, `maxFileSize`).
+  - Implements URL filtering (Blacklist/Whitelist/Regex).
+  - Implements MIME type and extension detection.
+
+### [mimeTypes.ts](file:///home/rob/cat-catch-enhanced/src/shared/constants/mimeTypes.ts)
+Centralized definition of media extensions and MIME types.
+
+### [media.ts](file:///home/rob/cat-catch-enhanced/src/shared/utils/media.ts)
+Refactored utility functions for detecting resource types (`video`, `audio`, etc.) and stream types (`hls`, `dash`, etc.).
+
+## Refactoring
+
+### [background/index.ts](file:///home/rob/cat-catch-enhanced/src/background/index.ts)
+- Removed inline `webRequest` logic.
+- Now initializes and starts the [NetworkCapture](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts#11-247) engine.
+- Cleaner entry point, focused on lifecycle and messaging.
+
+## Verification Results
+
+### Automated Build
+Ran `npm run build` successfully.
+- **Result**: `✓ built in 10.46s`
+- **Typing**: Validated with `tsc`.
+
+### Manual Testing Instructions
+1.  Load the extension in Chrome/Firefox (Developer Mode).
+2.  Open a website with media (e.g., a test HLS stream).
+3.  Open the extension popup.
+4.  Verify that resources appear in the list.
+5.  Go to Settings -> Capture.
+6.  Test disabling 'Capture Video' and refresh the page. Verify video resources are NOT captured.

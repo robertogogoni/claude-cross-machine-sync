@@ -1,0 +1,5 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary":  "Plan to fix Caps Lock by resetting `kb_options` and address 'ç' issue by creating `.XCompose` and updating environment variables.",
+  "updatedAt":  "2026-01-03T10:48:35.515315048Z"
+}

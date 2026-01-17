@@ -1,0 +1,43 @@
+# Keyboard Layout & GUI Dashboard Plan
+
+## Goal
+
+Fix the active keyboard layout mismatch (US hardware vs BR system setting) and install a GUI tool for visualization and configuration.
+
+## Diagnosis
+
+The verification script failed because `~/.config/hypr/input.conf` sets `kb_layout = br,us`, making Brazilian (ABNT2) the default. Your physical keyboard is likely US (ANSI).
+
+- **Current**: `br` (Primary), `us` (Secondary)
+- **Desired**: `us` (Primary), `br` (Secondary) - *or remove `br` if not needed*.
+
+## Proposed Changes
+
+### 1. Hyprland Configuration
+
+Swap the order of layouts in `input.conf` to make `us` the default.
+
+#### [MODIFY] [input.conf](file:///home/rob/.config/hypr/input.conf)
+
+- Change `kb_layout = br,us` to `kb_layout = us,br`.
+- This ensures the system boots into US layout.
+
+### 2. GUI Dashboard Installation
+
+Install **Input Remapper**, a powerful GUI for visualizing inputs and remapping keys, which fulfills your request for a "GUI dashboard".
+
+#### [NEW] Install `input-remapper-git`
+
+- Use the existing `paru` build to install the package.
+- This provides a visual interface to handle key mappings.
+
+## Verification Plan
+
+### Automated
+
+1. **Reload Hyprland**: Apply the new config.
+2. **Run Verification Script**: Rerun `verify_keyboard.py`. It should now pass with 100% success on your US keyboard.
+
+### Manual
+
+1. **Launch GUI**: Open `input-remapper-gtk` to verify it sees your keyboard.

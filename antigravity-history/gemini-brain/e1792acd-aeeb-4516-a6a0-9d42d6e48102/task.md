@@ -1,0 +1,8 @@
+# Keyboard Configuration cleanup
+
+- [/] Research current configuration <!-- id: 0 -->
+- [x] Create implementation plan to revert to standard layouts <!-- id: 1 -->
+- [x] Remove custom XKB symbols if necessary <!-- id: 2 -->
+- [x] Configure `input.conf` for standard US International and ABNT2 layouts <!-- id: 3 -->
+- [x] Verify environment variables in `envs.conf` <!-- id: 4 -->
+- [/] Verify `ç` and accent functionality <!-- id: 5 -->

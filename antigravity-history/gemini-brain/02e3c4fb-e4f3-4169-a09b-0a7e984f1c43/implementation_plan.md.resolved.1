@@ -1,0 +1,29 @@
+# Critical Bug Fixes: State Sync & Downloads
+
+## Goal
+Fix broken functionality where 1) Side panel does not update with found streams, and 2) Downloads do not start.
+
+## Proposed Changes
+
+### 1. State Synchronization (`src/shared/state`)
+The Side Panel and Popup run in separate Javascript contexts from the Background script. They need to listen for updates.
+
+#### [MODIFY] [store.ts](file:///home/rob/cat-catch-enhanced/src/shared/state/store.ts)
+- **Add Broadcasts**: In `addResource`, `updateResource`, `deleteResource`, etc., send a `chrome.runtime.sendMessage` with the update.
+- **Add Listener**: In `initialize`, listen for `RESOURCE_DETECTED`, `RESOURCE_UPDATED`, etc., and update the local store state.
+
+### 2. Download Connection (`src/background`)
+
+#### [MODIFY] [index.ts](file:///home/rob/cat-catch-enhanced/src/background/index.ts)
+- **Implement `DOWNLOAD_START`**: Replace the `TODO` with a call to `downloadManager.startDownload`.
+
+### 3. Companion App Connection
+- Ensure `DownloadManager` can talk to the companion app (via HTTP as seen in `SegmentDownloader`? Or does it use `nativeMessaging`? The companion app runs an HTTP server, so `SegmentDownloader` likely fetches via HTTP or the extension does).
+- *Correction*: `DownloadManager.ts` seems to use `fetch` and `chrome.downloads`. Wait, the user wants the **local hosted** version. The `Companion` app is an HTTP server. `DownloadManager` needs to *delegate* to the companion app if configured to do so, OR the "local hosted" version means the extension does the heavy lifting?
+- Looking at `DownloadManager.ts`, it uses `ParserFactory` and `SegmentDownloader`. It doesn't seem to call the Companion App at `http://localhost:9527`.
+- **CRITICAL**: If the user wants to use the Companion App, we need a bridge.
+- *Check*: `src/background/download/SegmentDownloader.ts` to see if it offloads to the companion.
+
+## Verification Plan
+1.  **State Sync**: Open a video page. Check if Side Panel populates immediately.
+2.  **Downloads**: Click "Download". Verify `DownloadManager` starts. 

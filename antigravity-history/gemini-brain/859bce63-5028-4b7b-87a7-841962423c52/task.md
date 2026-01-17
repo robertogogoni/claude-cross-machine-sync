@@ -1,0 +1,9 @@
+- [x] Create implementation plan <!-- id: 0 -->
+- [x] Create `verify_keyboard.py` script <!-- id: 1 -->
+  - [x] Include standard punctuation check <!-- id: 2 -->
+  - [x] Include accented character check (dead keys) <!-- id: 3 -->
+  - [x] Include 'ç' check <!-- id: 4 -->
+- [x] Run verification script <!-- id: 5 -->
+- [x] Research GUI keyboard configuration tools <!-- id: 6 -->
+- [x] Create plan for GUI tool installation <!-- id: 7 -->
+- [ ] Verify fix with script <!-- id: 8 -->

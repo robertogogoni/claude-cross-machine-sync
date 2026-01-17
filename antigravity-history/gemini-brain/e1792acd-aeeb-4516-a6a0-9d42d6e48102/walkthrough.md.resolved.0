@@ -1,0 +1,41 @@
+# Keyboard Configuration Verification
+
+The keyboard configuration has been simplified to use standard layouts: **US International** and **Portuguese (Brazil)**. The custom [us_custom](file:///home/rob/.config/xkb/symbols/us_custom) layout and [.XCompose](file:///home/rob/.XCompose) hacks have been removed.
+
+## Changes Made
+
+- **Modified** `~/.config/hypr/input.conf`:
+    - Set `kb_layout = us,br` (US and Brazil layouts).
+    - Set `kb_variant = intl,` (US International variant).
+    - Set `kb_options = grp:alt_shift_toggle` (Switch layouts with `Alt` + `Shift`).
+- **Deleted** `~/.XCompose`: Removed custom dead key hacks.
+- **Deleted** `~/.config/xkb/symbols/us_custom`: Removed unused custom layout definition.
+
+## Verification Steps
+
+Please perform the following steps to ensure everything works as expected.
+
+### 1. Apply Changes
+Hyprland should automatically detect changes to [input.conf](file:///home/rob/.config/hypr/input.conf). If not, you may need to restart your session or reload Hyprland.
+
+### 2. Verify US International Layout (`us(intl)`)
+This should be the default active layout initially.
+
+- **Check accents:**
+    - Press `'` then `e` -> Should output `é`.
+    - Press `~` then `n` -> Should output `ñ` (or `ã` if using `~` + `a`).
+- **Check Cedilla (`ç`):**
+    - Press `'` then `c` -> Should output `ç`.
+    - Press `AltGr` (Right Alt) + `,` -> Should output `ç`.
+
+### 3. Verify Layout Switching
+- Press `Alt` + `Shift`.
+- Type some keys to verify the layout has changed to **ABNT2**.
+
+### 4. Verify ABNT2 Layout (`br`)
+- **Check Cedilla (`ç`):**
+    - Press the dedicated `;` key (on a US keyboard) or the actual `ç` key (on an ABNT keyboard) -> Should output `ç` (or whatever the key corresponds to on your physical device).
+- **Check Accents:**
+    - Verify that standard ABNT2 accent keys work as labeled on a Brazilian keyboard.
+
+If all the above work, the configuration is successful!

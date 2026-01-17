@@ -1,0 +1,15 @@
+# System Update Summary
+
+Updates were performed on the system.
+
+## Actions Taken
+- **Detected `paru` failure**: `paru` failed due to `libalpm` version mismatch.
+- **Switched to `yay`**: Used `yay` as an alternative AUR helper.
+- **Updated Packages**:
+  - `antigravity` (1.12.4-1 -> 1.13.3-1)
+  - `qt-sudo` (2.2.0-1 -> 2.3.0-1)
+- **Verified Flatpak**: Checked for flatpak updates (system is up to date).
+- **Skipped Snap**: Snap daemon is inactive.
+
+## Recommendations
+- **Rebuild `paru`**: If you prefer `paru`, you may need to uninstall and reinstall it (or rebuild it) to link against the new `libalpm`.

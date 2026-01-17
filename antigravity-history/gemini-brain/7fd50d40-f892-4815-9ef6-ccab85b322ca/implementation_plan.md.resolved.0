@@ -1,0 +1,26 @@
+# Fix Hyprland Configuration Errors
+
+The system is displaying Hyprland configuration errors on startup due to deprecated options and incorrect syntax usage (mixing `windowrulev2` syntax with `windowrule`).
+
+## User Review Required
+> [!IMPORTANT]
+> The changes involve modifying core Hyprland configuration files for the Omarchy distribution. We are switching from `windowrule` to `windowrulev2` which is the recommended modern syntax and fix the deprecated option errors.
+
+## Proposed Changes
+
+### Omarchy Default Config
+
+#### [MODIFY] [looknfeel.conf](file:///home/rob/.local/share/omarchy/default/hypr/looknfeel.conf)
+- Comment out the deprecated `misc:new_window_takes_over_fullscreen` option.
+
+#### [MODIFY] [windows.conf](file:///home/rob/.local/share/omarchy/default/hypr/windows.conf)
+- Convert `windowrule` directives to `windowrulev2`.
+- `suppressevent maximize` is only supported in `windowrulev2`.
+- `class:` and `title:` selectors are `windowrulev2` syntax.
+
+## Verification Plan
+
+### Automated Verification
+- Run `hyprctl reload` to apply changes.
+- Check `~/.cache/hyprland/hyprland.log` (typical log location) or `journalctl` for any remaining config errors.
+- Ideally, the "red box" error overlay should disappear from the user's screen immediately after reload (which the user can confirm, or we can infer from absence of new logs).

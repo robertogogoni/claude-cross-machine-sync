@@ -1,0 +1,13 @@
+I don't have direct CLI access to run the `/plugin marketplace add` command, but here are the commands to install the top marketplaces:
+
+```bash
+# Install the most popular community marketplace
+/plugin marketplace add ananddtyagi/cc-marketplace
+
+# Install the Netresearch curated marketplace
+/plugin marketplace add netresearch/claude-code-marketplace
+```
+
+Run these commands in Claude Code to add the most-starred marketplaces. After adding them, you'll be able to browse and install individual plugins from these catalogs.
+
+Would you like me to help you explore what plugins are available in these marketplaces once you've added them?

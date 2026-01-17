@@ -1,0 +1,17 @@
+# Locale Error Fix Walkthrough
+
+## Changes
+Removed empty locale directories from `public/_locales/`. The following directories were removed:
+- `ar`, `de`, `es`, `fr`, `it`, `ja`, `ko`, `pt_BR`, `ru`, `th`, `tr`, `vi`, `zh_CN`, `zh_TW`
+
+Only `public/_locales/en` remains, which contains a valid `messages.json`.
+
+## Verification Results
+
+### Automated Build
+Ran `npm run build` to verify the extension builds without errors.
+
+### Manual Verification
+To manually verify in a browser:
+1. Load the unpacked extension from the `dist` directory.
+2. Verify that no "Messages file is missing" error appears.

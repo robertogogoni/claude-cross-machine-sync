@@ -1,0 +1,17 @@
+# Remap Acute Accent to Cedilla
+
+The user wants to replace the acute accent (´) key with the cedilla (ç) character, as they do not use the acute accent.
+
+## Proposed Changes
+
+### Configuration Analysis
+First, need to check `envs.conf`, `input.conf` and equaly import `.XCompose`.
+
+### Potential Solutions
+1.  **XCompose**: Map the acute key (dead_acute) to produce 'ç' directly? Or maybe `dead_acute` + `c` = `ç` (which is standard). The user says they "don't use at all" the acute. This implies they might be pressing the key and getting `´` immediately (non-dead key) or getting the dead key behavior but wanting `ç` instead.
+    *   If they want the *single key press* that usually starts the acute accent to instead output `ç` immediately, we need to know what keycode or keysym that is.
+    *   If they are using `us(intl)`, the `'` key produces `dead_acute`.
+2.  **Hyprland keybind**: Bind the specific key code to type `ç`.
+
+## Verification Plan
+1.  Ask user to test the key.

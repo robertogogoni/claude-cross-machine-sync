@@ -1,0 +1,53 @@
+# Phase 5: Encryption & Processing Implementation Plan
+
+## Goal
+Enable decryption of protected streams (HLS AES-128) and local media processing (merging segments) using FFmpeg.wasm without external dependencies.
+
+## Components
+
+### 1. `CryptoEngine.ts`
+- **Purpose**: specific implementation for decrypting media segments.
+- **Supported Algorithms**: AES-128-CBC (standard HLS), AES-128-ECB.
+- **Libraries**: Native Web Crypto API + `libsodium-wrappers` (if needed for ChaCha20, though HLS usually uses AES).
+
+### 2. `KeyManager.ts`
+- **Purpose**: Manage detected encryption keys.
+- **Features**: 
+  - Store keys in `keysDb`.
+  - Fetch keys from network if missing.
+  - Value caching.
+
+### 3. Offscreen Document (FFmpeg Host)
+- **Files**: `src/offscreen/offscreen.html`, `src/offscreen/main.ts`.
+- **Purpose**: Run `@ffmpeg/ffmpeg` in a DOM-capable environment (required for SharedArrayBuffer/WASM in some contexts, and keeps heavy work out of Service Worker).
+- **Capabilities**:
+  - Merge binary segments into MP4/MKV.
+  - Generate thumbnails.
+
+### 4. `FFmpegManager.ts` (Background)
+- **Purpose**: Orchestrate the offscreen document.
+- **Features**:
+  - Lifecycle management (create/close offscreen doc).
+  - Message passing (Background <-> Offscreen).
+
+## Architecture
+
+```mermaid
+sequenceDiagram
+    participant Downloader
+    participant CryptoEngine
+    participant FFmpegMgr
+    participant Offscreen
+    
+    Downloader->>CryptoEngine: Decrypt chunk
+    CryptoEngine-->>Downloader: Decrypted data
+    Downloader->>FFmpegMgr: Merge completed job
+    FFmpegMgr->>Offscreen: Load FFmpeg & Merge
+    Offscreen-->>FFmpegMgr: Merged Blob/File
+```
+
+## Steps
+1. Create `CryptoEngine` & `KeyManager`.
+2. Set up `offscreen` entry point in Vite.
+3. Implement `FFmpegManager` to talk to offscreen.
+4. Integrate decryption into [SegmentDownloader](file:///home/rob/cat-catch-enhanced/src/background/download/SegmentDownloader.ts#19-237) (update Phase 4 code).

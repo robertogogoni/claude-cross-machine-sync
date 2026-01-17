@@ -1,0 +1,13 @@
+# Task: Diagnose and Fix Input Method & Keyboard Layout
+
+- [ ] Investigate current configuration <!-- id: 0 -->
+    - [ ] Check environment variables in Hyprland config (`envs.conf`) <!-- id: 1 -->
+    - [ ] Check keyboard input configuration (`input.conf`) <!-- id: 2 -->
+    - [ ] Check `.XCompose` file <!-- id: 3 -->
+- [ ] Fix Wayland Diagnose Warning <!-- id: 4 -->
+    - [ ] Unset or correct `GTK_IM_MODULE` <!-- id: 5 -->
+- [ ] Fix 'ç' Character Input <!-- id: 6 -->
+    - [ ] Verify/Adjust keyboard variant (e.g., `us-intl` or `abnt2`) <!-- id: 7 -->
+    - [ ] Verify `compose:cedilla` options if necessary <!-- id: 8 -->
+- [ ] Verification <!-- id: 9 -->
+    - [ ] Restart Hyprland or reload config (simulated/suggested) <!-- id: 10 -->

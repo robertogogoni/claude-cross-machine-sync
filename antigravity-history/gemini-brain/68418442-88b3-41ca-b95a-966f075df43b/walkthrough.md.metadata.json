@@ -1,0 +1,5 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary":  "Walkthrough of the keyboard layout changes. Configured Hyprland to use the US International layout (`us(intl)`), allowing input of Portuguese characters on a US keyboard. verification instructions included.",
+  "updatedAt":  "2026-01-03T09:14:02.479089354Z"
+}

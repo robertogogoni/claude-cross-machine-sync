@@ -1,0 +1,17 @@
+# Walkthrough: Remap Acute Accent to Cedilla
+
+## Changes Made
+1.  **Created Custom XKB Layout**:
+    *   Created `~/.config/xkb/symbols/us_custom` which includes `us(intl)` but overrides the acute accent key to produce `ç` / `Ç`.
+2.  **Updated Hyprland Configuration**:
+    *   Modified `~/.config/hypr/input.conf` to use `kb_layout = us_custom` and `kb_variant = cedilla`.
+
+## Verification Steps
+1.  **Reload Hyprland**: The configuration change should take effect immediately upon saving (Hyprland usually hot-reloads), or you might need to run `hyprctl reload` if it doesn't.
+2.  **Test the Key**:
+    *   Press the key that used to correspond to `´` (next to `;` on standard US keyboards).
+    *   **Expect**: `ç` (cedilla) to appear immediately.
+    *   Press `Shift` + that key.
+    *   **Expect**: `Ç` (uppercase cedilla).
+    *   Press `AltGr` + that key.
+    *   **Expect**: `'` (apostrophe).

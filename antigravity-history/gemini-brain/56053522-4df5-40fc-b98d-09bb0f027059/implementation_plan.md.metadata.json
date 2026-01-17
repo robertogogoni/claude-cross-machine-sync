@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Implementation plan for Phase 6: Merging Logic & UI. Focuses on FFmpeg concatenation in offscreen document and connecting it to the UI.",
+  "updatedAt": "2025-12-19T18:16:10.032144479Z",
+  "version": "5"
+}

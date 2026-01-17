@@ -1,0 +1,48 @@
+# Phase 3: Stream Parsers Implementation
+
+## Goal
+Implement robust stream parsers for HLS (M3U8), DASH (MPD), and Smooth Streaming (ISM) formats, capable of extracting variants, segments, and encryption keys.
+
+## User Review Required
+> [!NOTE]
+> This phase introduces new file types support (ISM) and enhances existing parsing logic.
+
+## Proposed Changes
+
+### [Shared Types]
+
+#### [NEW] [stream.ts](file:///home/rob/cat-catch-enhanced/src/shared/types/stream.ts)
+- Define interfaces for `MasterPlaylist`, `MediaPlaylist`, [StreamVariant](file:///home/rob/cat-catch-enhanced/src/shared/types/resource.ts#63-75), [Track](file:///home/rob/cat-catch-enhanced/src/shared/types/resource.ts#79-87), [Segment](file:///home/rob/cat-catch-enhanced/src/shared/types/resource.ts#147-156).
+
+### [Parsers]
+
+#### [NEW] [M3U8Parser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/M3U8Parser.ts)
+- Parse Master Playlists to extract variants (bandwidth, resolution, codecs).
+- Parse Media Playlists to extract segments and keys.
+- **Enhanced Features**:
+  - Handle discontinuities (`#EXT-X-DISCONTINUITY`).
+  - Extract encryption keys (`#EXT-X-KEY`).
+  - Support `EXT-X-MAP` (init segments).
+
+#### [NEW] [MPDParser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/MPDParser.ts)
+- Parse DASH manifests (XML).
+- Extract AdaptationSets and Representations.
+- Support `SegmentTemplate`, `SegmentTimeline`, and `SegmentList`.
+
+#### [NEW] [ISMParser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/ISMParser.ts)
+- Parse Smooth Streaming manifests (XML).
+- Extract Tracks and QualityLevels.
+- Generate chunk URLs.
+
+#### [NEW] [ParserFactory.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/ParserFactory.ts)
+- Factory to select the correct parser based on content content/extension.
+
+## Verification Plan
+
+### Automated Tests
+- Build verification.
+
+### Manual Verification
+- **HLS**: Load a test `.m3u8` stream. Check if variants are detected.
+- **DASH**: Load a test `.mpd` stream. Check if qualities are detected.
+- **ISM**: Load a test `.ism` stream. Check if detected.

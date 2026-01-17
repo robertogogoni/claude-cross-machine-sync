@@ -1,0 +1,6 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary":  "Plan to switch Hyprland keyboard layout to US (default) and install `input-remapper` as a GUI dashboard.\nIncludes verify steps using the existing script.",
+  "updatedAt":  "2026-01-03T02:33:12.459646608Z",
+  "version":  "1"
+}

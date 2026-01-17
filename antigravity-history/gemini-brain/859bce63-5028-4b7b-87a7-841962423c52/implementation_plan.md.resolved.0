@@ -1,0 +1,26 @@
+# Keyboard Verification Plan
+
+## Goal
+Verify that the current keyboard layout (detected as `br` / `br-abnt2`) is correctly handling punctuation and accented characters.
+
+## User Review Required
+> [!NOTE]
+> I will create a Python script that requires you to interactively type characters. This is the most reliable way to test input mappings.
+
+## Proposed Changes
+
+### [New Tool] Keyboard Validator
+I will create a script `verify_keyboard.py` in the current directory.
+
+#### [NEW] [verify_keyboard.py](file:///home/rob/.gemini/antigravity/scratch/verify_keyboard.py)
+This script will:
+1.  Print instructions.
+2.  Prompt for specific characters one by one.
+    -   **Punctuation**: `/`, `?`, `\`, `|`, `;`, `:`, `"`
+    -   **Accents**: `~` (tilde), `^` (circumflex), `´` (acute), `` ` `` (grave)
+    -   **Special**: `ç`, `Ç`
+3.  Provide immediate feedback if the character matches.
+
+## Verification
+-   **Manual**: You will run the script and follow the on-screen prompts.
+-   **Success Criteria**: All prompts are successfully matched by your typing.

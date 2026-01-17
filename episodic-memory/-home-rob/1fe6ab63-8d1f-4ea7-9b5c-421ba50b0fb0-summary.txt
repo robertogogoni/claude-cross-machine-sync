@@ -1,0 +1,9 @@
+I'm currently at my token limit and will reset at 1pm (America/Sao_Paulo). I'll be able to help you fix any issues once the limit resets.
+
+In the meantime, could you clarify what needs to be fixed? For example:
+- Build errors?
+- Runtime errors in the extension?
+- Specific files not working correctly?
+- Missing functionality?
+
+I'll address all issues immediately once my token budget resets.

@@ -1,0 +1,40 @@
+# Tasks
+
+- [x] Phase 2: Capture Engine <!-- id: 13 -->
+    - [x] Create [src/shared/constants/mimeTypes.ts](file:///home/rob/cat-catch-enhanced/src/shared/constants/mimeTypes.ts) <!-- id: 14 -->
+    - [x] Implement [NetworkCapture.ts](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts) (port logic from [index.ts](file:///home/rob/cat-catch-enhanced/src/content/index.ts)) <!-- id: 15 -->
+    - [x] Add CaptureRule Logic (MIME/URL filtering) <!-- id: 16 -->
+    - [x] Refactor [src/background/index.ts](file:///home/rob/cat-catch-enhanced/src/background/index.ts) to use [NetworkCapture](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts#11-247) <!-- id: 17 -->
+
+- [x] Phase 3: Stream Parsers <!-- id: 23 -->
+    - [x] Create [src/shared/types/stream.ts](file:///home/rob/cat-catch-enhanced/src/shared/types/stream.ts) <!-- id: 24 -->
+    - [x] Implement [M3U8Parser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/M3U8Parser.ts) <!-- id: 25 -->
+    - [x] Implement [MPDParser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/MPDParser.ts) <!-- id: 26 -->
+    - [x] Implement [ISMParser.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/ISMParser.ts) <!-- id: 27 -->
+    - [x] Create [ParserFactory.ts](file:///home/rob/cat-catch-enhanced/src/background/parsers/ParserFactory.ts) <!-- id: 28 -->
+
+- [x] Fix Immer Error <!-- id: 18 -->
+    - [x] Analyze [src/shared/state/store.ts](file:///home/rob/cat-catch-enhanced/src/shared/state/store.ts) <!-- id: 19 -->
+    - [x] Reproduce or Identify the invalid state mutation <!-- id: 20 -->
+    - [x] Fix the store action <!-- id: 21 -->
+    - [x] Verify fix <!-- id: 22 -->
+
+- [x] Phase 4: Download Manager <!-- id: 30 -->
+    - [x] Create [src/background/download/SpeedTracker.ts](file:///home/rob/cat-catch-enhanced/src/background/download/SpeedTracker.ts) <!-- id: 31 -->
+    - [x] Create [src/background/download/SegmentDownloader.ts](file:///home/rob/cat-catch-enhanced/src/background/download/SegmentDownloader.ts) <!-- id: 32 -->
+    - [x] Implement [src/background/download/DownloadManager.ts](file:///home/rob/cat-catch-enhanced/src/background/download/DownloadManager.ts) <!-- id: 33 -->
+    - [x] Integrate with `zustand` store (progress updates) <!-- id: 34 -->
+
+- [x] Phase 5: Encryption & Processing <!-- id: 35 -->
+    - [x] Implement [src/background/processing/KeyManager.ts](file:///home/rob/cat-catch-enhanced/src/background/processing/KeyManager.ts) <!-- id: 36 -->
+    - [x] Implement [src/background/processing/CryptoEngine.ts](file:///home/rob/cat-catch-enhanced/src/background/processing/CryptoEngine.ts) <!-- id: 37 -->
+    - [x] Set up Offscreen Document for FFmpeg <!-- id: 38 -->
+    - [x] Implement [src/background/processing/FFmpegManager.ts](file:///home/rob/cat-catch-enhanced/src/background/processing/FFmpegManager.ts) <!-- id: 39 -->
+    - [x] Integrate decryption into [SegmentDownloader](file:///home/rob/cat-catch-enhanced/src/background/download/SegmentDownloader.ts#23-305) <!-- id: 40 -->
+
+- [ ] Phase 6: UI Polishing & Merging Logic <!-- id: 41 -->
+    - [x] Implement `MERGE_SEGMENTS` in [src/offscreen/main.ts](file:///home/rob/cat-catch-enhanced/src/offscreen/main.ts) (Read from DB, FFmpeg concat) <!-- id: 42 -->
+    - [x] Update [FFmpegManager](file:///home/rob/cat-catch-enhanced/src/background/processing/FFmpegManager.ts#4-97) to trigger merge <!-- id: 43 -->
+    - [x] Update [DownloadManager](file:///home/rob/cat-catch-enhanced/src/background/download/DownloadManager.ts#15-300) to handle merging state and final file save <!-- id: 44 -->
+    - [ ] Create [Downloads](file:///home/rob/cat-catch-enhanced/src/shared/state/store.ts#366-373) UI component (Popup/Sidepanel) <!-- id: 45 -->
+    - [ ] Polish progress bars and formatting <!-- id: 46 -->

@@ -1,0 +1,22 @@
+# Tasks
+
+- [x] Explore project structure <!-- id: 0 -->
+    - [x] List root directory files <!-- id: 1 -->
+    - [x] Identify project type and key dependencies <!-- id: 2 -->
+    - [x] Read documentation (README, etc.) <!-- id: 3 -->
+- [x] Analyze source code <!-- id: 4 -->
+    - [x] Understand entry points <!-- id: 5 -->
+    - [x] Review core logic <!-- id: 6 -->
+- [x] Summarize findings <!-- id: 7 -->
+
+- [ ] Fix "Messages file is missing" error <!-- id: 8 -->
+    - [x] Check for `_locales` directory in `public` or `src` <!-- id: 9 -->
+    - [x] Verify [manifest.json](file:///home/rob/cat-catch-enhanced/src/manifest.json) locale configuration <!-- id: 10 -->
+    - [x] Create missing [ar](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts#21-42) locale file or fix build process <!-- id: 11 -->
+    - [x] Verify fix by building and checking `dist` <!-- id: 12 -->
+
+- [x] Phase 2: Capture Engine <!-- id: 13 -->
+    - [x] Create [src/shared/constants/mimeTypes.ts](file:///home/rob/cat-catch-enhanced/src/shared/constants/mimeTypes.ts) <!-- id: 14 -->
+    - [x] Implement [NetworkCapture.ts](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts) (port logic from [index.ts](file:///home/rob/cat-catch-enhanced/src/content/index.ts)) <!-- id: 15 -->
+    - [x] Add CaptureRule Logic (MIME/URL filtering) <!-- id: 16 -->
+    - [x] Refactor [src/background/index.ts](file:///home/rob/cat-catch-enhanced/src/background/index.ts) to use [NetworkCapture](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts#11-247) <!-- id: 17 -->

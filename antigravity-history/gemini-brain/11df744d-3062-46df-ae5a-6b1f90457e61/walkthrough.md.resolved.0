@@ -1,0 +1,17 @@
+# Verification Walkthrough
+
+## 1. Reload Hyprland
+- Please reload your Hyprland configuration or restart your session.
+- **Check**: Verify that the "Wayland Diagnose" warning **does not** appear.
+
+## 2. Test 'ç' Character
+You are using the `us-intl` layout.
+- Open a text editor or terminal.
+- **Method 1 (Standard)**: Press `AltGr` (Right Alt) + `,` (comma).
+  - Expected: `ç`
+- **Method 2 (Alternative)**: Press `'` (single quote) then `c`.
+  - Expected with XIM removed: `ć` (c-acute) - *This is normal for standard Wayland us-intl*.
+
+> [!NOTE]
+> If `AltGr + ,` works for you, then we are done!
+> If you strictly prefer `' + c` to output `ç`, we will need to do further configuration (likely setting `GTK_IM_MODULE=cedilla` specifically or changing the layout variant), but let's confirm the warning is gone first.

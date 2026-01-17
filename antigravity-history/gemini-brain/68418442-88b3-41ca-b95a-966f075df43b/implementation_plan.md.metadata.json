@@ -1,0 +1,5 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary":  "Update Hyprland input configuration to use `us(intl)` layout. This enables typing 'ç' and accents on a standard US keyboard, addressing the user's missing physical cedilla key.",
+  "updatedAt":  "2026-01-03T09:13:31.944688936Z"
+}

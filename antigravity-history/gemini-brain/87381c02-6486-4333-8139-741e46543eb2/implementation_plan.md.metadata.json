@@ -1,0 +1,6 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary":  "Detailed plan to create a custom XKB layout `us_custom` that remaps the acute key to `ç`.",
+  "updatedAt":  "2026-01-03T11:42:37.144197712Z",
+  "version":  "1"
+}

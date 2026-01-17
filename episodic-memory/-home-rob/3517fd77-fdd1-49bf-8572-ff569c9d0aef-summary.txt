@@ -1,0 +1,10 @@
+I understand. I'm ready to help you search past conversations or work on your project.
+
+To search your conversation archive, please describe what you're looking for in natural language. For example:
+
+- "How did we handle authentication in the user dashboard?"
+- "The conversation about performance optimization in the data fetching layer"
+- "Error we fixed related to async state management"
+- "The approach we took for styling the modal component"
+
+What would you like to search for, or is there something else you'd like to work on?

@@ -1,0 +1,36 @@
+# Automated Testing Setup & Verification
+
+## Overview
+We have successfully set up an automated testing environment using **Vitest** and **JSDOM**. This allows for rapid testing of extension logic without needing to launch a browser manually.
+
+## Environment Configuration
+- **Test Runner**: Vitest
+- **Environment**: JSDOM (Simulates browser DOM)
+- **Mocks**: Custom `setup.ts` mocking `chrome.*` APIs and `Dexie` (IndexedDB layer).
+
+## Verification Results
+
+### Unit Tests
+`src/shared/state/store.test.ts` passed successfully (3/3 tests), confirming:
+-   **Broadcast Check**: ✅
+-   **Loop Prevention**: ✅
+-   **Listener Check**: ✅
+
+### Integration Verification
+1.  **Build Success**: The project now builds cleanly (`npm run build` exit code 0).
+2.  **Linting**: Fixed all type errors and unused variables.
+3.  **UI Components**:
+    -   Implemented `DownloadItem.tsx` with proper type integration.
+    -   Added "Downloads" tab to Side Panel.
+4.  **Components**:
+    -   **Offscreen Worker**: Fixed `index.html` to load the correct `main.ts` script for FFmpeg merging.
+    -   **Download Manager**: Confirmed connected to store and background events.
+
+### Security & HLS Decryption Fix
+Resolved a critical issue where protected HLS streams failed to decrypt:
+-   **Key Pre-fetching**: `DownloadManager` now proactively finds and fetches encryption keys found in the manifest.
+-   **Contextual Auth**: `KeyManager` now uses the original resource's headers (`Referer`, `Authorization`) and includes cookies (`credentials: 'include'`) when fetching keys.
+-   **Permissions**: Confirmed `host_permissions` allows background fetching.
+
+## Conclusion
+The extension is now fully integrated. The critical bugs (Side Panel sync, Merging hang, Decryption) are fixed, and the codebase compiles without errors. The user can now proceed to install and use the extension.

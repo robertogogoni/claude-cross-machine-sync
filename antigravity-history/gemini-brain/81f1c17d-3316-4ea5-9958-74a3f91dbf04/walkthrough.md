@@ -1,0 +1,41 @@
+# Trackpad & Magic Mouse Optimization Walkthrough
+
+I have updated your system configuration to make the trackpad and Magic Mouse feel much more natural, fluid, and usable on Hyprland.
+
+## Changes Made
+
+### 1. Hyprland Input Configuration (`~/.config/hypr/input.conf`)
+- **Sensitivity Reset**: Changed global sensitivity to `-0.6` with `flat` acceleration profile. This removes the jitter and provides 1:1 control.
+- **Trackpad Scrolling**: Increased `scroll_factor` to `0.8` (up from `0.4`) for faster, more 1:1 scrolling.
+- **Magic Mouse Config**: Added a dedicated device block for "Apple Inc. Magic Mouse 2" with:
+    - `scroll_factor = 1.2` (to counter Linux's slow default scroll)
+    - `sensitivity = -0.8` (significantly slowed down for precision)
+    - `accel_profile = flat` (removes acceleration curve to fix micro-movements)
+
+### 2. Kernel Module Parameters (`/etc/modprobe.d/hid_magicmouse.conf`)
+- Created a configuration file to tune the kernel driver:
+    - `scroll_acceleration=1`: Enables momentum/acceleration.
+    - `scroll_speed=45`: Sets a responsive base scroll speed (range 0-63).
+    - `emulate_scroll_wheel=1`: Ensures proper scroll events are sent.
+
+## Verification & Next Steps
+
+### Immediate Effects
+- **Trackpad**: You should feel the difference immediately after the reload I performed. Try swiping and moving the cursor.
+### User Feedback
+The current configuration is confirmed as "usable" and provides stable control, though individual preference for "feel" may vary. The `flat` profile is key to avoiding jitter on high-DPI Apple devices.
+### Magic Mouse Next Steps
+The kernel module changes need a reload to take effect for the Magic Mouse.
+1.  **Option A (Recommended)**: Reboot your system.
+2.  **Option B (Advanced)**: Reload the module without rebooting (disconnect mouse first):
+    ```bash
+    sudo rmmod hid_magicmouse
+    sudo modprobe hid_magicmouse
+    ```
+
+### Troubleshooting
+If the Magic Mouse settings don't seem to apply, verify the device name:
+```bash
+hyprctl devices
+```
+If the name is different from "Apple Inc. Magic Mouse 2", update `~/.config/hypr/input.conf` with the exact name shown.

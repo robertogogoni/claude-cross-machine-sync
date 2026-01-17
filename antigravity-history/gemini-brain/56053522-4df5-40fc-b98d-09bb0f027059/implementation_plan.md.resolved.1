@@ -1,0 +1,43 @@
+# Phase 2: Capture Engine Implementation
+
+## Goal
+Implement a robust network capture engine by modularizing the existing background script logic and adding enhanced filtering and detection capabilities.
+
+## User Review Required
+> [!NOTE]
+> This refactor moves core capture logic from [src/background/index.ts](file:///home/rob/cat-catch-enhanced/src/background/index.ts) to `src/background/capture/NetworkCapture.ts`.
+
+## Proposed Changes
+
+### [Shared Constants]
+
+#### [NEW] [mimeTypes.ts](file:///home/rob/cat-catch-enhanced/src/shared/constants/mimeTypes.ts)
+- Define `MEDIA_EXTENSIONS` and `MEDIA_MIME_PREFIXES`.
+- Centralize all MIME type definitions.
+
+### [Background Script]
+
+#### [NEW] [NetworkCapture.ts](file:///home/rob/cat-catch-enhanced/src/background/capture/NetworkCapture.ts)
+- Class `NetworkCapture` managing `webRequest` listeners.
+- Implements:
+  - [start()](file:///home/rob/cat-catch-enhanced/src/background/index.ts#39-51) / [stop()](file:///home/rob/cat-catch-enhanced/src/background/index.ts#52-59) methods.
+  - [isMediaResource()](file:///home/rob/cat-catch-enhanced/src/background/index.ts#183-214) detection (ported and enhanced).
+  - Header capturing (`onSendHeaders`).
+  - Response processing (`onResponseStarted`).
+  - `CaptureRule` logic (using [Settings](file:///home/rob/cat-catch-enhanced/src/shared/types/settings.ts#5-24): regex, blacklist/whitelist, size, MIME).
+
+#### [MODIFY] [index.ts](file:///home/rob/cat-catch-enhanced/src/background/index.ts)
+- Remove inline listener logic.
+- Initialize and use `NetworkCapture` instance.
+- Pass store actions to `NetworkCapture`.
+
+## Verification Plan
+
+### Automated Tests
+- Build verification (`npm run build`).
+
+### Manual Verification
+- Load extension.
+- Visit a media site (e.g., test page with video).
+- Verify media is captured and appears in the popup/store.
+- Test filtering (disable capture in settings, verify no capture).

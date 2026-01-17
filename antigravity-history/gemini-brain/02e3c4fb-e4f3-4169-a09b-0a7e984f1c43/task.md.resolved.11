@@ -1,0 +1,31 @@
+# Task: Debug Critical Functionality
+- [x] Debug Stream Parsing <!-- id: 10 -->
+    - [x] Locate stream interception logic <!-- id: 11 -->
+    - [x] Verify content script injection and matching <!-- id: 12 -->
+    - [x] Check m3u8/mpd parsing logic <!-- id: 13 -->
+- [x] Debug Side Panel Global State <!-- id: 14 -->
+    - [x] Verify side panel message listeners <!-- id: 15 -->
+    - [x] Check data flow from background to side panel <!-- id: 16 -->
+- [x] Debug Download Functionality <!-- id: 17 -->
+    - [x] Verify extension -> companion communication <!-- id: 18 -->
+
+# Task: Setup Automated Testing
+- [x] Configure Vitest Environment <!-- id: 19 -->
+    - [x] Create test setup/mocks for Chrome API <!-- id: 20 -->
+    - [x] Update vite.config.ts <!-- id: 21 -->
+- [x] Write Unit Tests <!-- id: 22 -->
+    - [x] Test Store Synchronization <!-- id: 23 -->
+- [x] Write Unit Tests <!-- id: 22 -->
+    - [x] Test Store Synchronization <!-- id: 23 -->
+    - [x] Verify message broadcasting <!-- id: 24 -->
+    - [x] Fix mock environment setup <!-- id: 25 -->
+
+# Task: Phase 3 - Final Integration
+- [x] Fix Offscreen Entry Point <!-- id: 26 -->
+    - [x] Update index.html to load main.ts <!-- id: 27 -->
+- [x] Implement/Verify UI <!-- id: 28 -->
+    - [x] Create/Update DownloadItem component <!-- id: 29 -->
+    - [x] Ensure progress bars render <!-- id: 30 -->
+- [ ] Verify Settings Persistence <!-- id: 31 -->
+- [ ] Full End-to-End Test <!-- id: 32 -->
+

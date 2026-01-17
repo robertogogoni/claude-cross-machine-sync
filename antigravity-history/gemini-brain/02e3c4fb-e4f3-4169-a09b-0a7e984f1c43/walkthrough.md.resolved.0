@@ -1,0 +1,29 @@
+# Automated Testing Setup & Verification
+
+## Overview
+We have successfully set up an automated testing environment using **Vitest** and **JSDOM**. This allows for rapid testing of extension logic without needing to launch a browser manually.
+
+## Environment Configuration
+- **Test Runner**: Vitest
+- **Environment**: JSDOM (Simulates browser DOM)
+- **Mocks**: Custom [setup.ts](file:///home/rob/cat-catch-enhanced/src/test/setup.ts) mocking `chrome.*` APIs and `Dexie` (IndexedDB layer).
+
+## Verification Results
+We created a unit test [src/shared/state/store.test.ts](file:///home/rob/cat-catch-enhanced/src/shared/state/store.test.ts) to verify the critical "State Synchronization" fix.
+
+### Test Cases
+1.  **Broadcast Check**: Verifies that adding a resource locally sends a `RESOURCE_DETECTED` message to other parts of the extension.
+    -   *Result*: ✅ PASSED
+2.  **Loop Prevention**: Verifies that adding a resource that came *from* a sync message does NOT re-broadcast it.
+    -   *Result*: ✅ PASSED
+3.  **Listener Check**: Verifies that the Store listens for `RESOURCE_DETECTED` messages and updates its internal state correctly.
+    -   *Result*: ✅ PASSED
+
+## How to Run Tests
+You can run the tests anytime using:
+```bash
+npm test
+```
+
+## Conclusion
+The testing infrastructure is solid, and the critical bug regarding Side Panel synchronization is confirmed fixed by automated tests.
