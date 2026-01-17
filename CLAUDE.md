@@ -33,6 +33,39 @@ This repository is a **comprehensive AI intelligence hub** that:
 
 ## Recent Solutions & Fixes
 
+### 2026-01-17: Personal Communication System & Connections Registry
+
+**Session Goal**: Help elaborate a personal message and establish a system for future interactions
+
+**What We Accomplished**:
+
+#### 1. Elaborated Response for Daiana (WhatsApp)
+- **Context**: She sent a vulnerable, detailed message about herself
+- **Challenge**: Match her depth, tone, and communication style
+- **Process**:
+  - Analyzed her message style (fluido, sem bullets, parágrafos conectados)
+  - Collected personal information through focused questions
+  - Used MyHeritage DNA traits (via Chrome integration) for personality insights
+  - Rewrote multiple times based on feedback
+- **Key Learnings**:
+  - Espelhar o estilo do interlocutor
+  - Evitar estruturas artificiais (bullets, headers)
+  - Usar conectores naturais entre assuntos
+  - Reformular dados de testes como autopercepção
+
+#### 2. Created Connections Registry
+- **Location**: `connections/`
+- **Purpose**: Track people, context, and communication preferences
+- **Files Created**:
+  - `connections/README.md` - Guidelines and index
+  - `connections/daiana.md` - First connection profile
+
+#### 3. Documented Communication Patterns
+- **Location**: `learnings/personal-communication.md`
+- **Content**: Process for helping with personal messages, anti-patterns, quality checklist
+
+---
+
 ### 2026-01-17: "Jarvis Mode" - Full Autonomy Permission Setup
 
 **Session Goal**: Eliminate permission prompts for a fully autonomous Claude Code experience
@@ -373,7 +406,16 @@ grep -i "keyword" warp-ai/queries/all-queries.csv
 4. Copy skills: `cp -r skills/* ~/.claude/skills/`
 5. Install plugins via Claude Code
 
-### Workflow 4: Extracting AI History (Future Updates)
+### Workflow 4: Personal Communication Assistance
+1. Consultar `connections/<pessoa>.md` para contexto
+2. Usar Beeper MCP para ler mensagens recentes
+3. Analisar estilo de comunicação do interlocutor
+4. Coletar informações através de perguntas focadas (uma por vez)
+5. Elaborar resposta espelhando o estilo do interlocutor
+6. Revisar: sem bullets, texto fluido, transições naturais
+7. Atualizar arquivo da conexão após interação
+
+### Workflow 5: Extracting AI History (Future Updates)
 ```bash
 # Warp Terminal
 sqlite3 ~/.local/state/warp-terminal/warp.sqlite \
@@ -427,7 +469,12 @@ git push
 │   ├── claude-code-permissions.md # Permission modes & yolo mode
 │   ├── electron-wayland.md      # Electron fixes
 │   ├── cross-machine-sync.md    # Sync patterns
-│   └── ai-data-extraction.md    # Extraction techniques
+│   ├── ai-data-extraction.md    # Extraction techniques
+│   └── personal-communication.md # Communication patterns
+│
+├── connections/                 # Personal connections registry
+│   ├── README.md                # Index and guidelines
+│   └── <person>.md              # Individual profiles
 │
 └── docs/                        # Documentation
     ├── WINDOWS-SETUP.md         # Windows guide
@@ -499,4 +546,4 @@ sqlite3 ~/.local/state/warp-terminal/warp.sqlite \
 
 *This file is automatically loaded by Claude Code. Update it whenever you discover new solutions!*
 
-*Last session: 2026-01-17 - Jarvis Mode setup (--dangerously-skip-permissions with PowerShell alias)*
+*Last session: 2026-01-17 - Personal communication assistance and connections registry*
