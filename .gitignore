@@ -4,6 +4,9 @@
 CLAUDE.local.md
 .claude/*.local.*
 
+# Exception: hookify rules ARE meant to sync
+!hookify-rules/*.local.md
+
 # OS files
 .DS_Store
 Thumbs.db
