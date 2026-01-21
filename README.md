@@ -30,7 +30,7 @@ This repository aggregates and syncs **all AI-generated intelligence** from mult
 |---------|-----|--------|----------|
 | **MacBook Air** (Main) | Arch Linux | ✅ Configured | `macbook-air` |
 | **Linux Notebook 2** | Linux | 📋 Pending | - |
-| **Windows Desktop** | Windows 11 | 📋 Pending | - |
+| **Windows Desktop** | Windows 11 | ✅ Configured | `rober-pc` |
 
 ---
 
@@ -283,6 +283,6 @@ Personal use. This repository contains personal AI conversation history and mach
 
 **Sync your AI intelligence across all machines** 🧠
 
-*Last updated: 2026-01-17*
+*Last updated: 2026-01-21*
 
 </div>
