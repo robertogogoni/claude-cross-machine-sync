@@ -1,6 +1,6 @@
 # Claude Code Cross-Machine Setup
 
-**Last Updated**: 2026-01-17
+**Last Updated**: 2026-01-21
 **Machines**: MacBook Air (Main), Linux Notebook 2, Windows Desktop
 **Repository**: https://github.com/robertogogoni/claude-cross-machine-sync
 
@@ -32,6 +32,47 @@ This repository is a **comprehensive AI intelligence hub** that:
 ---
 
 ## Recent Solutions & Fixes
+
+### 2026-01-21: Claude in Chrome Extension Troubleshooting & Bug Report
+
+**Session Goal**: Fix "Chrome extension is not detected" warning at Claude Code startup
+
+**What We Accomplished**:
+
+#### 1. Fixed Extension Detection Cache
+- **Problem**: Claude Code showed "Chrome extension is not detected" every startup
+- **Root Cause**: Stale `cachedChromeExtensionInstalled: false` in `~/.claude.json`
+- **Fix**: Changed to `cachedChromeExtensionInstalled: true`
+- **Why it happens**: Claude Code caches detection to speed startup; cache becomes stale after updates
+
+#### 2. Discovered & Reported Navigate Tool Bug
+- **Problem**: `mcp__claude-in-chrome__navigate` corrupts special URL schemes
+- **Example**: `chrome://extensions` becomes `https://chrome//extensions` (malformed)
+- **Also affected**: `about:blank` returns "Invalid URL" error
+- **Root Cause**: Tool prepends `https://` without recognizing `chrome://`, `about://`, etc.
+- **Bug Report**: https://github.com/anthropics/claude-code/issues/19911
+
+#### 3. Documented Multi-Browser Consideration
+- Extension installed ONLY in Chrome Canary
+- Native messaging hosts configured in ALL browsers (Chrome, Canary, Chromium)
+- This mismatch can cause detection failures
+
+#### 4. Created Comprehensive Documentation
+- **Location**: `learnings/chrome-extension-troubleshooting.md`
+- **Content**: CLI flags, key settings, native messaging setup, diagnostic commands
+- **Also in**: `~/repos/robertogogoni/notes/claude-code/` (personal repo)
+
+**Key Learnings**:
+- `--chrome` / `--no-chrome` CLI flags control integration
+- `~/.claude.json` contains critical cache values
+- Native host at `~/.claude/chrome/chrome-native-host`
+- Extension ID: `fcoeoabgfenejglbffodgkkbkcdhcgfn`
+
+**Resources**:
+- [Bug #19911](https://github.com/anthropics/claude-code/issues/19911) - Navigate URL corruption
+- [Chrome Extension Troubleshooting](learnings/chrome-extension-troubleshooting.md)
+
+---
 
 ### 2026-01-17: Personal Communication System & Connections Registry
 
