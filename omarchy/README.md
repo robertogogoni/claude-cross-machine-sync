@@ -2,6 +2,29 @@
 
 Machine-aware configuration sync for [Omarchy](https://github.com/omarchy/omarchy) (Hyprland-based Linux desktop).
 
+## Quick Start (New Machine)
+
+```bash
+# Clone and setup in one command
+git clone https://github.com/robertogogoni/claude-cross-machine-sync.git ~/claude-cross-machine-sync
+~/claude-cross-machine-sync/omarchy/setup.sh
+```
+
+That's it! The setup script will:
+1. ✅ Check dependencies (install `inotify-tools` if needed)
+2. ✅ Create machine-specific config from your current setup
+3. ✅ Install and enable the auto-sync daemon
+4. ✅ Deploy universal configs
+5. ✅ Sync your configs to the repo
+
+### Setup Options
+
+```bash
+./setup.sh              # Interactive setup (recommended)
+./setup.sh --auto       # Non-interactive (use defaults)
+./setup.sh --uninstall  # Remove daemon and service
+```
+
 ## Structure
 
 ```
