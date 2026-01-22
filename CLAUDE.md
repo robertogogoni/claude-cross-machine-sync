@@ -89,6 +89,36 @@ Place changes here if they involve:
 - **Machine config**: `omarchy/machines/macbook-air/`
 - **Hardware**: Apple MacBookAir7,2, Intel HD 6000, Force Touch trackpad
 
+### Auto-Sync Daemon
+
+The **omarchy-sync daemon** automatically syncs changes bidirectionally:
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  ~/.config/     │────▶│  Git Repo       │────▶│  Other Machines │
+│  (system)       │◀────│  (sync)         │◀────│  (pull/deploy)  │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+```
+
+**Start daemon**: `systemctl --user start omarchy-sync`
+**Enable on boot**: `systemctl --user enable omarchy-sync`
+**Check status**: `systemctl --user status omarchy-sync`
+**View logs**: `tail -f ~/.local/state/omarchy-sync.log`
+
+**What it does**:
+1. Watches `~/.config/hypr`, `waybar`, terminals for file changes
+2. Auto-categorizes changes (machine-specific vs universal)
+3. Commits and pushes to git repo
+4. Every 5 minutes, checks for updates from other machines
+5. Auto-deploys incoming changes and reloads Hyprland
+
+### Claude Code Integration
+
+When I (Claude) modify omarchy configs:
+1. I make the change to `~/.config/` directly (for immediate effect)
+2. The daemon detects the change and syncs to repo
+3. OR I can manually run `./omarchy/sync-to-repo.sh --commit --push`
+
 ---
 
 ## Recent Solutions & Fixes

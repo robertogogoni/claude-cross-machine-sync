@@ -91,6 +91,40 @@ The deploy script creates/updates:
 - `~/.config/waybar/*` - From universal
 - `~/.config/*/` - Terminal, walker configs
 
+## Auto-Sync Daemon
+
+The `omarchy-sync-daemon.sh` provides automatic bidirectional sync:
+
+### Features
+- **Watches** `~/.config/hypr`, `waybar`, terminals for changes
+- **Auto-categorizes** changes as machine-specific or universal
+- **Commits & pushes** changes to git automatically
+- **Pulls & deploys** changes from other machines (every 5 min)
+- **Reloads Hyprland** when changes are deployed
+
+### Usage
+
+```bash
+# Manual control
+./omarchy-sync-daemon.sh           # Run in foreground
+./omarchy-sync-daemon.sh --bg      # Run in background
+./omarchy-sync-daemon.sh --stop    # Stop daemon
+./omarchy-sync-daemon.sh --status  # Check status
+
+# Systemd service (recommended)
+systemctl --user enable omarchy-sync   # Enable on boot
+systemctl --user start omarchy-sync    # Start now
+systemctl --user status omarchy-sync   # Check status
+journalctl --user -u omarchy-sync -f   # View logs
+```
+
+### Log File
+
+Logs are written to: `~/.local/state/omarchy-sync.log`
+
 ## Claude Code Integration
 
-When Claude Code modifies omarchy configs, it follows the auto-categorization rules in `CLAUDE.md` to automatically place changes in the correct location (universal vs machine-specific).
+When Claude Code modifies omarchy configs:
+1. Changes can be made directly to `~/.config/` for immediate effect
+2. The daemon auto-syncs to the repo with proper categorization
+3. Or Claude can manually run `./sync-to-repo.sh --commit --push`
