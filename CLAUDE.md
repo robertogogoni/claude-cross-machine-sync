@@ -74,6 +74,57 @@ This repository is a **comprehensive AI intelligence hub** that:
 
 ---
 
+### 2026-01-21: Self-Hosted GitHub Profile Widgets (Vercel)
+
+**Session Goal**: Set up self-hosted GitHub stats widgets to include private repository data
+
+**What We Accomplished**:
+
+#### 1. Deployed github-readme-stats to Vercel
+- **URL**: `github-readme-stats-zeta-blush-29.vercel.app`
+- **PAT**: Added as `PAT_1` environment variable
+- **Benefit**: Stats now include private repo commits, stars, PRs
+
+#### 2. Deployed github-readme-activity-graph to Vercel
+- **URL**: `github-readme-activity-graph-sage.vercel.app`
+- **PAT**: Added as `TOKEN` environment variable
+- **Benefit**: Activity graph shows all contributions including private
+
+#### 3. Discovered PHP Limitation for Streak Stats
+- `github-readme-streak-stats` is a **PHP/Heroku project**
+- Not compatible with Vercel (Node.js serverless only)
+- **Solution**: Use public instance `streak-stats.demolab.com` (streak data is public anyway)
+
+#### 4. Updated GitHub Profile README
+- All widgets use `tokyonight` theme for consistency
+- Added streak stats and activity graph widgets
+- Both self-hosted (private data) and public (streak) widgets
+
+#### 5. Updated Sync Repo Status
+- Windows Desktop: `📋 Pending` → `✅ Configured`
+
+**Vercel Deployment Process**:
+```bash
+# Clone, deploy, add PAT, redeploy
+git clone --depth 1 https://github.com/anuraghazra/github-readme-stats.git
+cd github-readme-stats
+vercel --yes
+printf "ghp_TOKEN" | vercel env add PAT_1 production
+vercel --prod --yes
+```
+
+**Key Learnings**:
+- Vercel CLI device auth flow for Wayland: `vercel login` → copy URL manually
+- PHP projects (Heroku buildpacks) won't work on Vercel
+- PAT needs `repo` + `user` scopes for private data
+- Different projects use different env var names (`PAT_1` vs `TOKEN`)
+
+**Resources**:
+- [Vercel GitHub Widgets Guide](learnings/vercel-github-widgets.md)
+- Personal profile: https://github.com/robertogogoni
+
+---
+
 ### 2026-01-17: Personal Communication System & Connections Registry
 
 **Session Goal**: Help elaborate a personal message and establish a system for future interactions
