@@ -31,6 +31,66 @@ This repository is a **comprehensive AI intelligence hub** that:
 
 ---
 
+## 🤖 Omarchy Auto-Categorization Rules
+
+**IMPORTANT FOR CLAUDE CODE**: When modifying omarchy/Hyprland configs, automatically categorize changes:
+
+### Machine-Specific → `omarchy/machines/<hostname>/`
+
+Place changes here if they involve:
+
+| Pattern | Examples | Reason |
+|---------|----------|--------|
+| `monitor =` | Resolution, scale, position | Hardware-dependent |
+| `device {` | Device names, sensitivity | Different hardware |
+| `touchpad {` | Scroll factor, tap-to-click | Device-specific |
+| `XF86Kbd*` | Keyboard backlight keys | MacBook-only |
+| `XF86Launch*` | Special function keys | Vendor-specific |
+| GPU performance | `blur`, `shadow`, `vfr` | Hardware capability |
+| Device names | `apple-inc.-*`, `logitech-*` | Hardware identifiers |
+| Battery/power | Lid actions, power profiles | Laptop-specific |
+
+**Detection keywords**:
+- Specific device names (e.g., `apple-inc.-apple-internal-keyboard`)
+- Monitor port names (e.g., `eDP-1`, `HDMI-A-1`)
+- Hardware-specific keys (e.g., `XF86KbdBrightness`)
+- Performance tuning for specific GPUs
+
+### Universal → `omarchy/universal/`
+
+Place changes here if they involve:
+
+| Pattern | Examples | Reason |
+|---------|----------|--------|
+| `bindd = SUPER` | App launchers, shortcuts | Same workflow everywhere |
+| `windowrulev2` | App workspace rules | Same apps |
+| `env =` (Wayland) | `XDG_*`, `QT_*`, `GDK_*` | Cross-platform |
+| Screenshot tools | `grim`, `slurp`, `swappy` | Same tools |
+| App configs | Terminal colors, fonts | Preferences |
+| Waybar modules | Clock, workspaces, tray | UI elements |
+
+**Detection keywords**:
+- Standard keybindings (`SUPER`, `CTRL`, `ALT`)
+- Application class names (e.g., `class:^(firefox)$`)
+- Environment variables for compatibility
+- Theme/styling properties
+
+### Categorization Workflow
+
+1. **Identify the change type**: Monitor? Input? Keybinding? Style?
+2. **Check for hardware references**: Device names? Port names? GPU-specific?
+3. **If hardware-specific** → Place in `omarchy/machines/$(hostname)/hypr/`
+4. **If generic/workflow** → Place in `omarchy/universal/hypr/`
+5. **After changes** → Run `omarchy/deploy.sh` to apply
+
+### Current Machine
+
+- **Hostname**: `macbook-air`
+- **Machine config**: `omarchy/machines/macbook-air/`
+- **Hardware**: Apple MacBookAir7,2, Intel HD 6000, Force Touch trackpad
+
+---
+
 ## Recent Solutions & Fixes
 
 ### 2026-01-21: Claude in Chrome Extension Troubleshooting & Bug Report
