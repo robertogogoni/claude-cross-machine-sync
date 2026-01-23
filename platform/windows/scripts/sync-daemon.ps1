@@ -288,8 +288,9 @@ function Install-ScheduledTask {
         $scriptPath = "$RepoPath\platform\windows\scripts\sync-daemon.ps1"
     }
 
-    $action = New-ScheduledTaskAction -Execute "powershell.exe" `
-        -Argument "-WindowStyle Hidden -ExecutionPolicy Bypass -File `"$scriptPath`" -Mode Watch"
+    # Use conhost with /b flag for truly hidden execution
+    $action = New-ScheduledTaskAction -Execute "conhost.exe" `
+        -Argument "--headless powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -Mode Watch"
 
     $trigger = New-ScheduledTaskTrigger -AtLogOn
 
@@ -298,17 +299,22 @@ function Install-ScheduledTask {
         -DontStopIfGoingOnBatteries `
         -StartWhenAvailable `
         -RestartInterval (New-TimeSpan -Minutes 1) `
-        -RestartCount 3
+        -RestartCount 3 `
+        -Hidden
+
+    # Run with highest privileges but hidden
+    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -RunLevel Limited -LogonType Interactive
 
     Register-ScheduledTask -TaskName $script:TaskName `
         -Action $action `
         -Trigger $trigger `
         -Settings $settings `
-        -Description "Machine Sync Daemon - Auto-syncs configurations across machines" `
+        -Principal $principal `
+        -Description "Machine Sync Daemon - Auto-syncs configurations across machines (hidden)" `
         -Force
 
-    Write-Host "Task '$script:TaskName' installed successfully" -ForegroundColor Green
-    Write-Host "The daemon will start automatically at logon." -ForegroundColor Cyan
+    Write-Host "Task '$script:TaskName' installed successfully (hidden mode)" -ForegroundColor Green
+    Write-Host "The daemon will start automatically at logon with no visible window." -ForegroundColor Cyan
 }
 
 function Uninstall-ScheduledTask {
