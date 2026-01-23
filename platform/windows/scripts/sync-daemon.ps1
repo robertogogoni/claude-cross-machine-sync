@@ -331,10 +331,10 @@ function Get-DaemonStatus {
 
     # Check lock file
     if (Test-Path $script:LockFile) {
-        $pid = Get-Content $script:LockFile
-        $proc = Get-Process -Id $pid -ErrorAction SilentlyContinue
+        $daemonPid = Get-Content $script:LockFile
+        $proc = Get-Process -Id $daemonPid -ErrorAction SilentlyContinue
         if ($proc) {
-            Write-Host "Daemon Process: Running (PID: $pid)" -ForegroundColor Green
+            Write-Host "Daemon Process: Running (PID: $daemonPid)" -ForegroundColor Green
         }
         else {
             Write-Host "Daemon Process: Stale lock file" -ForegroundColor Yellow
