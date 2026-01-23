@@ -1,0 +1,1 @@
+Warmup interaction with Claude Code assistant in read-only mode. No conversation content to summarize.

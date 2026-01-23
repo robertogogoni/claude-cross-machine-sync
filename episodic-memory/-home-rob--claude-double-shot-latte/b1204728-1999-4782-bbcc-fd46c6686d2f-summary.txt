@@ -1,0 +1,1 @@
+User has Beeper messaging app installed via AUR (v4.2.455-1) with an older AppImage also present in Downloads. Assistant diagnosed inconsistent update process and asked clarifying questions about update preferences (automatic vs manual vs notification-based) to determine best update strategy.

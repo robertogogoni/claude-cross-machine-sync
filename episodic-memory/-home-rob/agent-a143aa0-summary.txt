@@ -1,0 +1,1 @@
+No conversation occurred - user sent a warmup message to test system readiness.

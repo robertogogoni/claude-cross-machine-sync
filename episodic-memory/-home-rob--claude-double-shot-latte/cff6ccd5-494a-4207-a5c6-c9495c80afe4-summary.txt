@@ -1,0 +1,1 @@
+Designed a comprehensive bash script for automated Beeper updates with fallback strategies (paru → direct AppImage installation). Added features including check-only mode, auto-restart functionality, backup management, and desktop notifications. Script handles version comparison, patches AppImage for auto-update suppression, and manages multiple backups of previous installations.

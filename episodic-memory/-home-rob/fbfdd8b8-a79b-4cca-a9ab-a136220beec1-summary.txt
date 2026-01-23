@@ -1,0 +1,1 @@
+Researched Claude Code plugin marketplaces and identified the most popular community options: ananddtyagi/cc-marketplace (618 stars) and netresearch/claude-code-marketplace (13 stars). Provided commands to install these marketplaces using `/plugin marketplace add` commands, which enable browsing and installation of specialized plugins for Claude Code workflows.

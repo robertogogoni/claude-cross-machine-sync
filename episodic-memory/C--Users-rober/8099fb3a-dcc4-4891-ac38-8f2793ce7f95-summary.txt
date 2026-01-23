@@ -1,0 +1,1 @@
+User set up cross-machine Claude Code sync via GitHub repository (robertogogoni/claude-cross-machine-sync), installed GitHub CLI, enabled permissive mode with full system-wide permissions bypassing all authorization prompts, and configured Git LFS for episodic memory archival. Settings were synced across all machines via GitHub.

@@ -1,0 +1,9 @@
+**What's most important to you in a Claude Code TUI?** (Pick the one that resonates most)
+
+A) **Session management** - Easily start/stop/switch between multiple Claude instances
+B) **Visual status dashboard** - See what Claude is working on in real-time
+C) **Independent display** - Claude gets its own dedicated window/pane separate from my shell
+D) **Project switcher** - Quick switching between different coding projects with context preservation
+E) **Workflow automation** - Visual interface for running complex multi-step Claude tasks
+
+Or is there something else you're looking for that I haven't mentioned?

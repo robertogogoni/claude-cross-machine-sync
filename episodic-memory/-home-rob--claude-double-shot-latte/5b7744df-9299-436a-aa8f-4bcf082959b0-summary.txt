@@ -1,0 +1,1 @@
+User requested addition of their professional skills and social links to a portfolio/profile. Assistant identified tech stack from project work (Bash, Linux/Arch, Git, GitHub Actions, systemd, Hyprland) and gathered social media handles (LinkedIn: robertogogoni, X: ragogoni). Conversation paused while assistant awaits user choice on bio wording before finalizing profile creation.

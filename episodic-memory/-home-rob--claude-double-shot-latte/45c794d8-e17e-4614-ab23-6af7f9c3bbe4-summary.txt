@@ -1,0 +1,1 @@
+Modified the update-beeper bash script to remove the --restart flag documentation and update the usage message to indicate Beeper automatically restarts after updates. Successfully restarted Beeper 4.2.482 to apply changes. Task completed with all update tools (Bauh, AM, Topgrade) previously installed and configured, awaiting user feedback for additional adjustments.

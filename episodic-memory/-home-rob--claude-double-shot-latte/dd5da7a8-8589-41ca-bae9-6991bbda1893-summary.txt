@@ -1,0 +1,1 @@
+Removed stale Beeper OAuth entry from ~/.claude/.credentials.json credentials file to trigger fresh OAuth flow on next Claude Code session. Explained OAuth token expiration behavior and that Beeper requires periodic re-authentication unlike permanent GitHub PAT tokens.

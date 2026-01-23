@@ -1,0 +1,1 @@
+Built beeper-extended MCP plugin to extend Beeper API capabilities with four new tools: search_contacts, create_chat, download_asset, and unified_search. Plugin created at ~/beeper-extended with TypeScript source compiled to JavaScript bundle (703KB). All implementation tasks completed; plugin ready for activation after Claude Code restart.

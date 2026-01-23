@@ -1,0 +1,1 @@
+Updated Beeper updater script to open the desktop-specific changelog at beeper.com/changelog/desktop instead of the general changelog URL. Modified the CHANGELOG_URL constant in /home/rob/bin/update-beeper and verified the change works correctly with a test run.

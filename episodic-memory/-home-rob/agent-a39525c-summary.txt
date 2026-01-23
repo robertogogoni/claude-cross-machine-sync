@@ -1,0 +1,1 @@
+Warmup interaction. Claude Code initialized in read-only mode with capability to explore codebases, analyze code patterns, and design implementation plans, but unable to modify files or run state-changing commands.

@@ -1,0 +1,1 @@
+Warmup message confirming readiness to help with codebase exploration and implementation planning in read-only mode.

@@ -1,0 +1,1 @@
+No conversation content to summarize. User sent "Warmup" as a test message, which is a common way to verify the assistant is ready and functioning.

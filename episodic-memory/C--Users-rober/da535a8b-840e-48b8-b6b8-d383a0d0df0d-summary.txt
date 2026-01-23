@@ -1,0 +1,8 @@
+I appreciate you providing context, but I notice you've shared a file path rather than a conversation to summarize.
+
+To help you create a summary, I need the actual conversation content. Could you please provide:
+
+1. **The conversation history** - the messages between you and Claude about what was built/changed/discussed
+2. **Or the conversation ID** - if this is from a previous Claude conversation
+
+Once you share the conversation content, I'll write a concise 2-4 sentence summary following your guidelines (specific technical details, key decisions, problems solved, no meta-commentary).

@@ -1,0 +1,1 @@
+User asked for on-demand commands to update Beeper and topgrade, shifting from the originally discussed scheduled automation approach. Assistant confirmed the new requirements (manual trigger commands) and is awaiting user confirmation before proceeding with implementation.

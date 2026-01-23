@@ -1,0 +1,1 @@
+Warmup conversation - Claude Code CLI assistant ready for file search and code exploration tasks in read-only mode.

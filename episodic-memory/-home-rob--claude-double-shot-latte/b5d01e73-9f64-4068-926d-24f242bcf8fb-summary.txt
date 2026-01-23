@@ -1,0 +1,1 @@
+Built and deployed Beeper Extended MCP server with four new tools (search_contacts, create_chat, download_asset, unified_search). Successfully compiled TypeScript to dist/index.js (703.6KB) and verified server startup. Requires Claude Code restart to load the new MCP plugin and test the tools.

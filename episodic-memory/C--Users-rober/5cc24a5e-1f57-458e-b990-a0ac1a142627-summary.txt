@@ -1,0 +1,1 @@
+User inquired about Claude Code nightly/beta versions and switched to the "latest" release channel from "stable". Explained that Claude Code uses a two-channel update system (latest vs stable) rather than traditional nightly builds, with latest providing cutting-edge features ~1 week ahead of stable.

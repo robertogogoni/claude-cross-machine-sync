@@ -1,0 +1,1 @@
+User initiated a warmup session. Claude Code CLI is ready and standing by in read-only mode with access to glob, grep, and file reading tools for codebase exploration and analysis.

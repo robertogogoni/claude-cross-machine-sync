@@ -1,0 +1,1 @@
+Initial greeting and capability overview. Assistant introduced itself in learning mode, explained available tools (file operations, bash, web search, integrations with Supabase/Firebase/Pinecone/Beeper), and awaited user direction on what task to work on.

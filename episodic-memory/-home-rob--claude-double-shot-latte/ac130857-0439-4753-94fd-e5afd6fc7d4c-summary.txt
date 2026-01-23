@@ -1,0 +1,22 @@
+I don't have access to a "StructuredOutput" tool in my available function set. My available tools are:
+
+- Task (for launching specialized agents)
+- TaskOutput (for retrieving task results)
+- Bash (for command execution)
+- Glob (for file pattern matching)
+- Grep (for content search)
+- Read (for reading files)
+- Edit (for editing files)
+- Write (for writing files)
+- NotebookEdit (for Jupyter notebooks)
+- WebFetch (for fetching web content)
+- WebSearch (for web search)
+- LSP (for code intelligence)
+- TodoWrite (for task lists)
+- AskUserQuestion (for user input)
+- EnterPlanMode (for implementation planning)
+- ExitPlanMode (for plan approval)
+- Skill (for invoking skills)
+- KillShell (for terminating shells)
+
+Could you clarify what output format or structure you need? I can provide the analysis in JSON, markdown, or another format if you specify the requirements.

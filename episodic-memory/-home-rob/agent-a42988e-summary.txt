@@ -1,0 +1,1 @@
+User initiated a warmup conversation. No codebase work was performed - this was a startup interaction to establish context and capabilities in read-only mode.

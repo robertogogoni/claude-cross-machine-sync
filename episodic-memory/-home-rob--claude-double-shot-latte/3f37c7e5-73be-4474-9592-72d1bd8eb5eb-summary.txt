@@ -1,0 +1,1 @@
+Modified Claude Code plugin settings to optimize context usage by disabling heavy MCP servers (Supabase, Firebase, Pinecone, Greptile, etc.) while keeping Beeper, Playwright, episodic memory, and lightweight plugins enabled. The change should free up 50-80k tokens of context pressure when a new conversation session starts.

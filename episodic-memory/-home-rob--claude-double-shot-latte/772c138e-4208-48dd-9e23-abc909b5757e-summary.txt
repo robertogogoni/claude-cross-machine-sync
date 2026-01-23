@@ -1,0 +1,1 @@
+Automated Beeper update checker setup using systemd timer and custom scripts. Created ~/bin/update-beeper script, installed Bauh and AM AppImage managers, and enabled daily systemd timer that triggers at midnight. Currently paused awaiting user decision on topgrade integration (install now, create config for later, or skip).

@@ -1,0 +1,1 @@
+User ran local CLI commands to set up MCP connections (Beeper, Firebase, Supabase) and accessed the search-conversations skill. The assistant acknowledged the setup and offered help with software engineering tasks. No actual work was performed or requested.

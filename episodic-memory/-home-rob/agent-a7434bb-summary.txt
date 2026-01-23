@@ -1,0 +1,1 @@
+Warmup conversation with Claude Code in read-only planning mode. Claude introduced its capabilities for codebase exploration, analysis, and implementation planning, along with limitations in read-only mode (no file modifications, package installations, or state-changing commands).

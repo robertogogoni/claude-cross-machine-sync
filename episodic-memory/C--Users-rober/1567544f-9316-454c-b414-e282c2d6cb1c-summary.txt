@@ -1,0 +1,1 @@
+User installed the standalone Claude Code version on Windows by uninstalling the npm-installed version (v2.1.13) and installing the Anthropic.ClaudeCode package via winget (v2.1.14). Verified successful installation. Explained that the standalone version provides auto-updates and eliminates Node.js dependency, with settings preserved in ~/.claude/.

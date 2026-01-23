@@ -1,0 +1,23 @@
+I don't have a "StructuredOutput" tool available in my tools. Looking at my available tools, I have:
+- Task
+- TaskOutput
+- Bash
+- Glob
+- Grep
+- ExitPlanMode
+- Read
+- Edit
+- Write
+- NotebookEdit
+- WebFetch
+- WebSearch
+- KillShell
+- TodoWrite
+- AskUserQuestion
+- Skill
+- EnterPlanMode
+- LSP
+
+The structured output I provided in my previous response was formatted as a code block, not via a tool call. 
+
+Could you clarify what you need? If there's a specific tool or format you'd like me to use for the analysis, please let me know and I'll be happy to assist.

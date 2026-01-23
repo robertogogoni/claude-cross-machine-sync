@@ -1,0 +1,5 @@
+I don't have access to a "StructuredOutput" tool in my available toolset. Looking at my available tools, I have:
+
+- Task, TaskOutput, Bash, Glob, Grep, Read, Edit, Write, NotebookEdit, WebFetch, WebSearch, KillShell, TodoWrite, AskUserQuestion, Skill, EnterPlanMode, ExitPlanMode, LSP
+
+Could you clarify what you'd like me to output, or provide the correct tool name? I'm happy to help format the response appropriately once I understand the exact requirement.

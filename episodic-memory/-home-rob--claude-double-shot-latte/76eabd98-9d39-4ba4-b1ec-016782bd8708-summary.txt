@@ -1,0 +1,22 @@
+I don't see a "StructuredOutput" tool available in my tool set. The available tools I have are:
+
+- Task
+- TaskOutput
+- Bash
+- Glob
+- Grep
+- ExitPlanMode
+- Read
+- Edit
+- Write
+- NotebookEdit
+- WebFetch
+- TodoWrite
+- WebSearch
+- KillShell
+- LSP
+- EnterPlanMode
+- AskUserQuestion
+- Skill
+
+Could you clarify what the StructuredOutput tool is or provide me with access to it? Alternatively, if this is a custom tool or format you'd like me to use, please provide the specification and I'll be happy to use it correctly.

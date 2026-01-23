@@ -1,0 +1,1 @@
+User initiated a warmup message. Claude Code confirmed readiness in read-only planning mode with capabilities for codebase exploration, analysis, and implementation design, but without file modification permissions.

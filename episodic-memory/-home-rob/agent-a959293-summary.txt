@@ -1,0 +1,1 @@
+Identified incorrect slash command syntax for plugin installation in Claude Code. User was attempting `/plugin install superpowers@superpowers-marketplace` but needed to first add the marketplace and restart Claude Code. Provided correct command sequences for adding marketplaces and installing plugins with optional scope specifications (user/project/local).

@@ -1,0 +1,1 @@
+Researched Beeper installation and update options on Arch Linux. Discovered Beeper is not in AM's database, so proposed a revised plan: use Bauh for AUR package management with GUI notifications, AM CLI for future AppImage use, and a custom `update-beeper` script with fallback logic. Currently awaiting user confirmation on the component list before implementation begins.

@@ -1,0 +1,1 @@
+Warmup conversation - Claude Code initialized in READ-ONLY planning mode with capabilities to explore codebases, analyze patterns, and design implementation plans without file modification abilities.

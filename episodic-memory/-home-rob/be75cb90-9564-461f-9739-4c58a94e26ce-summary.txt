@@ -1,0 +1,11 @@
+I see the issue now - we're on a Windows system (`/c/Users/rober`), but Hyprland is a Linux-only window manager. 
+
+**Can you clarify:**
+
+1. Are you running **Hyprland in WSL2** (Windows Subsystem for Linux)?
+2. Or in a **Linux virtual machine**?
+3. Or on a **separate Linux partition/machine** via SSH?
+
+Once I understand your actual setup, I can properly investigate and fix the screensaver issue. The changes I suggested earlier wouldn't apply to a Windows filesystem.
+
+What's your Hyprland setup?

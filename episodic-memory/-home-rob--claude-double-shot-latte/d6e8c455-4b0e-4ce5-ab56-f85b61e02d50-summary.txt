@@ -1,0 +1,1 @@
+User reported that plugins are failing to start in Claude Code. Assistant asked clarifying questions to diagnose the issue, requesting specific information about which plugins are failing, error messages, and requesting output from the `/mcp` command to assess plugin/MCP server status.

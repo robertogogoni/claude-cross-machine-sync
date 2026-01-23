@@ -1,0 +1,1 @@
+User upgraded Claude Code from winget version 2.1.14 to npm version 2.1.17 due to winget package lag. The system was running Claude Code at the time, so upgrade required closing the application first and running uninstall/reinstall commands via PowerShell. The conversation then introduced the brainstorming skill for turning ideas into designs through collaborative dialogue.

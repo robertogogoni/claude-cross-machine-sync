@@ -1,0 +1,1 @@
+Warmup message confirming Claude Code initialization in read-only mode with ability to explore codebases, analyze patterns, and design implementation plans.

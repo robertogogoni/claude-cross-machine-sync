@@ -1,0 +1,1 @@
+Removed GitHub streak visualization from robertogogoni's profile README by deleting the streak-stats.demolab.com embed section. Edited the file, committed changes with message "Remove GitHub streak section", and pushed to main branch successfully. Profile now displays header, bio, tech stack, stats card, top languages, and featured project without the streak tracker.

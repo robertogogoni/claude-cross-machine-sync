@@ -1,0 +1,1 @@
+User referenced a Git plugin directory path that doesn't exist in standard Git for Windows installations. Explained that Git for Windows lacks a central plugin directory and clarified where Git extensions, hooks, and helpers are actually located in the filesystem.

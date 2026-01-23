@@ -1,0 +1,1 @@
+User initiated a warmup session. Claude Code CLI confirmed readiness with file search, regex grep, and content analysis capabilities in read-only mode.

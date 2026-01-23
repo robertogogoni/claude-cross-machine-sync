@@ -1,0 +1,1 @@
+Warmup conversation. Claude Code agent introduced with capabilities: can explore codebases and design implementation plans using read-only tools, but cannot modify files or run state-changing commands.

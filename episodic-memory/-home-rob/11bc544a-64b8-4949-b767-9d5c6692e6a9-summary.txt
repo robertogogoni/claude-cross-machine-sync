@@ -1,0 +1,1 @@
+Added and configured Beeper MCP server to Claude Code using HTTP transport with bearer token authentication. Fixed connection issues by correcting the server URL from 0.0.0.0 to localhost and adding required Accept headers. Verified successful integration with message fetching confirmed across 5+ connected chats.

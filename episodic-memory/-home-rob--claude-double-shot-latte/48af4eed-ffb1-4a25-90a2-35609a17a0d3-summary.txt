@@ -1,0 +1,22 @@
+I understand you need me to use a specific tool, but I don't see a "StructuredOutput" tool in my available tools list. The tools I have access to are:
+
+- Task
+- TaskOutput
+- Bash
+- Glob
+- Grep
+- ExitPlanMode
+- Read
+- Edit
+- Write
+- NotebookEdit
+- WebFetch
+- WebSearch
+- KillShell
+- Skill
+- EnterPlanMode
+- LSP
+- AskUserQuestion
+- TodoWrite
+
+Could you clarify which tool I should use, or provide more details about what "StructuredOutput" refers to? That would help me complete your request correctly.

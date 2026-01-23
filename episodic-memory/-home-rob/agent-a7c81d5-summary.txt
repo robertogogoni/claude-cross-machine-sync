@@ -1,0 +1,1 @@
+Warmup message. Claude Code CLI initialized in read-only mode with search and exploration capabilities available.

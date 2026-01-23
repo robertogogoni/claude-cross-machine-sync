@@ -1,0 +1,3 @@
+Updated the README for the update-beeper project to document new features including the beeper-version script for checking version status, systemd timer setup for automatic updates, and improved installation instructions. The README now includes badges, a clearer feature list highlighting version status and auto-update capabilities, expanded usage examples demonstrating beeper-version output, and a dedicated systemd automation section.
+
+Subsequent attempts to continue work were blocked by repeated usage limit errors ("You're out of extra usage · resets 3am America/Sao_Paulo"), preventing completion of additional tasks related to stop hook feedback and StructuredOutput tool integration. No further development work was accomplished due to resource constraints.

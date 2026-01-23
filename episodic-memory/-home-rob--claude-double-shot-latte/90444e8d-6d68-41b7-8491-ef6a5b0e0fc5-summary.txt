@@ -1,0 +1,1 @@
+Discussed switching from fully automatic system updates to on-demand commands for updating Beeper and system packages. User confirmed preference for manual `update-beeper` command and `topgrade` installation. Assistant began presenting design for on-demand update script in ~/bin directory and is awaiting user approval before proceeding with implementation.

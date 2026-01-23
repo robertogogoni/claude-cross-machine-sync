@@ -1,0 +1,5 @@
+I don't have a StructuredOutput tool available in my function list. Looking at my available tools, I can see:
+
+- Task, TaskOutput, Bash, Glob, Grep, ExitPlanMode, Read, Edit, Write, NotebookEdit, WebFetch, WebSearch, KillShell, TodoWrite, AskUserQuestion, Skill, EnterPlanMode, LSP
+
+The tool you're referencing doesn't appear to be available to me. Could you clarify what output format you need? I can provide the analysis using the tools I have available, or if "StructuredOutput" is a specific tool that should be available, there may be a configuration issue.

@@ -1,0 +1,3 @@
+I'm ready for your request. I'm Claude Code operating as a file search and code analysis specialist with read-only capabilities. I can help you find files, search code, read contents, and explore codebases.
+
+What would you like me to do?
