@@ -247,7 +247,7 @@ function Start-WatchLoop {
 
     try {
         # Initial pull
-        Invoke-GitPull
+        Invoke-GitPull | Out-Null
 
         # Start file watcher
         $watcher = Start-FileWatcher
@@ -363,7 +363,7 @@ switch ($Mode) {
         Invoke-GitSync -PushChanges
     }
     "Pull" {
-        Invoke-GitPull
+        Invoke-GitPull | Out-Null
     }
     "Status" {
         Get-DaemonStatus
