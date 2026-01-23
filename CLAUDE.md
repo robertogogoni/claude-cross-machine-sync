@@ -1,17 +1,17 @@
 # Claude Code Cross-Machine Setup
 
-**Last Updated**: 2026-01-21
-**Machines**: MacBook Air (Main), Linux Notebook 2, Windows Desktop
+**Last Updated**: 2026-01-23
+**Machines**: Dell G15 (Windows), MacBook Air (Linux), Samsung Laptop (Linux)
 **Repository**: https://github.com/robertogogoni/claude-cross-machine-sync
 
 ## Machine Identification
 
 This repository syncs configuration across:
-- **MacBook Air** (Main) - Apple MacBookAir7,2 running Arch Linux (hostname: macbook-air)
-- **Linux Notebook 2** - To be configured
-- **Windows Desktop** - To be configured
+- **Dell G15 5530** (Windows 11) - Gaming laptop, hostname: Rob-Dell, user: rober
+- **MacBook Air** (Arch Linux/Omarchy) - hostname: macbook-air, user: rob
+- **Samsung Laptop** (Arch Linux/Omarchy) - hostname: samsung-arch, user: TBD (pending)
 
-See `.claude/machine-info.json` for detailed system configuration.
+See `machines/registry.yaml` for the complete machine ecosystem configuration.
 
 ## Purpose
 
@@ -31,97 +31,163 @@ This repository is a **comprehensive AI intelligence hub** that:
 
 ---
 
-## 🤖 Omarchy Auto-Categorization Rules
+## 🤖 Auto-Categorization System (v2.0)
 
-**IMPORTANT FOR CLAUDE CODE**: When modifying omarchy/Hyprland configs, automatically categorize changes:
+**NEW**: Comprehensive AI-driven auto-categorization for the entire machine ecosystem.
 
-### Machine-Specific → `omarchy/machines/<hostname>/`
-
-Place changes here if they involve:
-
-| Pattern | Examples | Reason |
-|---------|----------|--------|
-| `monitor =` | Resolution, scale, position | Hardware-dependent |
-| `device {` | Device names, sensitivity | Different hardware |
-| `touchpad {` | Scroll factor, tap-to-click | Device-specific |
-| `XF86Kbd*` | Keyboard backlight keys | MacBook-only |
-| `XF86Launch*` | Special function keys | Vendor-specific |
-| GPU performance | `blur`, `shadow`, `vfr` | Hardware capability |
-| Device names | `apple-inc.-*`, `logitech-*` | Hardware identifiers |
-| Battery/power | Lid actions, power profiles | Laptop-specific |
-
-**Detection keywords**:
-- Specific device names (e.g., `apple-inc.-apple-internal-keyboard`)
-- Monitor port names (e.g., `eDP-1`, `HDMI-A-1`)
-- Hardware-specific keys (e.g., `XF86KbdBrightness`)
-- Performance tuning for specific GPUs
-
-### Universal → `omarchy/universal/`
-
-Place changes here if they involve:
-
-| Pattern | Examples | Reason |
-|---------|----------|--------|
-| `bindd = SUPER` | App launchers, shortcuts | Same workflow everywhere |
-| `windowrulev2` | App workspace rules | Same apps |
-| `env =` (Wayland) | `XDG_*`, `QT_*`, `GDK_*` | Cross-platform |
-| Screenshot tools | `grim`, `slurp`, `swappy` | Same tools |
-| App configs | Terminal colors, fonts | Preferences |
-| Waybar modules | Clock, workspaces, tray | UI elements |
-
-**Detection keywords**:
-- Standard keybindings (`SUPER`, `CTRL`, `ALT`)
-- Application class names (e.g., `class:^(firefox)$`)
-- Environment variables for compatibility
-- Theme/styling properties
-
-### Categorization Workflow
-
-1. **Identify the change type**: Monitor? Input? Keybinding? Style?
-2. **Check for hardware references**: Device names? Port names? GPU-specific?
-3. **If hardware-specific** → Place in `omarchy/machines/$(hostname)/hypr/`
-4. **If generic/workflow** → Place in `omarchy/universal/hypr/`
-5. **After changes** → Run `omarchy/deploy.sh` to apply
-
-### Current Machine
-
-- **Hostname**: `macbook-air`
-- **Machine config**: `omarchy/machines/macbook-air/`
-- **Hardware**: Apple MacBookAir7,2, Intel HD 6000, Force Touch trackpad
-
-### Auto-Sync Daemon
-
-The **omarchy-sync daemon** automatically syncs changes bidirectionally:
+### Directory Structure
 
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  ~/.config/     │────▶│  Git Repo       │────▶│  Other Machines │
-│  (system)       │◀────│  (sync)         │◀────│  (pull/deploy)  │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
+machines/                      # Machine-specific configs
+├── registry.yaml              # Source of truth for all machines
+├── dell-g15/                  # Windows gaming laptop
+│   ├── machine.yaml           # Hardware specs
+│   ├── claude/                # Claude Code settings
+│   └── shell/                 # PowerShell configs
+├── macbook-air/               # Linux laptop
+│   ├── machine.yaml
+│   ├── claude/
+│   └── hypr/                  # Hyprland configs
+└── samsung-laptop/            # Linux laptop (pending)
+
+platform/                      # Platform-specific (all machines of type)
+├── windows/
+│   └── scripts/sync-daemon.ps1
+└── linux/
+    ├── scripts/sync-daemon.sh
+    └── omarchy/               # Hyprland universal configs
+
+universal/                     # Cross-platform (works everywhere)
+└── claude/
+    └── settings.json
 ```
 
-**Start daemon**: `systemctl --user start omarchy-sync`
-**Enable on boot**: `systemctl --user enable omarchy-sync`
-**Check status**: `systemctl --user status omarchy-sync`
-**View logs**: `tail -f ~/.local/state/omarchy-sync.log`
+### Commit Tag Conventions
 
-**What it does**:
-1. Watches `~/.config/hypr`, `waybar`, terminals for file changes
-2. Auto-categorizes changes (machine-specific vs universal)
-3. Commits and pushes to git repo
-4. Every 5 minutes, checks for updates from other machines
-5. Auto-deploys incoming changes and reloads Hyprland
+| Tag | Meaning | Example |
+|-----|---------|---------|
+| `[universal]` | Works on all machines | Settings, shared configs |
+| `[windows]` | Windows-specific | PowerShell scripts, .ps1 files |
+| `[linux]` | Linux-specific | Bash scripts, systemd, Hyprland |
+| `[machine:dell-g15]` | Specific machine only | GPU tweaks, monitor layout |
 
-### Claude Code Integration
+### Categorization Decision Tree
 
-When I (Claude) modify omarchy configs:
-1. I make the change to `~/.config/` directly (for immediate effect)
-2. The daemon detects the change and syncs to repo
-3. OR I can manually run `./omarchy/sync-to-repo.sh --commit --push`
+```
+Is it hardware-dependent (monitor, GPU, trackpad)?
+  └─YES→ [machine:<hostname>] → machines/<hostname>/
+
+Is it OS-specific (PowerShell vs Bash, systemd vs Task Scheduler)?
+  └─YES→ [windows] or [linux] → platform/<os>/
+
+Otherwise:
+  └─NO→ [universal] → universal/
+```
+
+### Background Sync Daemons
+
+**Windows (Task Scheduler)**:
+```powershell
+# Status
+.\platform\windows\scripts\sync-daemon.ps1 -Mode Status
+
+# Manual sync
+.\platform\windows\scripts\sync-daemon.ps1 -Mode SyncNow
+
+# Install/Uninstall
+.\platform\windows\scripts\sync-daemon.ps1 -Mode Install
+.\platform\windows\scripts\sync-daemon.ps1 -Mode Uninstall
+```
+
+**Linux (systemd)**:
+```bash
+# Status
+./platform/linux/scripts/sync-daemon.sh --status
+
+# Manual run
+./platform/linux/scripts/sync-daemon.sh
+
+# Install systemd service
+./platform/linux/scripts/sync-daemon.sh --install
+```
+
+### Bootstrap New Machine
+
+**One-command setup**:
+```bash
+# Windows (PowerShell)
+.\bootstrap.ps1
+
+# Linux
+./bootstrap.sh
+```
+
+Bootstrap automatically:
+1. Detects hardware (vendor, model, CPU, GPU, RAM)
+2. Registers machine in `machines/registry.yaml`
+3. Creates machine-specific directory
+4. Installs sync daemon
+5. Deploys configs
+6. Commits and pushes to git
+
+### Current Machine Status
+
+| Machine | Hostname | Platform | Daemon | Status |
+|---------|----------|----------|--------|--------|
+| Dell G15 5530 | Rob-Dell | Windows 11 | Running | ✅ Active |
+| MacBook Air | macbook-air | Arch Linux | Pending | ⏳ Migration |
+| Samsung Laptop | samsung-arch | Arch Linux | Pending | ⏳ Setup |
 
 ---
 
 ## Recent Solutions & Fixes
+
+### 2026-01-23: Machine Sync Auto-Categorization System
+
+**Session Goal**: Build comprehensive AI-driven auto-categorization for multi-machine ecosystem
+
+**What We Accomplished**:
+
+#### 1. Designed 3-Layer Architecture
+- **Claude AI Layer**: Intelligent categorization decisions
+- **Directory Structure Layer**: Physical organization
+- **Git Conventions Layer**: Searchable commit history with tags
+
+#### 2. Created Machine Registry
+- **Location**: `machines/registry.yaml`
+- **Purpose**: Single source of truth for all machines
+- **Contains**: Hardware specs, hostnames, platforms, status
+
+#### 3. Built Background Sync Daemons
+- **Windows**: PowerShell with FileSystemWatcher + Task Scheduler
+- **Linux**: Bash with inotifywait + systemd user service
+- **Features**: Debouncing, auto-categorization, push/pull sync
+
+#### 4. One-Command Bootstrap
+- `bootstrap.ps1` for Windows
+- `bootstrap.sh` for Linux
+- Auto-detects hardware, registers machine, installs daemon
+
+#### 5. Migrated Legacy Structure
+- `omarchy/machines/` → `machines/`
+- `omarchy/universal/` → `platform/linux/omarchy/`
+- Fixed broken symlinks
+
+**Key Learnings**:
+- FileSystemWatcher in PowerShell for real-time file monitoring
+- `$pid` is reserved in PowerShell (use `$daemonPid` instead)
+- inotifywait for Linux file watching
+- Git commit tags enable powerful `git log --grep` searches
+
+**Files Created**:
+- `machines/registry.yaml` - Machine ecosystem definition
+- `machines/dell-g15/machine.yaml` - Hardware specs
+- `platform/windows/scripts/sync-daemon.ps1` - Windows daemon
+- `platform/linux/scripts/sync-daemon.sh` - Linux daemon
+- `bootstrap.ps1` and `bootstrap.sh` - Setup scripts
+- `docs/plans/2026-01-23-machine-sync-auto-categorization-design.md`
+
+---
 
 ### 2026-01-21: Claude in Chrome Extension Troubleshooting & Bug Report
 
@@ -619,9 +685,36 @@ git push
 ├── CLAUDE.md                    # This file (project memory)
 ├── README.md                    # Repository documentation
 ├── .gitattributes               # Git LFS configuration
+├── bootstrap.ps1                # Windows one-command setup
+├── bootstrap.sh                 # Linux one-command setup
+│
+├── machines/                    # Machine-specific configurations
+│   ├── registry.yaml            # Source of truth for all machines
+│   ├── dell-g15/                # Windows gaming laptop
+│   │   ├── machine.yaml         # Hardware specs
+│   │   ├── claude/              # Claude Code settings
+│   │   └── shell/               # PowerShell configs
+│   ├── macbook-air/             # Linux laptop
+│   │   ├── machine.yaml
+│   │   ├── claude/
+│   │   └── hypr/                # Hyprland configs
+│   └── samsung-laptop/          # Linux laptop (pending)
+│
+├── platform/                    # Platform-specific (OS level)
+│   ├── windows/
+│   │   └── scripts/
+│   │       └── sync-daemon.ps1  # Windows sync daemon
+│   └── linux/
+│       ├── scripts/
+│       │   └── sync-daemon.sh   # Linux sync daemon
+│       └── omarchy/             # Universal Hyprland configs
+│
+├── universal/                   # Cross-platform configs
+│   └── claude/
+│       └── settings.json        # Shared Claude settings
 │
 ├── .claude/                     # Claude Code configuration
-│   ├── settings.json            # Shared settings
+│   ├── settings.json            # Project settings
 │   └── machine-info.json        # Machine identification
 │
 ├── skills/                      # Custom Claude Code skills
@@ -631,41 +724,28 @@ git push
 │
 ├── episodic-memory/             # Conversation archive (Git LFS)
 │   ├── -home-rob/               # JSONL conversation files
-│   ├── conversation-index/      # Search index
-│   └── learnings/               # Extracted learnings
+│   └── conversation-index/      # Search index
 │
 ├── warp-ai/                     # Warp Terminal AI history
 │   ├── queries/                 # AI queries (CSV)
 │   ├── agents/                  # Agent conversations (JSON)
-│   ├── preview-queries/         # Warp Preview queries
-│   ├── preview-agents/          # Warp Preview agents
 │   └── INDEX.md                 # Documentation
 │
-├── antigravity-history/         # Antigravity/Gemini recovery
-│   ├── gemini-brain/            # 15 task sessions
-│   └── INDEX.md                 # Session index
-│
 ├── learnings/                   # AI-generated knowledge
+│   ├── machine-sync-patterns.md # Sync daemon & categorization
+│   ├── cross-machine-sync.md    # General sync patterns
 │   ├── bash-patterns.md         # Shell patterns
-│   ├── beeper.md                # Beeper insights
-│   ├── claude-code-permissions.md # Permission modes & yolo mode
-│   ├── electron-wayland.md      # Electron fixes
-│   ├── cross-machine-sync.md    # Sync patterns
-│   ├── ai-data-extraction.md    # Extraction techniques
-│   └── personal-communication.md # Communication patterns
+│   ├── claude-code-permissions.md # Permission modes
+│   └── ...                      # Other learnings
 │
 ├── connections/                 # Personal connections registry
-│   ├── README.md                # Index and guidelines
 │   └── <person>.md              # Individual profiles
 │
 └── docs/                        # Documentation
     ├── WINDOWS-SETUP.md         # Windows guide
-    ├── ssh-setup.md             # SSH configuration
-    ├── guides/                  # Hardware/software guides
-    ├── system/                  # System reports
-    ├── beeper/                  # Beeper docs
-    ├── plans/                   # Development plans
-    └── obra-superpowers/        # Plugin docs
+    ├── plans/                   # Design documents
+    │   └── 2026-01-23-machine-sync-auto-categorization-design.md
+    └── ...                      # Other docs
 ```
 
 ---
@@ -706,14 +786,22 @@ sqlite3 ~/.local/state/warp-terminal/warp.sqlite \
 
 ## Checklist: New Machine Setup
 
+**Automated (recommended)**:
+```bash
+# Windows
+.\bootstrap.ps1
+
+# Linux
+./bootstrap.sh
+```
+
+**Manual Setup**:
 - [ ] Install Git and Git LFS
-- [ ] Clone repository
-- [ ] Copy settings to `~/.claude/`
-- [ ] Copy skills to `~/.claude/skills/`
+- [ ] Clone: `git clone https://github.com/robertogogoni/claude-cross-machine-sync.git`
+- [ ] Run bootstrap script (auto-detects hardware)
+- [ ] Verify daemon running: `sync-daemon.ps1 -Mode Status` or `sync-daemon.sh --status`
 - [ ] Install Claude Code plugins
-- [ ] Test episodic memory search
-- [ ] Update machine-info.json
-- [ ] Commit and push
+- [ ] Test with a small config change (should auto-sync)
 
 ---
 
@@ -728,4 +816,4 @@ sqlite3 ~/.local/state/warp-terminal/warp.sqlite \
 
 *This file is automatically loaded by Claude Code. Update it whenever you discover new solutions!*
 
-*Last session: 2026-01-17 - Personal communication assistance and connections registry*
+*Last session: 2026-01-23 - Machine Sync Auto-Categorization System v2.0*
