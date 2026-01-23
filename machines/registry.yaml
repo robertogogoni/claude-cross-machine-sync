@@ -1,0 +1,112 @@
+# Machine Registry - Source of truth for the ecosystem
+# Claude Code reads this at session start to understand context
+#
+# Usage:
+#   - Add new machines by creating an entry here
+#   - Run bootstrap script to auto-populate hardware details
+#   - Status: active | pending | retired
+
+machines:
+  dell-g15:
+    hostname: Rob-Dell
+    platform: windows
+    os: Windows 11
+    hardware:
+      vendor: Dell Inc.
+      model: Dell G15 5530
+      type: desktop
+      cpu: Intel Core (TBD)
+      gpu: NVIDIA (TBD)
+    status: active
+    primary_user: rober
+    config_paths:
+      home: "C:\\Users\\rober"
+      claude: "C:\\Users\\rober\\.claude"
+      sync_repo: "C:\\Users\\rober\\claude-cross-machine-sync"
+
+  macbook-air:
+    hostname: macbook-air
+    platform: linux
+    os: Arch Linux
+    desktop: omarchy
+    hardware:
+      vendor: Apple Inc.
+      model: MacBookAir7,2
+      type: laptop
+      cpu: Intel Core i5-5250U
+      gpu: Intel HD Graphics 6000
+    status: active
+    primary_user: rob
+    config_paths:
+      home: "/home/rob"
+      claude: "/home/rob/.claude"
+      sync_repo: "/home/rob/claude-cross-machine-sync"
+      hypr: "/home/rob/.config/hypr"
+
+  samsung-laptop:
+    hostname: samsung-arch
+    platform: linux
+    os: Arch Linux
+    desktop: omarchy
+    hardware:
+      vendor: Samsung
+      model: TBD
+      type: laptop
+    status: pending
+    primary_user: rob
+    config_paths:
+      home: "/home/rob"
+      claude: "/home/rob/.claude"
+      sync_repo: "/home/rob/claude-cross-machine-sync"
+      hypr: "/home/rob/.config/hypr"
+
+# Platform definitions
+platforms:
+  windows:
+    machines:
+      - dell-g15
+    shell: powershell
+    path_separator: "\\"
+    line_ending: crlf
+    sync_daemon: Task Scheduler
+
+  linux:
+    machines:
+      - macbook-air
+      - samsung-laptop
+    shell: bash
+    path_separator: "/"
+    line_ending: lf
+    sync_daemon: systemd
+
+# Categorization rules for Claude Code
+categorization:
+  # Files matching these patterns go to machines/{hostname}/
+  machine_specific_patterns:
+    - "monitor"
+    - "display"
+    - "gpu"
+    - "trackpad"
+    - "touchpad"
+    - "keyboard backlight"
+    - "device-specific"
+    - "hardware"
+
+  # Files matching these patterns go to platform/{os}/
+  platform_specific_patterns:
+    windows:
+      - ".ps1"
+      - "powershell"
+      - "registry"
+      - "task scheduler"
+      - "winget"
+    linux:
+      - ".sh"
+      - "bash"
+      - "systemd"
+      - "hyprland"
+      - "waybar"
+      - "pacman"
+      - "omarchy"
+
+  # Everything else defaults to universal/
