@@ -1,0 +1,559 @@
+{
+  "version": "1.0.0",
+  "description": "Maps natural language patterns to SuperNavigator skills for auto-activation",
+  "config": {
+    "auto_inject_threshold": 0.65,
+    "suggest_threshold": 0.50,
+    "cache_ttl_minutes": 60,
+    "max_suggestions": 3
+  },
+  "skills": [
+    {
+      "name": "brainstorming",
+      "layer": "app",
+      "category": "design",
+      "aliases": ["brainstorm", "ideate", "design session", "explore ideas"],
+      "triggers": {
+        "keywords": ["brainstorm", "idea", "design", "feature", "concept", "explore", "creative"],
+        "patterns": ["help me think", "let's design", "I want to build", "new feature", "how should I"],
+        "intent_phrases": [
+          "I have an idea",
+          "help me design",
+          "let's brainstorm",
+          "I want to create",
+          "what's the best approach"
+        ]
+      },
+      "confidence_boost": 0.15
+    },
+    {
+      "name": "writing-plans",
+      "layer": "app",
+      "category": "design",
+      "aliases": ["write plan", "create plan", "implementation plan", "planning"],
+      "triggers": {
+        "keywords": ["plan", "implementation", "steps", "roadmap", "breakdown", "phases"],
+        "patterns": ["create.*plan", "write.*plan", "implementation.*steps", "how to implement"],
+        "intent_phrases": [
+          "I need a plan",
+          "help me plan",
+          "break this down",
+          "what are the steps"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "test-driven-development",
+      "layer": "app",
+      "category": "development",
+      "aliases": ["tdd", "write tests", "test first", "testing"],
+      "triggers": {
+        "keywords": ["test", "tdd", "spec", "jest", "pytest", "mocha", "vitest", "coverage"],
+        "patterns": ["write.*test", "add.*test", "test.*first", "need.*tests"],
+        "intent_phrases": [
+          "I want to add tests",
+          "help me test",
+          "write tests for",
+          "test this function",
+          "increase coverage"
+        ]
+      },
+      "confidence_boost": 0.2
+    },
+    {
+      "name": "using-git-worktrees",
+      "layer": "app",
+      "category": "development",
+      "aliases": ["worktree", "git worktree", "parallel branch", "isolated work"],
+      "triggers": {
+        "keywords": ["worktree", "parallel", "branch", "isolation", "concurrent"],
+        "patterns": ["work.*parallel", "separate.*branch", "isolated.*work"],
+        "intent_phrases": [
+          "work on multiple branches",
+          "create isolated workspace",
+          "parallel development"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "executing-plans",
+      "layer": "app",
+      "category": "development",
+      "aliases": ["execute plan", "run plan", "implement plan", "follow plan"],
+      "triggers": {
+        "keywords": ["execute", "implement", "follow", "proceed"],
+        "patterns": ["execute.*plan", "implement.*plan", "follow.*steps"],
+        "intent_phrases": [
+          "let's execute the plan",
+          "implement this plan",
+          "proceed with implementation"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "requesting-code-review",
+      "layer": "app",
+      "category": "quality",
+      "aliases": ["code review", "review code", "pr review", "check my code"],
+      "triggers": {
+        "keywords": ["review", "feedback", "check", "validate", "pr"],
+        "patterns": ["review.*code", "check.*implementation", "look.*at.*this"],
+        "intent_phrases": [
+          "can you review",
+          "check my code",
+          "is this implementation good",
+          "review this PR"
+        ]
+      },
+      "confidence_boost": 0.15
+    },
+    {
+      "name": "receiving-code-review",
+      "layer": "app",
+      "category": "quality",
+      "aliases": ["handle feedback", "address review", "fix review comments"],
+      "triggers": {
+        "keywords": ["feedback", "comments", "suggestions", "changes requested"],
+        "patterns": ["address.*feedback", "fix.*comments", "respond.*review"],
+        "intent_phrases": [
+          "I got review feedback",
+          "need to address comments",
+          "reviewer suggested"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "systematic-debugging",
+      "layer": "app",
+      "category": "quality",
+      "aliases": ["debug", "fix bug", "troubleshoot", "diagnose"],
+      "triggers": {
+        "keywords": ["bug", "error", "broken", "crash", "fail", "issue", "problem", "debug", "fix"],
+        "patterns": ["not working", "doesn't work", "getting.*error", "why.*fail", "broken.*code"],
+        "intent_phrases": [
+          "something is broken",
+          "help me debug",
+          "I can't figure out why",
+          "this isn't working",
+          "getting an error"
+        ]
+      },
+      "confidence_boost": 0.25
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "layer": "app",
+      "category": "parallel",
+      "aliases": ["parallel agents", "multiple agents", "concurrent tasks"],
+      "triggers": {
+        "keywords": ["parallel", "concurrent", "multiple", "agents", "subagent"],
+        "patterns": ["run.*parallel", "multiple.*tasks", "concurrent.*work"],
+        "intent_phrases": [
+          "do these in parallel",
+          "run multiple tasks",
+          "use parallel agents"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "subagent-driven-development",
+      "layer": "app",
+      "category": "parallel",
+      "aliases": ["subagents", "delegate tasks", "split work"],
+      "triggers": {
+        "keywords": ["subagent", "delegate", "split", "distribute"],
+        "patterns": ["delegate.*task", "split.*work", "subagent.*handle"],
+        "intent_phrases": [
+          "delegate this to subagents",
+          "split this work up",
+          "use subagents for this"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "verification-before-completion",
+      "layer": "app",
+      "category": "advanced",
+      "aliases": ["verify", "double check", "confirm working"],
+      "triggers": {
+        "keywords": ["verify", "confirm", "check", "validate", "complete"],
+        "patterns": ["before.*commit", "make.*sure", "verify.*works"],
+        "intent_phrases": [
+          "is this ready",
+          "verify before committing",
+          "make sure it works"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "layer": "app",
+      "category": "advanced",
+      "aliases": ["finish branch", "merge branch", "complete work", "done with feature"],
+      "triggers": {
+        "keywords": ["finish", "merge", "complete", "done", "ready", "ship"],
+        "patterns": ["finish.*branch", "ready.*merge", "complete.*feature", "done.*with"],
+        "intent_phrases": [
+          "I'm done with this feature",
+          "ready to merge",
+          "finish this branch",
+          "complete the work"
+        ]
+      },
+      "confidence_boost": 0.15
+    },
+    {
+      "name": "writing-skills",
+      "layer": "app",
+      "category": "advanced",
+      "aliases": ["create skill", "new skill", "skill development"],
+      "triggers": {
+        "keywords": ["skill", "create skill", "new skill", "SKILL.md"],
+        "patterns": ["create.*skill", "write.*skill", "new.*skill"],
+        "intent_phrases": [
+          "I want to create a skill",
+          "help me write a skill",
+          "new Claude Code skill"
+        ]
+      },
+      "confidence_boost": 0.2
+    },
+    {
+      "name": "using-superpowers",
+      "layer": "app",
+      "category": "advanced",
+      "aliases": ["superpowers", "app layer", "workflow skills"],
+      "triggers": {
+        "keywords": ["superpowers", "workflow", "app layer"],
+        "patterns": ["use.*superpowers", "app.*layer"],
+        "intent_phrases": [
+          "what superpowers are available",
+          "use the app layer"
+        ]
+      },
+      "confidence_boost": 0.05
+    },
+    {
+      "name": "nav-init",
+      "layer": "os",
+      "category": "core",
+      "aliases": ["initialize navigator", "setup navigator", "init project"],
+      "triggers": {
+        "keywords": ["init", "initialize", "setup", "navigator", "supernavigator"],
+        "patterns": ["init.*navigator", "setup.*project", "initialize.*supernavigator"],
+        "intent_phrases": [
+          "initialize SuperNavigator",
+          "set up navigator in this project",
+          "create .agent directory"
+        ]
+      },
+      "confidence_boost": 0.15
+    },
+    {
+      "name": "nav-start",
+      "layer": "os",
+      "category": "core",
+      "aliases": ["start session", "begin work", "load context"],
+      "triggers": {
+        "keywords": ["start", "begin", "session", "context"],
+        "patterns": ["start.*session", "begin.*work", "load.*context"],
+        "intent_phrases": [
+          "start my session",
+          "begin working",
+          "load my context"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-onboard",
+      "layer": "os",
+      "category": "core",
+      "aliases": ["onboard", "new to project", "get oriented"],
+      "triggers": {
+        "keywords": ["onboard", "new", "unfamiliar", "orient"],
+        "patterns": ["new.*project", "first.*time", "get.*oriented"],
+        "intent_phrases": [
+          "I'm new to this project",
+          "help me get oriented",
+          "onboard me"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-loop",
+      "layer": "os",
+      "category": "core",
+      "aliases": ["loop mode", "autonomous", "iterate"],
+      "triggers": {
+        "keywords": ["loop", "iterate", "autonomous", "continuous"],
+        "patterns": ["loop.*mode", "keep.*going", "autonomous.*work"],
+        "intent_phrases": [
+          "enable loop mode",
+          "work autonomously",
+          "iterate until done"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-profile",
+      "layer": "os",
+      "category": "context-memory",
+      "aliases": ["profile", "preferences", "user profile"],
+      "triggers": {
+        "keywords": ["profile", "preferences", "settings", "remember"],
+        "patterns": ["my.*preferences", "update.*profile", "remember.*that"],
+        "intent_phrases": [
+          "update my profile",
+          "remember my preferences",
+          "what do you know about me"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-marker",
+      "layer": "os",
+      "category": "context-memory",
+      "aliases": ["checkpoint", "save progress", "marker", "snapshot"],
+      "triggers": {
+        "keywords": ["checkpoint", "marker", "save", "snapshot", "progress"],
+        "patterns": ["save.*progress", "create.*checkpoint", "mark.*this"],
+        "intent_phrases": [
+          "save my progress",
+          "create a checkpoint",
+          "mark this point"
+        ]
+      },
+      "confidence_boost": 0.15
+    },
+    {
+      "name": "nav-compact",
+      "layer": "os",
+      "category": "context-memory",
+      "aliases": ["compact", "reduce context", "save tokens"],
+      "triggers": {
+        "keywords": ["compact", "context", "tokens", "reduce"],
+        "patterns": ["reduce.*context", "save.*tokens", "compact.*session"],
+        "intent_phrases": [
+          "context is getting full",
+          "compact the session",
+          "reduce token usage"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-diagnose",
+      "layer": "os",
+      "category": "context-memory",
+      "aliases": ["diagnose session", "check health", "session status"],
+      "triggers": {
+        "keywords": ["diagnose", "health", "status", "check"],
+        "patterns": ["diagnose.*session", "check.*health", "session.*status"],
+        "intent_phrases": [
+          "diagnose the session",
+          "check session health",
+          "what's the status"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-task",
+      "layer": "os",
+      "category": "documentation",
+      "aliases": ["task doc", "document task", "task documentation"],
+      "triggers": {
+        "keywords": ["task", "document", "ticket", "requirement"],
+        "patterns": ["document.*task", "create.*task", "task.*doc"],
+        "intent_phrases": [
+          "document this task",
+          "create task documentation",
+          "archive the task"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-sop",
+      "layer": "os",
+      "category": "documentation",
+      "aliases": ["sop", "procedure", "standard procedure", "how-to"],
+      "triggers": {
+        "keywords": ["sop", "procedure", "howto", "guide", "steps"],
+        "patterns": ["create.*sop", "document.*procedure", "write.*guide"],
+        "intent_phrases": [
+          "create an SOP for this",
+          "document this procedure",
+          "write a how-to guide"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-skill-creator",
+      "layer": "os",
+      "category": "documentation",
+      "aliases": ["skill creator", "make skill", "skill generator"],
+      "triggers": {
+        "keywords": ["skill", "creator", "generator"],
+        "patterns": ["create.*skill", "generate.*skill"],
+        "intent_phrases": [
+          "help me create a skill",
+          "skill creator"
+        ]
+      },
+      "confidence_boost": 0.15
+    },
+    {
+      "name": "nav-stats",
+      "layer": "os",
+      "category": "project-management",
+      "aliases": ["stats", "statistics", "metrics", "progress"],
+      "triggers": {
+        "keywords": ["stats", "statistics", "metrics", "numbers", "progress"],
+        "patterns": ["show.*stats", "project.*metrics", "how.*much"],
+        "intent_phrases": [
+          "show me the stats",
+          "project statistics",
+          "what's the progress"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-update-claude",
+      "layer": "os",
+      "category": "project-management",
+      "aliases": ["update claude.md", "refresh claude", "sync claude"],
+      "triggers": {
+        "keywords": ["claude.md", "update", "refresh"],
+        "patterns": ["update.*claude", "refresh.*claude"],
+        "intent_phrases": [
+          "update the CLAUDE.md",
+          "refresh claude configuration"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-release",
+      "layer": "os",
+      "category": "project-management",
+      "aliases": ["release", "version bump", "publish"],
+      "triggers": {
+        "keywords": ["release", "version", "publish", "deploy", "tag"],
+        "patterns": ["create.*release", "bump.*version", "publish.*version"],
+        "intent_phrases": [
+          "create a release",
+          "bump the version",
+          "publish this version"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-upgrade",
+      "layer": "os",
+      "category": "project-management",
+      "aliases": ["upgrade", "update navigator", "update supernavigator"],
+      "triggers": {
+        "keywords": ["upgrade", "update", "latest"],
+        "patterns": ["upgrade.*navigator", "update.*supernavigator"],
+        "intent_phrases": [
+          "upgrade SuperNavigator",
+          "update to latest version"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-install-multi-claude",
+      "layer": "os",
+      "category": "project-management",
+      "aliases": ["multi claude", "multiple projects", "shared config"],
+      "triggers": {
+        "keywords": ["multi", "multiple", "projects", "shared"],
+        "patterns": ["multiple.*projects", "shared.*config"],
+        "intent_phrases": [
+          "setup for multiple projects",
+          "shared Claude configuration"
+        ]
+      },
+      "confidence_boost": 0.05
+    },
+    {
+      "name": "nav-sync",
+      "layer": "os",
+      "category": "integration",
+      "aliases": ["sync", "cross machine", "sync state"],
+      "triggers": {
+        "keywords": ["sync", "cross-machine", "synchronize", "push", "pull"],
+        "patterns": ["sync.*state", "cross.*machine", "synchronize.*config"],
+        "intent_phrases": [
+          "sync across machines",
+          "push state to other machines",
+          "cross-machine sync"
+        ]
+      },
+      "confidence_boost": 0.15
+    },
+    {
+      "name": "nav-notify",
+      "layer": "os",
+      "category": "integration",
+      "aliases": ["notify", "notification", "alert", "beeper"],
+      "triggers": {
+        "keywords": ["notify", "notification", "alert", "beeper", "message"],
+        "patterns": ["send.*notification", "notify.*me", "alert.*when"],
+        "intent_phrases": [
+          "notify me when done",
+          "send a notification",
+          "alert me"
+        ]
+      },
+      "confidence_boost": 0.1
+    },
+    {
+      "name": "nav-search",
+      "layer": "os",
+      "category": "integration",
+      "aliases": ["search memory", "find solution", "episodic search"],
+      "triggers": {
+        "keywords": ["search", "find", "memory", "past", "previous", "episodic"],
+        "patterns": ["search.*memory", "find.*solution", "past.*session"],
+        "intent_phrases": [
+          "search past sessions",
+          "find a previous solution",
+          "have I solved this before"
+        ]
+      },
+      "confidence_boost": 0.2
+    },
+    {
+      "name": "plugin-slash-command",
+      "layer": "os",
+      "category": "plugin",
+      "aliases": ["slash command", "plugin command"],
+      "triggers": {
+        "keywords": ["slash", "command", "plugin"],
+        "patterns": ["slash.*command", "plugin.*command"],
+        "intent_phrases": [
+          "use a slash command",
+          "run plugin command"
+        ]
+      },
+      "confidence_boost": 0.05
+    }
+  ]
+}
