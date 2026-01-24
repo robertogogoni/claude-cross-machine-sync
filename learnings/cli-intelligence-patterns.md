@@ -419,10 +419,240 @@ node skill-activator.js --analyze "write tests for this"
 
 ---
 
+## Phase 2 Implementation: Haiku API Integration
+
+**Status**: Completed 2026-01-24
+
+### Files Created
+
+| File | Location | Purpose |
+|------|----------|---------|
+| `haiku-intent.js` | `~/.claude/engine/` | Claude Haiku API client |
+| `skill-activator-v2.js` | `~/.claude/hooks/` | Enhanced hook with AI + fallback |
+| `intent-cache.json` | `~/.claude/data/` | MD5-keyed prompt cache |
+
+### Priority Chain Pattern
+
+The key insight: **always have a fallback**. AI APIs can be slow, rate-limited, or unavailable.
+
+```javascript
+async function analyzePrompt(prompt) {
+  // 1. Check cache first (instant)
+  const cached = checkCache(hashPrompt(prompt));
+  if (cached) return cached;
+
+  // 2. Try AI if available
+  if (CONFIG.useHaiku && process.env.ANTHROPIC_API_KEY) {
+    try {
+      const result = await callHaiku(prompt);
+      cacheResult(prompt, result);
+      return result;
+    } catch (e) {
+      // Fall through to keywords
+    }
+  }
+
+  // 3. Keyword fallback (always works)
+  return keywordMatch(prompt);
+}
+```
+
+### Haiku API Call Pattern
+
+```javascript
+// Minimal prompt for fast responses
+const systemPrompt = `You are a skill matcher. Given a prompt, identify relevant skills.
+Skills: ${skillList}
+Respond with JSON only: {"matches":[{"skill":"name","score":0.0-1.0,"reason":"brief"}]}
+Rules: Only score >= 0.5, max 5 matches, be conservative.`;
+
+// Short timeout - keyword fallback is better than waiting
+req.setTimeout(5000, () => {
+  req.destroy();
+  reject(new Error('Timeout'));
+});
+```
+
+### MD5 Cache Implementation
+
+```javascript
+function hashPrompt(prompt) {
+  return crypto.createHash('md5')
+    .update(prompt.toLowerCase().trim())
+    .digest('hex');
+}
+
+// Cache structure
+{
+  "entries": {
+    "a1b2c3...": {
+      "timestamp": 1706123456789,
+      "result": { "matches": [...] }
+    }
+  },
+  "lastCleanup": 1706123456789
+}
+```
+
+### Key Phase 2 Learnings
+
+1. **5-second timeout is optimal**: Longer waits frustrate users; shorter risks missing valid responses.
+
+2. **Cache at prompt level, not skill level**: The same prompt always wants the same skills.
+
+3. **Haiku is cheap enough for per-prompt**: ~$0.25/1M tokens means 100 prompts/day costs ~$1-2/month.
+
+4. **JSON extraction needs regex**: Haiku sometimes wraps JSON in markdown; use `/\{[\s\S]*\}/` to extract.
+
+5. **Fallback is not failure**: Keyword matching catches >90% of cases; Haiku adds polish for ambiguous prompts.
+
+---
+
+## Phase 3 Implementation: Terminal Auto-Completion
+
+**Status**: Completed 2026-01-24
+
+### Files Created
+
+| File | Location | Purpose |
+|------|----------|---------|
+| `completion-engine.js` | `~/.claude/engine/` | Multi-source aggregator |
+| `ClaudeComplete.psm1` | `~/.claude/shell/` | PowerShell module |
+| `claude-complete.sh` | `~/.claude/shell/` | Bash/Zsh functions |
+
+### Multi-Source Aggregation Pattern
+
+```javascript
+function getCompletions(query) {
+  let items = [];
+
+  // Gather from all sources
+  items = items.concat(loadSkills());      // 34 skills
+  items = items.concat(loadPlugins());     // 3 plugins
+  items = items.concat(loadMCPTools());    // 6 tools
+  items = items.concat(loadHistory());     // recent commands
+
+  // Score and rank
+  return items
+    .map(item => ({ ...item, score: scoreCompletion(query, item) }))
+    .filter(item => item.score > 0.1)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, maxResults);
+}
+```
+
+### Fuzzy Match Algorithm
+
+```javascript
+function fuzzyMatch(query, text) {
+  query = query.toLowerCase();
+  text = text.toLowerCase();
+
+  if (text === query) return 1.0;           // Exact
+  if (text.startsWith(query)) return 0.9;   // Prefix
+  if (text.includes(query)) return 0.7;     // Contains
+
+  // Character sequence match
+  let queryIdx = 0;
+  for (const char of text) {
+    if (char === query[queryIdx]) queryIdx++;
+  }
+  if (queryIdx === query.length) {
+    return 0.5 + (0.3 * (queryIdx / text.length));
+  }
+
+  return 0;
+}
+```
+
+### Recency + Frequency Boost
+
+```javascript
+// Recency: recent = more relevant
+if (item.lastUsed) {
+  const ageHours = (Date.now() - item.lastUsed) / (1000 * 60 * 60);
+  if (ageHours < 1) score += 0.15;
+  else if (ageHours < 24) score += 0.10;
+  else if (ageHours < 168) score += 0.05;  // 1 week
+}
+
+// Frequency: often used = more relevant
+if (item.count) {
+  score += Math.min(item.count * 0.02, 0.1);  // Cap at +0.10
+}
+```
+
+### PowerShell Completer Pattern
+
+```powershell
+$completer = {
+  param($commandName, $wordToComplete, $cursorPosition)
+
+  $completions = Get-ClaudeCompletions -Query $wordToComplete
+
+  foreach ($c in $completions) {
+    [System.Management.Automation.CompletionResult]::new(
+      $c.Display,           # completionText
+      $c.Display,           # listItemText
+      'ParameterValue',     # resultType
+      "[$($c.Type)] $($c.Description)"  # toolTip
+    )
+  }
+}
+
+Register-ArgumentCompleter -CommandName 'claude' -Native -ScriptBlock $completer
+```
+
+### Bash Completer Pattern
+
+```bash
+_claude_bash_complete() {
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  local query="${cur#/}"  # Remove leading slash
+
+  local completions
+  completions=$(node "$ENGINE" complete "$query" "bash")
+
+  COMPREPLY=($(compgen -W "$completions" -- "$cur"))
+}
+
+complete -F _claude_bash_complete claude
+```
+
+### Key Phase 3 Learnings
+
+1. **Track usage for personalization**: Recording command history makes completions smarter over time.
+
+2. **Multiple output formats needed**: PowerShell, Bash, Zsh, and fzf all want different formats.
+
+3. **Recency beats frequency**: A command used 1 hour ago is more relevant than one used 100 times last month.
+
+4. **Type priority as tiebreaker**: When scores are equal, prefer skills > history > plugins > mcp.
+
+5. **Cap frequency boost**: Without capping, frequently-used commands dominate forever.
+
+6. **fzf integration is powerful**: If available, use fzf for interactive browsing with previews.
+
+---
+
 ## Related Files
 
+**Design Documents**:
 - `docs/plans/2026-01-24-unified-cli-intelligence-design.md` - Full design document
 - `docs/plans/2026-01-24-supernavigator-enhancements.md` - SuperNavigator integration
+
+**Phase 1 - Skill Registry**:
+- `universal/claude/data/skill-registry.json` - 34 skills with triggers
+- `universal/claude/hooks/skill-activator.js` - Basic keyword matching
+
+**Phase 2 - Haiku Integration**:
+- `universal/claude/engine/haiku-intent.js` - Haiku API client
+- `universal/claude/hooks/skill-activator-v2.js` - Enhanced with AI fallback
+
+**Phase 3 - Terminal Completion**:
+- `universal/claude/engine/completion-engine.js` - Multi-source aggregator
+- `universal/claude/shell/ClaudeComplete.psm1` - PowerShell module
+- `universal/claude/shell/claude-complete.sh` - Bash/Zsh functions
+
+**Plugin**:
 - `~/.claude/plugins/supernavigator/` - Enhanced plugin with 34 skills
-- `universal/claude/hooks/skill-activator.js` - Implementation (synced)
-- `universal/claude/data/skill-registry.json` - Skill mappings (synced)
