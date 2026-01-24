@@ -1,6 +1,6 @@
 # Claude Code Cross-Machine Setup
 
-**Last Updated**: 2026-01-23
+**Last Updated**: 2026-01-24
 **Machines**: Dell G15 (Windows), MacBook Air (Linux), Samsung Laptop (Linux)
 **Repository**: https://github.com/robertogogoni/claude-cross-machine-sync
 
@@ -141,6 +141,92 @@ Bootstrap automatically:
 ---
 
 ## Recent Solutions & Fixes
+
+### 2026-01-24: Unified CLI Intelligence System Design
+
+**Session Goal**: Design a system for natural language skill activation, automatic memory management, and intelligent auto-completion
+
+**What We Accomplished**:
+
+#### 1. Deep GitHub Research (20+ Projects Analyzed)
+
+| Category | Key Projects | Main Insight |
+|----------|--------------|--------------|
+| **Skill Auto-Activation** | claude-skills-supercharged, claude-code-infrastructure-showcase | Haiku-powered intent detection with confidence scoring |
+| **Continuous Learning** | Claudeception | Auto-extract skills when solving hard problems |
+| **Memory Management** | mcp-memory-service, claude-mem | "Dream-inspired" consolidation, auto-capture |
+| **Terminal AI** | autocomplete-sh, nl-sh, ai-shell | Natural language → shell commands |
+| **Fuzzy Matching** | fzf, fuzzball.js, fuzz-run | Typo-tolerant command matching |
+
+#### 2. Discovered The #1 Skill Problem
+
+**The core issue**: Claude Code skills don't activate on their own. Users must:
+- Know exact skill names
+- Manually invoke them with `/skill-name`
+- Remember which skill applies to which situation
+
+**The solution**: UserPromptSubmit hook + AI intent analyzer:
+```
+User prompt → Haiku analyzes intent → Score each skill (0.0-1.0)
+  → Auto-inject if >0.65
+  → Suggest if 0.50-0.65
+  → Ignore if <0.50
+```
+
+#### 3. Designed 4-Part Unified System
+
+**Part 1: Natural Language Skill Activation**
+- skill-registry.json maps patterns/aliases to skills
+- Haiku API for intent detection (~$1-2/month)
+- MD5-cached prompts (1hr TTL, ~95% API reduction)
+- Fallback chain: Semantic → Fuzzy → Regex → Suggestions
+
+**Part 2: Automatic Memory Management**
+- 4-layer hierarchy: Working → Short-Term → Long-Term → Cross-Machine
+- SessionEnd hook extracts learnings automatically
+- Daily consolidation daemon
+- Syncs to claude-cross-machine-sync repo
+
+**Part 3: Intelligent Auto-Completion**
+- Multi-source: skills, plugins, MCP tools, shell history, memory
+- Semantic + fuzzy + recency ranking
+- PowerShell and Bash integration modules
+
+**Part 4: Continuous Learning (Claudeception)**
+- Auto-creates skills when you solve hard problems
+- Quality gates ensure only useful knowledge persists
+- Syncs auto-extracted skills across machines
+
+#### 4. Installed SuperNavigator 6.1.0 (Enhanced)
+
+- **Location**: `~/.claude/plugins/supernavigator`
+- **Skills**: 34 total (17 OS Layer + 14 App Layer + 3 Integration)
+- **New skills created**:
+  - `nav-sync`: Cross-machine .agent/ synchronization
+  - `nav-notify`: Beeper notifications for task events
+  - `nav-search`: Episodic memory search before debugging
+
+#### 5. Created Comprehensive Design Document
+
+- **Location**: `docs/plans/2026-01-24-unified-cli-intelligence-design.md`
+- **Content**: Architecture, code examples, implementation phases, dependencies
+
+**Key Learnings**:
+- UserPromptSubmit hook intercepts every prompt (great for injection)
+- Haiku is cheap/fast enough for per-prompt analysis
+- skill-rules.json pattern matching for API-free fallback
+- Sentence transformers for semantic similarity
+- Progressive disclosure keeps skill loading efficient (~100 tokens metadata)
+- Claudeception research: Voyager (2023), CASCADE (2024), SEAgent (2025)
+
+**Key GitHub Resources**:
+- [claude-skills-supercharged](https://github.com/jefflester/claude-skills-supercharged) - 7-stage AI injection
+- [claude-code-infrastructure-showcase](https://github.com/diet103/claude-code-infrastructure-showcase) - Auto-activation technique
+- [Claudeception](https://github.com/blader/Claudeception) - Autonomous skill extraction
+- [mcp-memory-service](https://github.com/doobidoo/mcp-memory-service) - Dream-inspired memory
+- [autocomplete-sh](https://github.com/closedLoop-technologies/autocomplete-sh) - AI terminal completion
+
+---
 
 ### 2026-01-23: Machine Sync Auto-Categorization System
 
