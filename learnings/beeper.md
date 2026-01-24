@@ -557,4 +557,154 @@ Beeper MCP doesn't support sending attachments. Need workaround.
 
 ---
 
-*Last updated: 2026-01-16*
+## Beeper Scout Project (2026-01-24)
+
+### Overview
+
+Beeper Scout is an automated scouting system for the Beeper ecosystem. It collects, analyzes, and categorizes community discussions, feature requests, and bug reports from various sources.
+
+**Location:** `~/beeper-community/beeper-scout/`
+**Technology:** TypeScript, Node.js, Matrix API
+
+### Architecture Discovery: MCP vs Matrix API
+
+**Original Plan:**
+```
+Beeper MCP Tools (mcp__beeper__*) → localhost:23373 HTTP API
+```
+
+**Reality:**
+- MCP tools work through Claude's protocol, NOT direct HTTP
+- Tested HTTP endpoints like `/api/v1/accounts` → "Not found"
+- Beeper Desktop's internal API is undocumented
+
+**Solution:**
+```
+Matrix API → https://matrix.beeper.com/_matrix/client/v3/
+```
+
+The Matrix API is:
+- Stable, documented standard
+- Works with direct authentication (access token)
+- Supports pagination via tokens
+- Room IDs are consistent
+
+### Key Implementation Details
+
+**Matrix API Endpoints Used:**
+```typescript
+// Check availability
+GET /_matrix/client/v3/account/whoami
+
+// Fetch messages with pagination
+GET /_matrix/client/v3/rooms/{roomId}/messages?dir=b&limit=100&from={token}
+
+// Get room name
+GET /_matrix/client/v3/rooms/{roomId}/state/m.room.name
+```
+
+**Room IDs (from rooms.json):**
+```json
+{
+  "id": "!VRvJRVNZDbRuKAsKvK:beeper.com",
+  "name": "Beeper Developer Community"
+}
+```
+
+**Token Format:**
+```
+syt_<base64_user_id>_<random_chars>_<signature>
+```
+Example: `syt_cm9idGhlcGlyYXRl_MXOpapEvAZAyPvBHAQCy_1HOS7l`
+
+### CLI Commands
+
+```bash
+# Set Matrix token (required)
+export MATRIX_ACCESS_TOKEN="syt_..."
+
+# Check adapter status
+pnpm status
+
+# Collect findings (default 100)
+pnpm scout --limit 50
+
+# Deep historical scan
+pnpm scout --deep --limit 500
+
+# Filter by keywords
+pnpm scout --keywords "api,mcp"
+
+# Specific room only
+pnpm scout --room "!VRvJRVNZDbRuKAsKvK:beeper.com"
+```
+
+### Finding Classification
+
+**Types (auto-detected):**
+- `discussion` - General conversations
+- `question` - Questions from community
+- `project` - GitHub links, tools
+- `bug-report` - Bug mentions
+- `feature-request` - Feature asks
+- `tip` - Workarounds, tips
+
+**Categories (auto-detected):**
+- `api` - API-related discussions
+- `mcp` - MCP tool mentions
+- `bridges` - Bridge-related (mautrix, etc.)
+- `automation` - Bots, n8n, webhooks
+- `community` - General community
+- `official` - From Beeper team
+
+### Sample Findings Output
+
+```json
+{
+  "scoutedAt": "2026-01-24T12:23:47.480Z",
+  "totalFindings": 100,
+  "findings": [
+    {
+      "id": "beeper--VRvJRVNZDbRuKAsKvK-beeper-com--hoGZ...",
+      "source": "beeper-mcp",
+      "type": "question",
+      "category": "community",
+      "title": "Are whatsapp polls ever going to be...",
+      "author": "intoxikateuk",
+      "timestamp": "2026-01-24T10:08:12.224Z",
+      "relevance": 60,
+      "tags": ["whatsapp"]
+    }
+  ]
+}
+```
+
+### Files Created
+
+| File | Purpose |
+|------|---------|
+| `src/sources/beeper-mcp.ts` | Matrix API adapter |
+| `src/adapters/index.ts` | Adapter registry |
+| `src/adapters/types.ts` | TypeScript types |
+| `config/rooms.json` | Room configurations |
+| `data/findings.json` | Collected findings |
+
+### Key Learnings
+
+1. **MCP Tools vs HTTP API**: Beeper Desktop's MCP tools work through Claude's protocol, not direct HTTP calls. For programmatic access, use Matrix API.
+
+2. **Matrix API Pagination**: Use `dir=b` for backwards (newest first), `from` token for pagination. Response includes `end` token for next page.
+
+3. **Token Authentication**: Bearer token in Authorization header. Token format: `syt_<base64>_<random>_<signature>`
+
+4. **Finding Relevance Score**: Calculated based on:
+   - Content length (+10 if >200 chars)
+   - URL presence (+15 for any URL, +10 for GitHub)
+   - Key people boost (+15 for batuhan, tulir, eric, cam)
+   - Technical terms (+3 per term: api, mcp, bridge, etc.)
+
+5. **Message Filtering**: Skip messages < 20 chars, use `isInteresting()` rules-based filter before AI analysis.
+
+---
+
+*Last updated: 2026-01-24*
