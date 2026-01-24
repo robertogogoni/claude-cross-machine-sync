@@ -298,8 +298,131 @@ complete -F _claude_complete claude
 
 ---
 
+## Actual Implementation (Phase 1)
+
+**Status**: Completed 2026-01-24
+
+### Files Created
+
+| File | Location | Purpose |
+|------|----------|---------|
+| `skill-registry.json` | `~/.claude/data/` | 34 skills with triggers, patterns, aliases |
+| `skill-activator.js` | `~/.claude/hooks/` | Hook that scores and injects skills |
+| `session-skills.json` | `~/.claude/data/` | Tracks injected skills per session |
+
+### Scoring Implementation
+
+The actual implementation uses a simpler approach than Haiku API (Phase 1 baseline):
+
+```javascript
+function calculateScore(prompt, skill) {
+  let score = 0;
+
+  // Keywords: +0.15 each
+  for (const keyword of skill.triggers.keywords) {
+    if (promptLower.includes(keyword)) score += 0.15;
+  }
+
+  // Patterns (regex): +0.20 each
+  for (const pattern of skill.triggers.patterns) {
+    if (new RegExp(pattern, 'i').test(prompt)) score += 0.20;
+  }
+
+  // Intent phrases (fuzzy): +0.25 × similarity
+  for (const phrase of skill.triggers.intent_phrases) {
+    const similarity = fuzzyScore(prompt, phrase);
+    if (similarity > 0.6) score += 0.25 * similarity;
+  }
+
+  // Aliases: +0.10 each
+  for (const alias of skill.aliases) {
+    if (promptLower.includes(alias)) score += 0.10;
+  }
+
+  // Apply confidence boost
+  score += skill.confidence_boost;
+
+  return Math.min(score, 1.0);
+}
+```
+
+### Fuzzy Matching (Simple Implementation)
+
+```javascript
+function fuzzyScore(str1, str2) {
+  if (str1 === str2) return 1.0;
+  if (str1.includes(str2) || str2.includes(str1)) return 0.8;
+
+  // Character overlap ratio (Jaccard-like)
+  const chars1 = new Set(str1.split(''));
+  const chars2 = new Set(str2.split(''));
+  const intersection = [...chars1].filter(x => chars2.has(x)).length;
+  const union = new Set([...chars1, ...chars2]).size;
+  return intersection / union;
+}
+```
+
+### Hook Configuration (settings.json)
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/hooks/skill-activator.js --hook"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### CLI Modes
+
+```bash
+# Test mode (default)
+node skill-activator.js
+
+# Hook mode (stdin JSON → stdout JSON)
+echo '{"prompt":"help debug"}' | node skill-activator.js --hook
+
+# Analyze mode (single prompt)
+node skill-activator.js --analyze "write tests for this"
+```
+
+### Verified Test Results
+
+| Prompt | Detected Skill | Score |
+|--------|---------------|-------|
+| "Help me debug this error" | systematic-debugging | 1.0 |
+| "I want to write tests" | test-driven-development | 1.0 |
+| "Let's brainstorm a feature" | brainstorming | 0.95 |
+| "Create a checkpoint" | nav-marker | 1.0 |
+| "Something is broken" | systematic-debugging | 0.92 |
+
+### Key Implementation Learnings
+
+1. **Character overlap is surprisingly effective**: Simple Jaccard-like similarity catches most intent phrases without expensive embeddings.
+
+2. **Confidence boost is essential**: High-priority skills (debugging, TDD) need a boost to surface above noise.
+
+3. **Session tracking is simple**: Just a JSON file with today's date + list of injected skill names.
+
+4. **Hook format matters**: Claude Code expects `{"additionalContext": "..."}` as stdout from command hooks.
+
+5. **Regex patterns need escaping**: Use `.*` not `.+` for optional matching in patterns like `write.*test`.
+
+---
+
 ## Related Files
 
 - `docs/plans/2026-01-24-unified-cli-intelligence-design.md` - Full design document
 - `docs/plans/2026-01-24-supernavigator-enhancements.md` - SuperNavigator integration
 - `~/.claude/plugins/supernavigator/` - Enhanced plugin with 34 skills
+- `universal/claude/hooks/skill-activator.js` - Implementation (synced)
+- `universal/claude/data/skill-registry.json` - Skill mappings (synced)
