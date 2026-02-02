@@ -1,288 +1,289 @@
-# 🔄 Claude Cross-Machine Sync
+<div align="center">
 
-> **Your AI memory, everywhere.** Synchronize Claude Code settings, conversation history, and AI-generated intelligence across all your machines.
-
-[![Machines](https://img.shields.io/badge/machines-3-blue)]()
-[![AI Queries](https://img.shields.io/badge/AI%20queries-1,708-green)]()
-[![Conversations](https://img.shields.io/badge/conversations-49-orange)]()
-[![Size](https://img.shields.io/badge/size-308MB-lightgrey)]()
-
----
-
-## 📋 Overview
-
-This repository aggregates and syncs **all AI-generated intelligence** from multiple tools across multiple machines:
-
-| Source | Content | Records |
-|--------|---------|---------|
-| **Claude Code** | Episodic memory, settings, skills | 128MB archive |
-| **Warp Terminal** | AI queries + agent conversations | 570 + 13 |
-| **Warp Preview** | AI queries + agent conversations | 1,138 + 36 |
-| **Antigravity/Gemini** | Task plans, implementations, walkthroughs | 15 sessions |
-| **Custom Skills** | Tool discovery, Beeper chat, Omarchy | 4 skills |
-| **Learnings** | Bash patterns, Beeper, Electron/Wayland | 3 files |
-
----
-
-## 🖥️ Machines
-
-| Machine | OS | Status | Hostname |
-|---------|-----|--------|----------|
-| **MacBook Air** (Main) | Arch Linux | ✅ Configured | `macbook-air` |
-| **Linux Notebook 2** | Linux | 📋 Pending | - |
-| **Windows Desktop** | Windows 11 | ✅ Configured | `rober-pc` |
-
----
-
-## 🚀 Quick Start
-
-### New Machine Setup
-
-<details>
-<summary><b>🐧 Linux / macOS</b></summary>
-
-```bash
-# 1. Install Git LFS (for large files)
-# Arch: sudo pacman -S git-lfs
-# Ubuntu: sudo apt install git-lfs
-# macOS: brew install git-lfs
-git lfs install
-
-# 2. Clone the repository
-cd ~
-git clone https://github.com/robertogogoni/claude-cross-machine-sync.git
-
-# 3. Copy settings to Claude Code
-cp ~/claude-cross-machine-sync/.claude/settings.json ~/.claude/
-cp -r ~/claude-cross-machine-sync/skills/* ~/.claude/skills/
-
-# 4. Install plugins
-claude /plugin marketplace add obra/superpowers-marketplace
-claude /plugin install episodic-memory@superpowers-marketplace
-claude /plugin install superpowers@superpowers-marketplace
+```
+   _____ _                 _         _____
+  / ____| |               | |       / ____|
+ | |    | | __ _ _   _  __| | ___  | (___  _   _ _ __   ___
+ | |    | |/ _` | | | |/ _` |/ _ \  \___ \| | | | '_ \ / __|
+ | |____| | (_| | |_| | (_| |  __/  ____) | |_| | | | | (__
+  \_____|_|\__,_|\__,_|\__,_|\___| |_____/ \__, |_| |_|\___|
+                                            __/ |
+   M A C H I N E   S Y N C                 |___/  v1.0.0
 ```
 
-</details>
+**Your Claude Code settings, everywhere. Safely.**
 
-<details>
-<summary><b>🪟 Windows</b></summary>
+[![CI](https://github.com/robertogogoni/claude-cross-machine-sync/actions/workflows/ci.yml/badge.svg)](https://github.com/robertogogoni/claude-cross-machine-sync/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-blue)]()
+[![Tests](https://img.shields.io/badge/tests-24%20passing-brightgreen)]()
+[![Bash](https://img.shields.io/badge/bash-4.0+-green)]()
+[![PowerShell](https://img.shields.io/badge/powershell-5.1+-blue)]()
+
+[Features](#-features) • [Installation](#-installation) • [Roadmap](#-roadmap) • [Contributing](#contributing)
+
+</div>
+
+---
+
+## 🤔 The Problem
+
+You use Claude Code on multiple machines. You've configured permissions, installed skills, set up hooks, and tuned settings *just right*. Then you switch to your laptop and... **start from scratch**.
+
+**Common pain points:**
+- ❌ Settings don't sync between machines
+- ❌ Manual copying leads to drift and conflicts
+- ❌ Git conflicts in configs are scary to resolve
+- ❌ No rollback when things break
+- ❌ Offline work creates sync nightmares
+
+**Machine Sync solves this.** Production-grade config synchronization with safety built in.
+
+---
+
+## ✨ Features
+
+### 🚀 Core Sync
+| Feature | Description |
+|---------|-------------|
+| **One-command bootstrap** | `./bootstrap.sh` and you're done |
+| **Real-time watching** | Changes sync automatically via inotifywait/FileSystemWatcher |
+| **Smart categorization** | Auto-tags commits as `[universal]`, `[linux]`, `[windows]`, or `[machine:hostname]` |
+| **Background daemon** | systemd (Linux) or Task Scheduler (Windows) |
+
+### 🛡️ Safety First
+| Feature | Description |
+|---------|-------------|
+| **Pre-flight validation** | Checks git, network, disk space, permissions BEFORE running |
+| **Snapshot & rollback** | Every bootstrap creates a restore point |
+| **Dry-run mode** | `--dry-run` shows what would happen without doing it |
+| **Path sanitization** | Protects against path traversal attacks |
+
+### 🌐 Network Resilience
+| Feature | Description |
+|---------|-------------|
+| **Offline queue** | Commits save locally when offline, push when connected |
+| **Exponential backoff** | Failed pushes retry at 5s → 15s → 60s intervals |
+| **Three-tier conflict resolution** | Auto-resolve → Stash & retry → Conflict branch |
+
+### 💻 Cross-Platform
+| Platform | Components |
+|----------|------------|
+| **Linux** | Bash + inotifywait + systemd |
+| **Windows** | PowerShell + FileSystemWatcher + Task Scheduler |
+| **macOS** | Bash + fswatch *(experimental)* |
+
+---
+
+## 📦 Installation
+
+### Quick Start (Linux/macOS)
+
+```bash
+git clone https://github.com/robertogogoni/claude-cross-machine-sync.git ~/machine-sync
+cd ~/machine-sync && ./bootstrap.sh
+```
+
+### Quick Start (Windows PowerShell)
 
 ```powershell
-# 1. Install Git LFS
-winget install GitHub.GitLFS
-git lfs install
+git clone https://github.com/robertogogoni/claude-cross-machine-sync.git $HOME\machine-sync
+cd $HOME\machine-sync; .\bootstrap.ps1
+```
 
-# 2. Clone the repository
-cd ~
+### What Happens
+
+1. ✅ Hardware auto-detected (vendor, model, CPU, GPU, RAM)
+2. ✅ Machine registered in `machines/registry.yaml`
+3. ✅ Sync daemon installed (systemd or Task Scheduler)
+4. ✅ Configs deployed to `~/.claude/`
+5. ✅ First sync pushed to git
+
+### CLI Options
+
+```bash
+./bootstrap.sh --dry-run        # Preview without changes
+./bootstrap.sh --skip-preflight # Skip validation checks
+./bootstrap.sh --rollback       # Undo last bootstrap
+```
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      CLI Interface                               │
+│         bootstrap.sh | sync-daemon.sh | rollback                │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
+│  │   Bootstrap  │  │  Sync Daemon │  │   Validator  │          │
+│  │    Engine    │  │    Engine    │  │    Engine    │          │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘          │
+│         │                 │                 │                   │
+│  ┌──────┴─────────────────┴─────────────────┴───────┐          │
+│  │              Core Library (lib/)                  │          │
+│  ├───────────────────────────────────────────────────┤          │
+│  │ • validator.sh    • rollback.sh    • categorizer  │          │
+│  │ • Git Operations  • File Watcher  • Offline Queue │          │
+│  └───────────────────────────────────────────────────┘          │
+│                                                                 │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │                Platform Adapters                          │  │
+│  │   Linux (systemd)  │  Windows (Task Sched)  │  macOS      │  │
+│  └──────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Directory Structure
+
+```
+machine-sync/
+├── bootstrap.sh          # Linux/macOS setup
+├── bootstrap.ps1         # Windows setup
+├── lib/
+│   ├── validator.sh      # Pre-flight checks (454 lines)
+│   └── rollback.sh       # Snapshot/restore (370 lines)
+├── machines/
+│   ├── registry.yaml     # Machine definitions
+│   └── <hostname>/       # Machine-specific configs
+├── platform/
+│   ├── linux/scripts/    # Linux daemon (667 lines)
+│   └── windows/scripts/  # Windows daemon
+├── universal/            # Cross-platform shared configs
+└── tests/                # 24 unit tests
+```
+
+---
+
+## 🗺️ Roadmap
+
+### Progress: `████████████░░░░░░░░` 60%
+
+### ✅ v1.0.0 - Production Ready (Current)
+
+#### Phase 1: Foundation
+- [x] Pre-flight validation system (`lib/validator.sh`)
+- [x] Dry-run mode for all commands
+- [x] Snapshot & rollback mechanism (`lib/rollback.sh`)
+- [x] Path sanitization security
+
+#### Phase 2: Reliability
+- [x] Retry logic with exponential backoff
+- [x] Offline commit queue
+- [x] Three-tier conflict resolution
+- [ ] Beeper notifications on sync failures
+
+#### Phase 5: Testing & CI/CD
+- [x] Unit test framework (24 tests)
+- [x] GitHub Actions CI (Linux, Windows, macOS)
+- [ ] Integration tests
+- [ ] Code coverage reporting
+
+#### Phase 6: Documentation
+- [x] README rewrite (this file!)
+- [x] CONTRIBUTING.md
+- [x] ROADMAP.md
+- [ ] Architecture deep-dive docs
+- [ ] Video walkthrough
+
+### ⏳ v1.1.0 - Enhanced Features
+
+- [ ] Full macOS support (fswatch + launchd)
+- [ ] Secrets encryption at rest (age/GPG)
+- [ ] Selective sync patterns (`.syncignore`)
+- [ ] Web dashboard for status monitoring
+- [ ] Unified CLI wrapper (`claude-sync`)
+
+### 🔮 v1.2.0 - Future
+
+- [ ] Multi-repository support
+- [ ] Team sync (shared configs)
+- [ ] Claude Code plugin integration
+- [ ] Ansible/Terraform modules
+
+---
+
+## 🔧 Configuration
+
+### Machine Registry (`machines/registry.yaml`)
+
+```yaml
+machines:
+  my-laptop:
+    hostname: my-laptop
+    platform: linux
+    status: active
+    hardware:
+      vendor: Dell
+      model: XPS 15
+      cpu: Intel i7-12700H
+      memory: 32GB
+```
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SNAPSHOT_DIR` | `~/.local/state/machine-sync/snapshots` | Snapshot storage |
+| `SNAPSHOT_RETENTION_DAYS` | `30` | Auto-cleanup threshold |
+| `RETRY_COUNT` | `3` | Push retry attempts |
+| `OFFLINE_QUEUE_DIR` | `~/.local/state/machine-sync/offline-queue` | Offline commits |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+```bash
+# Development setup
 git clone https://github.com/robertogogoni/claude-cross-machine-sync.git
+cd claude-cross-machine-sync
 
-# 3. Copy settings to Claude Code
-Copy-Item ".\claude-cross-machine-sync\.claude\settings.json" "$env:USERPROFILE\.claude\" -Force
-New-Item -ItemType Directory -Path "$env:USERPROFILE\.claude\skills" -Force
-Copy-Item -Recurse ".\claude-cross-machine-sync\skills\*" "$env:USERPROFILE\.claude\skills\" -Force
+# Run tests
+./tests/run_all.sh
 
-# 4. Install plugins (run inside Claude Code)
-# /plugin marketplace add obra/superpowers-marketplace
-# /plugin install episodic-memory@superpowers-marketplace
+# Lint
+shellcheck -x lib/*.sh bootstrap.sh
 ```
 
-See **[docs/WINDOWS-SETUP.md](docs/WINDOWS-SETUP.md)** for detailed instructions.
+### Commit Convention
 
-</details>
+Use scope tags for smart categorization:
+
+| Tag | When to Use |
+|-----|-------------|
+| `[universal]` | Changes that work on all platforms |
+| `[linux]` | Linux-specific changes |
+| `[windows]` | Windows-specific changes |
+| `[machine:hostname]` | Machine-specific configs |
 
 ---
 
-## 📁 Repository Structure
+## 📄 License
 
-```
-claude-cross-machine-sync/
-│
-├── 📄 CLAUDE.md                    # Project memory (auto-loaded by Claude)
-├── 📄 README.md                    # This file
-│
-├── 📂 .claude/                     # Claude Code configuration
-│   ├── settings.json               # Shared permissions & tool config
-│   └── machine-info.json           # Machine identification
-│
-├── 📂 skills/                      # Custom Claude Code skills
-│   ├── tool-discovery/             # Auto-discover available tools
-│   ├── beeper-chat/                # Beeper messaging integration
-│   └── omarchy-skill.md            # Linux desktop configuration
-│
-├── 📂 episodic-memory/             # 🔒 Git LFS (128MB)
-│   ├── -home-rob/                  # Conversation JSONL archives
-│   ├── conversation-index/         # Search index database
-│   └── learnings/                  # AI-extracted learnings
-│
-├── 📂 warp-ai/                     # Warp Terminal AI history
-│   ├── queries/                    # 570 AI queries (CSV)
-│   ├── agents/                     # 13 agent conversations (JSON)
-│   ├── preview-queries/            # 1,138 queries from Warp Preview
-│   ├── preview-agents/             # 36 agent conversations
-│   └── INDEX.md                    # Data format documentation
-│
-├── 📂 antigravity-history/         # Google Antigravity IDE recovery
-│   ├── gemini-brain/               # 15 AI task sessions
-│   │   └── <session-id>/
-│   │       ├── task.md             # Task definition
-│   │       ├── implementation_plan.md
-│   │       └── walkthrough.md      # Step-by-step guidance
-│   └── INDEX.md                    # Session index
-│
-├── 📂 learnings/                   # AI-generated knowledge
-│   ├── bash-patterns.md            # Shell scripting patterns
-│   ├── beeper.md                   # Beeper messaging insights
-│   └── electron-wayland.md         # Electron on Wayland fixes
-│
-└── 📂 docs/                        # Documentation
-    ├── WINDOWS-SETUP.md            # Windows installation guide
-    ├── ssh-setup.md                # SSH remote access
-    ├── guides/                     # Hardware/software guides
-    ├── system/                     # System reports & optimization
-    ├── beeper/                     # Beeper integration docs
-    ├── plans/                      # Development plans
-    └── obra-superpowers/           # Superpowers plugin docs
-```
+MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 🔍 Finding Past Solutions
+## 🙏 Credits
 
-### Episodic Memory Search
+Built with [Claude Code](https://claude.ai/code) by Anthropic.
 
-Just ask Claude naturally:
-
-```
-"What was the solution to the Chrome settings error?"
-"How did I configure permissions on Linux?"
-"What commands did I use to fix the audio?"
-```
-
-Or use the direct command:
-
-```
-/episodic-memory:search-conversations "keyword"
-```
-
-### Searching Warp AI History
-
-The extracted CSV files are grep-able:
-
-```bash
-# Find queries about Docker
-grep -i docker warp-ai/queries/all-queries.csv
-
-# Search agent conversations
-grep -i "kubernetes" warp-ai/agents/all-conversations.json
-```
-
----
-
-## 📚 Documentation
-
-| Guide | Description |
-|-------|-------------|
-| [CLAUDE.md](./CLAUDE.md) | Full project memory, solutions, machine configs |
-| [WINDOWS-SETUP.md](docs/WINDOWS-SETUP.md) | Complete Windows installation guide |
-| [ssh-setup.md](docs/ssh-setup.md) | SSH remote access configuration |
-| [warp-ai/INDEX.md](warp-ai/INDEX.md) | Warp AI data format & usage |
-| [antigravity-history/INDEX.md](antigravity-history/INDEX.md) | Gemini brain session index |
-
-### Hardware & System Guides
-
-| Guide | Topic |
-|-------|-------|
-| [AUDIO_SETUP.md](docs/guides/AUDIO_SETUP.md) | Audio configuration |
-| [KEYBOARD_BACKLIGHT_GUIDE.md](docs/guides/KEYBOARD_BACKLIGHT_GUIDE.md) | Keyboard backlight control |
-| [SENSOR_GUIDE.md](docs/guides/SENSOR_GUIDE.md) | Hardware sensor setup |
-| [OPTIMIZATION_REPORT.md](docs/system/OPTIMIZATION_REPORT.md) | System optimization |
-
----
-
-## 🛠️ Skills
-
-Custom skills enhance Claude Code's capabilities:
-
-| Skill | Trigger | Purpose |
-|-------|---------|---------|
-| **tool-discovery** | "what tools are available?" | Lists MCP servers, searches for new tools |
-| **beeper-chat** | Beeper-related requests | Chat search and messaging |
-| **omarchy** | Desktop/WM config changes | Hyprland, Waybar, terminal config |
-
----
-
-## 🔄 Daily Workflow
-
-```bash
-# Morning: Pull latest changes
-cd ~/claude-cross-machine-sync && git pull
-
-# Work normally - Claude loads settings automatically
-
-# After solving problems: Push updates
-cd ~/claude-cross-machine-sync
-git add .
-git commit -m "Added: <description>"
-git push
-```
-
----
-
-## ⚙️ Technical Details
-
-### Git LFS
-
-Large files (episodic memory) are tracked with Git LFS:
-
-```bash
-# Files tracked
-*.jsonl filter=lfs diff=lfs merge=lfs -text
-
-# Check LFS status
-git lfs ls-files
-```
-
-### Data Sources
-
-| Source | Location | Format |
-|--------|----------|--------|
-| Warp Terminal | `~/.local/state/warp-terminal/warp.sqlite` | SQLite |
-| Warp Preview | `~/.local/state/warp-terminal-preview/warp.sqlite` | SQLite |
-| Antigravity | `~/.gemini/antigravity/brain/` | Markdown |
-| Episodic Memory | `~/.config/superpowers/conversation-archive/` | JSONL |
-
----
-
-## 📈 Stats
-
-- **Total Size**: ~308MB
-- **Files**: 599+
-- **AI Queries**: 1,708
-- **Agent Conversations**: 49
-- **Gemini Sessions**: 15
-- **Custom Skills**: 4
-- **Documentation Files**: 25+
-
----
-
-## 🔗 Related
-
-- [Claude Code Documentation](https://docs.anthropic.com/claude-code)
-- [Superpowers Plugin](https://github.com/obra/superpowers)
-- [Episodic Memory Plugin](https://github.com/anthropics/claude-code-plugins)
-
----
-
-## 📝 License
-
-Personal use. This repository contains personal AI conversation history and machine configurations.
+**Inspired by:**
+- [chezmoi](https://www.chezmoi.io/) - Dotfile management
+- [yadm](https://yadm.io/) - Yet Another Dotfiles Manager
+- [stow](https://www.gnu.org/software/stow/) - Symlink farm manager
 
 ---
 
 <div align="center">
 
-**Sync your AI intelligence across all machines** 🧠
+**[Documentation](docs/) • [Report Bug](https://github.com/robertogogoni/claude-cross-machine-sync/issues) • [Request Feature](https://github.com/robertogogoni/claude-cross-machine-sync/issues)**
 
-*Last updated: 2026-01-21*
+Made with ☕ and Claude Code
+
+⭐ Star this repo if it helps you!
 
 </div>
