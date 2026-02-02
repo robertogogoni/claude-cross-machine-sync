@@ -1,6 +1,6 @@
 # Claude Code Cross-Machine Setup
 
-**Last Updated**: 2026-01-27
+**Last Updated**: 2026-02-02
 **Machines**: Dell G15 (Windows), MacBook Air (Linux), Samsung Laptop (Linux)
 **Repository**: https://github.com/robertogogoni/claude-cross-machine-sync
 
@@ -141,6 +141,69 @@ Bootstrap automatically:
 ---
 
 ## Recent Solutions & Fixes
+
+### 2026-02-02: System Update Errors & GitHub Profile Fixes
+
+**Session Goal**: Fix system update errors and troubleshoot GitHub profile widgets
+
+**What We Accomplished**:
+
+#### 1. Fixed beeper-v4-bin AUR Package Conflict
+
+**Problem**: `yay -Syu` failed with "file exists in filesystem" errors (75+ files)
+
+**Root Cause**:
+- `update-beeper` script installs Beeper to `/opt/beeper` without pacman tracking
+- `beeper-v4-bin` AUR package owns the same files
+- Pacman detects modified files and refuses to overwrite
+
+**Solution**:
+1. Removed AUR package: `sudo pacman -Rdd --noconfirm beeper-v4-bin`
+2. Restored from backup: `sudo cp -a /opt/beeper-backups/beeper-backup-*/* /opt/beeper/`
+3. Added to yay ignore list in `omarchy-update-system-pkgs`
+4. Created migration script at `migrations/1770031300.sh`
+
+**Key Learning**: Pacman's `-Rdd` flag only skips dependency checks, it still removes files. There's no clean way to "orphan" files in pacman.
+
+**Documentation**: `learnings/beeper-package-conflict-fix.md`
+
+#### 2. Fixed GitHub Profile Widget Errors
+
+**Problem**: "Something went wrong" error on profile widgets
+
+**Issues Found & Fixed**:
+
+| Issue | Root Cause | Fix |
+|-------|------------|-----|
+| Repo pin widget broken | `claude-cross-machine-sync` is PRIVATE | Replaced with public `awesome-beeper` |
+| Snake animation broken | Workflow lacked `contents: write` permission | Added permissions block |
+| No output branch | Workflow couldn't push | Fixed by permission change |
+
+**Key Learning**: GitHub readme-stats widgets cannot display PRIVATE repositories even with a PAT on Vercel - visitors can't authenticate.
+
+**Files Modified**:
+- `.github/workflows/snake.yml` - Added `permissions: contents: write`
+- `README.md` - Replaced private repo widget
+
+**Documentation**: `learnings/github-profile-widgets-troubleshooting.md`
+
+#### 3. Stored Insights to Cortex
+
+Captured 6 patterns/learnings:
+- Pacman `-Rdd` behavior
+- AUR package conflict resolution pattern
+- GitHub Actions workflow permissions
+- Private repo widget limitations
+- Cache busting for Vercel widgets
+- Widget theme naming conventions
+
+**Commits Made**:
+- `omarchy`: Fix beeper-v4-bin AUR package conflict
+- `claude-cross-machine-sync`: Documentation (2 commits)
+- `update-beeper`: CHANGELOG update
+- `robertogogoni/robertogogoni`: Widget and workflow fixes (2 commits)
+
+---
 
 ### 2026-01-27: Cortex v2.0.0 Production Release
 
