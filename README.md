@@ -172,7 +172,7 @@ machine-sync/
 ### Progress
 
 ```
-Overall    [############--------]  60%
+Overall    ▰▰▰▰▰▰▰▰▰▰▰▰▱▱▱▱▱▱▱▱  60%
 ```
 
 | Phase | Name | Status | Progress |
