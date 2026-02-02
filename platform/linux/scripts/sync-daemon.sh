@@ -8,6 +8,8 @@
 #   ./sync-daemon.sh --stop       Stop daemon
 #   ./sync-daemon.sh --status     Check status
 #   ./sync-daemon.sh --install    Install systemd service
+#   ./sync-daemon.sh --flush-queue Flush offline commit queue
+#   ./sync-daemon.sh --dry-run    Preview changes without executing
 
 set -e
 
@@ -17,18 +19,33 @@ HOSTNAME=$(hostname)
 LOG_FILE="$HOME/.local/state/machine-sync/sync.log"
 PID_FILE="$HOME/.local/state/machine-sync/daemon.pid"
 LOCK_FILE="$HOME/.local/state/machine-sync/daemon.lock"
+OFFLINE_QUEUE_DIR="$HOME/.local/state/machine-sync/offline-queue"
 DEBOUNCE_SECONDS=3
 PULL_INTERVAL=300  # 5 minutes
 
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-NC='\033[0m'
+# Retry configuration
+RETRY_COUNT=3
+RETRY_DELAYS=(5 15 60)  # Exponential backoff in seconds
+
+# Colors (export for lib scripts)
+export RED='\033[0;31m'
+export GREEN='\033[0;32m'
+export YELLOW='\033[1;33m'
+export CYAN='\033[0;36m'
+export NC='\033[0m'
+
+# Mode flags
+DRY_RUN=false
+SKIP_PREFLIGHT=false
 
 # Ensure directories exist
-mkdir -p "$(dirname "$LOG_FILE")"
+mkdir -p "$(dirname "$LOG_FILE")" "$OFFLINE_QUEUE_DIR"
+
+# Source library modules
+LIB_DIR="$REPO_DIR/lib"
+if [[ -f "$LIB_DIR/validator.sh" ]]; then
+    source "$LIB_DIR/validator.sh"
+fi
 
 # Logging
 log() {
@@ -44,8 +61,22 @@ log() {
     fi
 }
 
-# Dependencies check
+# Dependencies check (now uses validator if available)
 check_deps() {
+    if [[ "$SKIP_PREFLIGHT" == "true" ]]; then
+        log "Skipping pre-flight validation"
+        return 0
+    fi
+
+    if type -t validate_quick &>/dev/null; then
+        if ! validate_quick "$REPO_DIR"; then
+            log "Quick validation failed" "ERROR"
+            exit 1
+        fi
+        return 0
+    fi
+
+    # Fallback to basic check
     local missing=()
     command -v inotifywait &>/dev/null || missing+=("inotify-tools")
     command -v git &>/dev/null || missing+=("git")
@@ -55,6 +86,99 @@ check_deps() {
         log "Install with: sudo pacman -S ${missing[*]}"
         exit 1
     fi
+}
+
+#######################################
+# Check network connectivity
+#######################################
+is_online() {
+    timeout 3 bash -c "echo >/dev/tcp/github.com/443" 2>/dev/null
+}
+
+#######################################
+# Queue a commit for later (offline mode)
+# Arguments:
+#   $1 - Commit message
+#   $2 - Files (newline separated)
+#######################################
+queue_offline_commit() {
+    local message="$1"
+    local files="$2"
+    local queue_file="$OFFLINE_QUEUE_DIR/$(date +%Y%m%d-%H%M%S).commit"
+
+    cat > "$queue_file" << EOF
+{
+    "timestamp": "$(date -Iseconds)",
+    "hostname": "$HOSTNAME",
+    "message": $(echo "$message" | jq -Rs .),
+    "files": $(echo "$files" | jq -Rs .)
+}
+EOF
+
+    log "Queued commit for later: $queue_file" "WARN"
+}
+
+#######################################
+# Flush offline commit queue
+#######################################
+flush_offline_queue() {
+    local queue_files
+    queue_files=$(find "$OFFLINE_QUEUE_DIR" -name "*.commit" -type f 2>/dev/null | sort)
+
+    if [[ -z "$queue_files" ]]; then
+        log "No queued commits to flush"
+        return 0
+    fi
+
+    if ! is_online; then
+        log "Still offline, cannot flush queue" "WARN"
+        return 1
+    fi
+
+    log "Flushing offline queue..."
+
+    cd "$REPO_DIR"
+    local flushed=0
+
+    for queue_file in $queue_files; do
+        log "Processing: $(basename "$queue_file")"
+
+        # The changes should already be committed locally
+        # We just need to push
+        if git_push_with_retry; then
+            rm -f "$queue_file"
+            ((flushed++))
+        else
+            log "Could not flush $queue_file, will retry later" "WARN"
+            break
+        fi
+    done
+
+    log "Flushed $flushed queued commit(s)"
+}
+
+#######################################
+# Git push with exponential backoff retry
+#######################################
+git_push_with_retry() {
+    local attempt=1
+
+    while [ $attempt -le $RETRY_COUNT ]; do
+        if git push 2>&1; then
+            return 0
+        fi
+
+        if [ $attempt -lt $RETRY_COUNT ]; then
+            local delay=${RETRY_DELAYS[$attempt-1]:-60}
+            log "Push failed, retrying in ${delay}s (attempt $attempt/$RETRY_COUNT)" "WARN"
+            sleep "$delay"
+        fi
+
+        ((attempt++))
+    done
+
+    log "Push failed after $RETRY_COUNT attempts" "ERROR"
+    return 1
 }
 
 # Categorization logic
@@ -114,44 +238,167 @@ git_sync() {
     local file_count
     file_count=$(echo "$files" | wc -l)
 
-    git commit -m "${scope} Auto-sync from $HOSTNAME
+    local commit_msg="${scope} Auto-sync from $HOSTNAME
 
 Changed files:
 $(echo "$files" | sed 's/^/- /')
 
-Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>" 2>&1 || true
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>"
+
+    git commit -m "$commit_msg" 2>&1 || true
 
     log "Committed: $scope ($file_count files)"
 
     if [ "$push" = "true" ]; then
-        if git push 2>&1; then
+        if ! is_online; then
+            log "Offline - queuing commit for later" "WARN"
+            queue_offline_commit "$commit_msg" "$files"
+            return
+        fi
+
+        if git_push_with_retry; then
             log "Pushed to remote"
+            # Flush any queued commits while we're online
+            flush_offline_queue 2>/dev/null || true
         else
-            log "Push failed" "WARN"
+            log "Push failed after retries - queuing for later" "WARN"
+            queue_offline_commit "$commit_msg" "$files"
         fi
     fi
 }
 
-# Git pull
+# Git pull with conflict resolution
 git_pull() {
     cd "$REPO_DIR"
 
-    git fetch origin 2>/dev/null
+    if ! is_online; then
+        log "Offline - skipping pull"
+        return 1
+    fi
 
-    local local_head remote_head
+    git fetch origin 2>/dev/null || return 1
+
+    local local_head remote_head branch
     local_head=$(git rev-parse HEAD)
-    remote_head=$(git rev-parse origin/master 2>/dev/null || git rev-parse origin/main 2>/dev/null)
+    branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo "master")
+    remote_head=$(git rev-parse "origin/$branch" 2>/dev/null || return 1)
 
-    if [ "$local_head" != "$remote_head" ]; then
-        log "Pulling changes from remote..."
-        if git pull --rebase 2>&1; then
-            log "Pull successful"
+    if [ "$local_head" = "$remote_head" ]; then
+        return 1  # No changes
+    fi
+
+    log "Pulling changes from remote..."
+
+    # Try normal rebase first
+    if git pull --rebase 2>&1; then
+        log "Pull successful"
+        return 0
+    fi
+
+    log "Pull failed, attempting conflict resolution..." "WARN"
+
+    # Check if we're in a conflicted state
+    if git diff --name-only --diff-filter=U | grep -q .; then
+        resolve_conflicts
+        return $?
+    else
+        # Pull failed for other reasons
+        log "Pull failed (not a conflict)" "ERROR"
+        return 1
+    fi
+}
+
+#######################################
+# Resolve merge conflicts using tiered strategy
+# Tier 1: Auto-resolve (ours for machine-specific, theirs for universal)
+# Tier 2: Stash and retry
+# Tier 3: Create conflict branch
+#######################################
+resolve_conflicts() {
+    local conflicted_files
+    conflicted_files=$(git diff --name-only --diff-filter=U)
+
+    log "Resolving conflicts in: $(echo "$conflicted_files" | wc -l) file(s)"
+
+    local auto_resolved=0
+    local manual_required=0
+
+    for file in $conflicted_files; do
+        if [[ "$file" =~ ^machines/$HOSTNAME/ ]] || [[ "$file" =~ ^machines/$(echo "$HOSTNAME" | tr '[:upper:]' '[:lower:]')/ ]]; then
+            # Machine-specific: keep ours
+            git checkout --ours "$file" 2>/dev/null && git add "$file"
+            log "  Auto-resolved (ours): $file"
+            ((auto_resolved++))
+        elif [[ "$file" =~ ^universal/ ]]; then
+            # Universal: accept theirs
+            git checkout --theirs "$file" 2>/dev/null && git add "$file"
+            log "  Auto-resolved (theirs): $file"
+            ((auto_resolved++))
+        else
+            # Unknown: need manual resolution
+            ((manual_required++))
+        fi
+    done
+
+    if [ $manual_required -eq 0 ]; then
+        # All conflicts auto-resolved, continue rebase
+        git rebase --continue 2>/dev/null || git commit --no-edit 2>/dev/null || true
+        log "All conflicts auto-resolved ($auto_resolved files)"
+        return 0
+    fi
+
+    # Tier 2: Stash local changes and try again
+    log "Manual conflicts remain, trying stash strategy..." "WARN"
+    git rebase --abort 2>/dev/null || true
+
+    local stash_result
+    stash_result=$(git stash push -m "machine-sync-conflict-$(date +%s)" 2>&1)
+
+    if echo "$stash_result" | grep -q "No local changes"; then
+        # Nothing to stash, create conflict branch
+        create_conflict_branch
+        return 1
+    fi
+
+    # Try pull again
+    if git pull --rebase 2>&1; then
+        # Apply stash
+        if git stash pop 2>&1; then
+            log "Stash strategy successful"
             return 0
         else
-            log "Pull failed" "WARN"
+            log "Stash pop failed, conflicts in stash" "WARN"
+            # Restore stash for manual handling
+            git checkout --theirs . 2>/dev/null || true
+            git stash drop 2>/dev/null || true
         fi
     fi
+
+    # Tier 3: Create conflict branch
+    create_conflict_branch
     return 1
+}
+
+#######################################
+# Create a conflict branch for manual resolution
+#######################################
+create_conflict_branch() {
+    local branch="conflict-$HOSTNAME-$(date +%Y%m%d-%H%M%S)"
+
+    log "Creating conflict branch: $branch" "WARN"
+
+    git rebase --abort 2>/dev/null || true
+    git checkout -b "$branch" 2>/dev/null || true
+
+    log "MANUAL ACTION REQUIRED:" "ERROR"
+    log "  1. Review conflicts in branch: $branch"
+    log "  2. Resolve and commit"
+    log "  3. Merge back or delete branch"
+    log "  4. Restart sync daemon"
+
+    # Write conflict notification file
+    local notify_file="$HOME/.local/state/machine-sync/conflict-pending"
+    echo "$branch" > "$notify_file"
 }
 
 # Watch directories
@@ -345,6 +592,16 @@ case "${1:-}" in
         ;;
     --status)
         show_status
+        # Also show queue status
+        queue_count=$(find "$OFFLINE_QUEUE_DIR" -name "*.commit" -type f 2>/dev/null | wc -l)
+        if [ "$queue_count" -gt 0 ]; then
+            echo -e "\n${YELLOW}Offline queue: $queue_count pending commit(s)${NC}"
+        fi
+        # Check for pending conflicts
+        if [ -f "$HOME/.local/state/machine-sync/conflict-pending" ]; then
+            conflict_branch=$(cat "$HOME/.local/state/machine-sync/conflict-pending")
+            echo -e "\n${RED}CONFLICT PENDING: Branch $conflict_branch needs manual resolution${NC}"
+        fi
         ;;
     --install)
         check_deps
@@ -359,6 +616,31 @@ case "${1:-}" in
         echo -e "${GREEN}Daemon started (PID: $(cat "$PID_FILE"))${NC}"
         echo -e "${CYAN}Log file: $LOG_FILE${NC}"
         ;;
+    --flush-queue)
+        flush_offline_queue
+        ;;
+    --dry-run)
+        DRY_RUN=true
+        echo -e "${YELLOW}DRY-RUN MODE - No changes will be made${NC}"
+        check_deps
+        echo ""
+        echo "Would watch directories:"
+        get_watch_dirs | while read -r dir; do
+            echo "  - $dir"
+        done
+        echo ""
+        echo "Configuration:"
+        echo "  Debounce: ${DEBOUNCE_SECONDS}s"
+        echo "  Pull interval: ${PULL_INTERVAL}s"
+        echo "  Retry count: $RETRY_COUNT"
+        echo "  Retry delays: ${RETRY_DELAYS[*]}s"
+        ;;
+    --skip-preflight)
+        SKIP_PREFLIGHT=true
+        shift
+        # Re-run with remaining args
+        exec "$0" "$@"
+        ;;
     --help|-h)
         echo "Machine Sync Daemon"
         echo ""
@@ -368,6 +650,9 @@ case "${1:-}" in
         echo "  $0 --stop       Stop daemon"
         echo "  $0 --status     Check status"
         echo "  $0 --install    Install systemd service"
+        echo "  $0 --flush-queue Flush offline commit queue"
+        echo "  $0 --dry-run    Preview configuration"
+        echo "  $0 --skip-preflight  Skip validation checks"
         ;;
     "")
         check_deps

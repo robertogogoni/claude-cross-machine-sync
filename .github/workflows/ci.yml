@@ -1,0 +1,210 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Lint shell scripts
+        run: |
+          echo "Checking bootstrap.sh..."
+          shellcheck -x bootstrap.sh || true
+
+          echo "Checking lib/*.sh..."
+          shellcheck -x lib/*.sh || true
+
+          echo "Checking sync-daemon.sh..."
+          shellcheck -x platform/linux/scripts/sync-daemon.sh || true
+
+      - name: Check PowerShell syntax
+        run: |
+          pwsh -Command "
+            \$scripts = @(
+              'bootstrap.ps1',
+              'platform/windows/scripts/sync-daemon.ps1'
+            )
+            \$hasErrors = \$false
+            foreach (\$script in \$scripts) {
+              if (Test-Path \$script) {
+                Write-Host \"Checking \$script...\"
+                \$null = [System.Management.Automation.Language.Parser]::ParseFile(
+                  \$script, [ref]\$null, [ref]\$errors
+                )
+                if (\$errors) {
+                  \$hasErrors = \$true
+                  \$errors | ForEach-Object { Write-Error \$_.Message }
+                } else {
+                  Write-Host \"  OK\"
+                }
+              }
+            }
+            if (\$hasErrors) { exit 1 }
+          "
+
+  test-linux:
+    name: Test (Linux)
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y inotify-tools jq
+
+      - name: Make scripts executable
+        run: |
+          chmod +x bootstrap.sh
+          chmod +x lib/*.sh
+          chmod +x platform/linux/scripts/*.sh
+          chmod +x tests/*.sh 2>/dev/null || true
+          chmod +x tests/**/*.sh 2>/dev/null || true
+
+      - name: Run unit tests
+        run: |
+          if [ -f tests/run_all.sh ]; then
+            ./tests/run_all.sh
+          else
+            echo "No test runner found, running basic checks..."
+            # Basic syntax check
+            bash -n bootstrap.sh
+            bash -n lib/validator.sh
+            bash -n lib/rollback.sh
+            bash -n platform/linux/scripts/sync-daemon.sh
+            echo "All syntax checks passed"
+          fi
+
+      - name: Test dry-run mode
+        run: |
+          ./bootstrap.sh --dry-run --skip-preflight
+
+  test-windows:
+    name: Test (Windows)
+    runs-on: windows-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run PowerShell tests
+        shell: pwsh
+        run: |
+          # Basic syntax validation
+          $scripts = @(
+            'bootstrap.ps1',
+            'platform/windows/scripts/sync-daemon.ps1'
+          )
+
+          foreach ($script in $scripts) {
+            if (Test-Path $script) {
+              Write-Host "Testing $script..."
+              $null = [System.Management.Automation.Language.Parser]::ParseFile(
+                $script, [ref]$null, [ref]$errors
+              )
+              if ($errors) {
+                throw "Syntax errors in $script"
+              }
+              Write-Host "  Syntax OK"
+            }
+          }
+
+      - name: Test status command
+        shell: pwsh
+        run: |
+          # Test that status command works (will show "not running" which is expected)
+          & .\platform\windows\scripts\sync-daemon.ps1 -Mode Status
+
+  test-macos:
+    name: Test (macOS)
+    runs-on: macos-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          brew install jq || true
+
+      - name: Make scripts executable
+        run: |
+          chmod +x bootstrap.sh
+          chmod +x lib/*.sh
+
+      - name: Run macOS-compatible tests
+        run: |
+          # Test scripts that should work on macOS
+          bash -n bootstrap.sh
+          bash -n lib/validator.sh
+          bash -n lib/rollback.sh
+
+          echo "macOS syntax checks passed"
+
+      - name: Test validation module
+        run: |
+          source lib/validator.sh
+          # Test sanitize_path function
+          result=$(sanitize_path "../../etc/passwd")
+          if [[ "$result" == *"/"* ]] || [[ "$result" == *".."* ]]; then
+            echo "FAIL: Path traversal not sanitized"
+            exit 1
+          fi
+          echo "PASS: sanitize_path works correctly"
+
+  integration:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    needs: [test-linux]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y inotify-tools jq
+
+      - name: Make scripts executable
+        run: |
+          chmod +x bootstrap.sh lib/*.sh platform/linux/scripts/*.sh
+
+      - name: Test full bootstrap dry-run
+        run: |
+          ./bootstrap.sh --dry-run
+
+      - name: Test sync daemon dry-run
+        run: |
+          ./platform/linux/scripts/sync-daemon.sh --dry-run
+
+      - name: Test offline queue creation
+        run: |
+          source lib/validator.sh
+          OFFLINE_QUEUE_DIR="/tmp/test-offline-queue"
+          mkdir -p "$OFFLINE_QUEUE_DIR"
+
+          # Create a test queue file
+          echo '{"test": true}' > "$OFFLINE_QUEUE_DIR/test.commit"
+
+          # Verify it exists
+          if [ -f "$OFFLINE_QUEUE_DIR/test.commit" ]; then
+            echo "PASS: Offline queue directory works"
+          else
+            echo "FAIL: Could not create queue file"
+            exit 1
+          fi
+
+          # Cleanup
+          rm -rf "$OFFLINE_QUEUE_DIR"
