@@ -1,0 +1,7 @@
+# Include the default system Compose table
+include "%L"
+
+# Override dead_acute + c/C to produce cedilla (ç/Ç) instead of c-acute (ć/Ć)
+# This is the standard behavior for Portuguese (pt_BR) but not for en_US
+<dead_acute> <c> : "ç" ccedilla
+<dead_acute> <C> : "Ç" Ccedilla
