@@ -1,0 +1,115 @@
+{
+  "identity": {
+    "name": "omarchy-samsung",
+    "friendlyName": "Omarchy Samsung Laptop",
+    "hostname": "omarchy",
+    "machineId": "289969333a234ba5915b5f1378f0821c",
+    "type": "laptop",
+    "primary": true,
+    "lastSeen": "2026-01-07"
+  },
+  "hardware": {
+    "vendor": "SAMSUNG ELECTRONICS CO., LTD.",
+    "model": "270E5J/2570EJ",
+    "series": "SAMSUNG SENS Series",
+    "sku": "P07RCK",
+    "firmwareVersion": "P07RCK.051.150623.XK",
+    "firmwareDate": "2015-06-23",
+    "cpu": {
+      "model": "Intel(R) Core(TM) i7-4510U CPU @ 2.00GHz",
+      "vendor": "GenuineIntel",
+      "architecture": "x86_64",
+      "cores": 2,
+      "threads": 4,
+      "baseFreq": "2.00GHz",
+      "generation": "Haswell (4th gen)"
+    },
+    "memory": {
+      "total": "7.7GB",
+      "type": "DDR3",
+      "available": "~4.5GB typical"
+    },
+    "storage": {
+      "root": {
+        "device": "/dev/mapper/root",
+        "size": "930GB",
+        "used": "144GB",
+        "available": "785GB",
+        "usage": "16%",
+        "type": "LVM"
+      }
+    },
+    "graphics": {
+      "integrated": "Intel Haswell-ULT Integrated Graphics Controller",
+      "pciId": "00:02.0"
+    },
+    "network": {
+      "typicalIp": "192.168.0.89",
+      "interfaces": ["ethernet", "wifi"]
+    }
+  },
+  "os": {
+    "distribution": "Arch Linux",
+    "id": "arch",
+    "kernel": "6.18.3-arch1-1",
+    "kernelVersion": "Linux 6.18.3-arch1-1 #1 SMP PREEMPT_DYNAMIC",
+    "architecture": "x86_64",
+    "init": "systemd"
+  },
+  "capabilities": {
+    "performance": "medium",
+    "portability": "high",
+    "powerUsage": "laptop",
+    "goodFor": [
+      "Development",
+      "General computing",
+      "Docker containers",
+      "Light to medium workloads"
+    ],
+    "limitations": [
+      "Older CPU generation (2014)",
+      "Limited to 8GB RAM",
+      "Integrated graphics only"
+    ]
+  },
+  "software": {
+    "shell": "bash",
+    "packageManager": "pacman",
+    "containerization": ["docker"],
+    "nodeManager": "mise",
+    "development": {
+      "languages": ["python3", "node.js"],
+      "tools": ["git", "jq", "npm", "npx"]
+    }
+  },
+  "claudeCode": {
+    "configLocation": "/home/robthepirate/.claude",
+    "settingsProfile": "default",
+    "features": {
+      "passwordlessSudo": true,
+      "mcpServers": ["memory", "sequential-thinking", "chrome", "brave-search", "git", "sqlite", "fetch"],
+      "customCommands": ["/analyze", "/security-scan", "/refactor", "/explain"],
+      "skills": ["debugging", "code-review", "testing"],
+      "agents": ["code-reviewer", "debugger", "test-writer"]
+    },
+    "preferences": {
+      "outputStyle": "Explanatory",
+      "defaultMode": "ask",
+      "hooks": {
+        "fileProtection": true,
+        "bashLogging": true
+      }
+    }
+  },
+  "usage": {
+    "primaryPurpose": "Development workstation",
+    "workingHours": "Variable",
+    "location": "Home/Office",
+    "notes": "Primary development machine with Arch Linux. Good for Docker, general development, and CLI work."
+  },
+  "metadata": {
+    "created": "2026-01-07",
+    "lastUpdated": "2026-01-07",
+    "profileVersion": "1.0"
+  }
+}

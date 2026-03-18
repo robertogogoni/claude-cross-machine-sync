@@ -1,0 +1,109 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "Task",
+      "WebFetch",
+      "WebSearch",
+      "TodoWrite",
+      "NotebookEdit",
+      "Skill",
+      "KillShell",
+      "TaskOutput",
+      "AskUserQuestion",
+      "EnterPlanMode",
+      "ExitPlanMode"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import json, sys; data=json.load(sys.stdin); path=data.get('tool_input',{}).get('file_path',''); protected=['.env', '.env.local', '.env.production', 'credentials.json', 'secrets.json', '.git/', 'id_rsa', 'id_ed25519', '.pem', 'claude_desktop_config.json']; system_configs=['hypridle.conf', 'monitors.conf', 'input.conf', 'chrome/policies/managed/permissions.json']; is_protected=any(p in path for p in protected); is_system=any(path.endswith(s) for s in system_configs); sys.exit(2 if (is_protected or is_system) else 0)\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/log-bash-command.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x ~/.claude/machines/detect-machine.sh ]; then MACHINE=$(~/.claude/machines/detect-machine.sh --name-only 2>/dev/null || echo 'unknown'); if [ -n \"$MACHINE\" ] && [ \"$MACHINE\" != \"unknown\" ]; then mkdir -p ~/.claude/machines 2>/dev/null && cd ~/.claude/machines && ln -sf \"${MACHINE}.json\" current.json 2>/dev/null; fi; fi; exit 0"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /home/robthepirate/.local/share/mcp-servers/cortex-claude/hooks/session-start.cjs"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /home/robthepirate/.local/share/mcp-servers/cortex-claude/hooks/session-end.cjs"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.local/bin/claude-memory-sync"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /home/robthepirate/.local/share/mcp-servers/cortex-claude/hooks/pre-compact.cjs"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /home/robthepirate/.local/share/mcp-servers/cortex-claude/hooks/stop-hook.cjs"
+          }
+        ]
+      }
+    ]
+  },
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true,
+  "autoUpdatesChannel": "latest"
+}

@@ -1,0 +1,43 @@
+#!/bin/bash
+# Auto-update claude-desktop-bin from AUR
+# Triggered by systemd timer: claude-desktop-update.timer
+
+LOG="$HOME/.local/share/claude-desktop/update.log"
+mkdir -p "$(dirname "$LOG")"
+
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$LOG"; }
+
+log "Checking for claude-desktop-bin updates..."
+
+# Get installed and latest versions
+INSTALLED=$(pacman -Q claude-desktop-bin 2>/dev/null | awk '{print $2}')
+LATEST=$(yay -Si claude-desktop-bin 2>/dev/null | grep "^Version" | awk '{print $3}')
+
+if [ -z "$INSTALLED" ]; then
+    log "ERROR: claude-desktop-bin not installed"
+    exit 1
+fi
+
+if [ -z "$LATEST" ]; then
+    log "ERROR: Could not fetch latest version from AUR"
+    exit 1
+fi
+
+if [ "$INSTALLED" = "$LATEST" ]; then
+    log "Already up to date: $INSTALLED"
+    exit 0
+fi
+
+log "Update available: $INSTALLED -> $LATEST"
+log "Installing update..."
+
+if yay -S --noconfirm claude-desktop-bin >> "$LOG" 2>&1; then
+    NEW=$(pacman -Q claude-desktop-bin 2>/dev/null | awk '{print $2}')
+    log "Updated successfully: $NEW"
+    notify-send -a "Claude Desktop" -i claude-desktop \
+        "Claude Desktop Updated" \
+        "Updated from $INSTALLED to $NEW" 2>/dev/null
+else
+    log "ERROR: Update failed"
+    exit 1
+fi

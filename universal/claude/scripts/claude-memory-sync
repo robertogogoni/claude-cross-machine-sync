@@ -1,0 +1,67 @@
+#!/bin/bash
+# Compiles Claude Code CLI memory files into a single profile
+# readable by Claude Desktop via the filesystem MCP server.
+# Triggered by Claude Code SessionEnd hook.
+
+MEMORY_DIR="$HOME/.claude/projects/-home-robthepirate/memory"
+OUTPUT="$HOME/.claude/memory-profile.md"
+TEMP="$OUTPUT.tmp"
+
+# Only run if memory files exist
+[ -d "$MEMORY_DIR" ] || exit 0
+
+cat > "$TEMP" << 'HEADER'
+# Claude Memory Profile
+# Auto-synced from Claude Code CLI memories
+# This file is read by Claude Desktop via the filesystem MCP server.
+# DO NOT EDIT — regenerated automatically on CLI session end.
+
+HEADER
+
+echo "Last synced: $(date '+%Y-%m-%d %H:%M:%S')" >> "$TEMP"
+echo "" >> "$TEMP"
+
+# User section
+echo "## User Profile" >> "$TEMP"
+echo "" >> "$TEMP"
+for f in "$MEMORY_DIR"/user_*.md; do
+    [ -f "$f" ] || continue
+    # Strip frontmatter and output content
+    sed -n '/^---$/,/^---$/!p' "$f" | sed '/^$/N;/^\n$/d' >> "$TEMP"
+    echo "" >> "$TEMP"
+done
+
+# Feedback section
+echo "## Preferences & Feedback" >> "$TEMP"
+echo "" >> "$TEMP"
+for f in "$MEMORY_DIR"/feedback_*.md; do
+    [ -f "$f" ] || continue
+    name=$(sed -n 's/^name: //p' "$f")
+    echo "### $name" >> "$TEMP"
+    sed -n '/^---$/,/^---$/!p' "$f" | sed '/^$/N;/^\n$/d' >> "$TEMP"
+    echo "" >> "$TEMP"
+done
+
+# Project section
+echo "## Active Projects" >> "$TEMP"
+echo "" >> "$TEMP"
+for f in "$MEMORY_DIR"/project_*.md; do
+    [ -f "$f" ] || continue
+    name=$(sed -n 's/^name: //p' "$f")
+    echo "### $name" >> "$TEMP"
+    sed -n '/^---$/,/^---$/!p' "$f" | sed '/^$/N;/^\n$/d' >> "$TEMP"
+    echo "" >> "$TEMP"
+done
+
+# Reference section
+echo "## References" >> "$TEMP"
+echo "" >> "$TEMP"
+for f in "$MEMORY_DIR"/reference_*.md; do
+    [ -f "$f" ] || continue
+    name=$(sed -n 's/^name: //p' "$f")
+    echo "### $name" >> "$TEMP"
+    sed -n '/^---$/,/^---$/!p' "$f" | sed '/^$/N;/^\n$/d' >> "$TEMP"
+    echo "" >> "$TEMP"
+done
+
+mv "$TEMP" "$OUTPUT"

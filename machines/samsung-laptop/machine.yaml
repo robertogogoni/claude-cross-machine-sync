@@ -1,0 +1,127 @@
+# Samsung Laptop - Machine Configuration
+# Generated from ~/.claude/machines/omarchy-samsung.json
+
+identity:
+  name: omarchy-samsung
+  friendly_name: Omarchy Samsung Laptop
+  hostname: omarchy
+  machine_id: 289969333a234ba5915b5f1378f0821c
+  type: laptop
+  primary: true
+
+hardware:
+  vendor: SAMSUNG ELECTRONICS CO., LTD.
+  model: 270E5J/2570EJ
+  series: SAMSUNG SENS Series
+  sku: P07RCK
+  firmware_version: P07RCK.051.150623.XK
+  firmware_date: "2015-06-23"
+  cpu:
+    model: Intel(R) Core(TM) i7-4510U CPU @ 2.00GHz
+    vendor: GenuineIntel
+    architecture: x86_64
+    cores: 2
+    threads: 4
+    base_freq: 2.00GHz
+    generation: Haswell (4th gen)
+  memory:
+    total: 7.7GB
+    type: DDR3
+    available: ~4.5GB typical
+  storage:
+    root:
+      device: /dev/mapper/root
+      size: 930GB
+      used: 144GB
+      available: 785GB
+      usage: 16%
+      type: LVM
+  graphics:
+    integrated: Intel Haswell-ULT Integrated Graphics Controller
+    pci_id: "00:02.0"
+  network:
+    typical_ip: 192.168.0.89
+    interfaces:
+      - ethernet
+      - wifi
+
+os:
+  distribution: Arch Linux
+  id: arch
+  kernel: 6.18.3-arch1-1
+  architecture: x86_64
+  init: systemd
+
+capabilities:
+  performance: medium
+  portability: high
+  power_usage: laptop
+  good_for:
+    - Development
+    - General computing
+    - Docker containers
+    - Light to medium workloads
+  limitations:
+    - Older CPU generation (2014)
+    - Limited to 8GB RAM
+    - Integrated graphics only
+
+software:
+  shell: bash
+  package_manager: pacman
+  containerization:
+    - docker
+  node_manager: mise
+  development:
+    languages:
+      - python3
+      - node.js
+    tools:
+      - git
+      - jq
+      - npm
+      - npx
+
+claude_code:
+  config_location: /home/robthepirate/.claude
+  settings_profile: default
+  features:
+    passwordless_sudo: true
+    mcp_servers:
+      - memory
+      - sequential-thinking
+      - chrome
+      - brave-search
+      - git
+      - sqlite
+      - fetch
+    custom_commands:
+      - /analyze
+      - /security-scan
+      - /refactor
+      - /explain
+    skills:
+      - debugging
+      - code-review
+      - testing
+    agents:
+      - code-reviewer
+      - debugger
+      - test-writer
+  preferences:
+    output_style: Explanatory
+    default_mode: ask
+    hooks:
+      file_protection: true
+      bash_logging: true
+
+usage:
+  primary_purpose: Development workstation
+  working_hours: Variable
+  location: Home/Office
+  notes: Primary development machine with Arch Linux. Good for Docker, general development, and CLI work.
+
+metadata:
+  created: "2026-01-07"
+  last_updated: "2026-01-07"
+  profile_version: "1.0"

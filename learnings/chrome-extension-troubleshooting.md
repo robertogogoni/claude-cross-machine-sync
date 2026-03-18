@@ -203,6 +203,54 @@ DefaultPopupsSetting: 1
 
 ---
 
+## Issue: Bridge Not Connecting After Chrome Restart (2026-03-18)
+
+### Symptom
+Native host process is running, socket exists, extension is installed and enabled, but `mcp__claude-in-chrome__tabs_context_mcp` returns "Browser extension is not connected."
+
+### Root Cause
+Claude Code CLI initializes the chrome MCP bridge at **session start**. If the socket doesn't exist at that time (Chrome not running, native host not registered), it caches "not connected" and never retries.
+
+### Fix
+Restart the Claude Code CLI session. The new session will discover the socket and connect.
+
+### Prevention
+Ensure Chrome is running before starting Claude Code. The native host socket must exist at CLI session start.
+
+### Diagnostic flow
+```bash
+# 1. Check if native host is running
+ps aux | grep "chrome-native-host"
+
+# 2. Check if socket exists
+ls -la /tmp/claude-mcp-browser-bridge-$USER/
+
+# 3. Check if CLI is connected to socket
+ss -xp | grep "claude-mcp-browser"
+
+# 4. If socket exists but CLI not connected -> restart CLI session
+```
+
+---
+
+## Issue: Native Host Not Registered for Chrome Canary (2026-03-18)
+
+### Symptom
+Claude Code auto-registers native messaging hosts for `google-chrome` and `chromium` but NOT for `google-chrome-canary`.
+
+### Fix
+Symlink instead of copy (survives Claude Code updates):
+```bash
+mkdir -p ~/.config/google-chrome-canary/NativeMessagingHosts
+ln -s ~/.config/google-chrome/NativeMessagingHosts/com.anthropic.claude_code_browser_extension.json \
+      ~/.config/google-chrome-canary/NativeMessagingHosts/
+```
+
+### Why symlink
+Claude Code regenerates Chrome/Chromium manifests on self-update. Symlink means Canary always gets the latest manifest automatically.
+
+---
+
 ## Environment (MacBook Air)
 
 | Component | Version |

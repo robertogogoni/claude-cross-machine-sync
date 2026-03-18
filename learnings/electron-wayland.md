@@ -183,4 +183,26 @@ hyprctl clients | grep -A5 "class:"
 
 ---
 
-*Last updated: 2026-01-16*
+## Critical: Scale Factor Separation (2026-03-18)
+
+`--force-device-scale-factor=0.75` in `electron-flags.conf` breaks Claude Desktop. The app renders at 75% inside a 100%-sized window frame, creating grey padding around the content.
+
+**Rule:** Scale factors belong in app-specific conf files (e.g., `chrome-canary-flags.conf`), NEVER in the global `electron-flags.conf`.
+
+### Recommended electron-flags.conf (global)
+```
+--enable-features=UseOzonePlatform,WaylandWindowDecorations
+--ozone-platform=wayland
+--enable-wayland-ime
+```
+
+### Apps that use system Electron (read electron-flags.conf)
+| App | Wrapper |
+|-----|---------|
+| Claude Desktop | `exec electron /usr/lib/claude-desktop-bin/app.asar` |
+| Stremio | Uses electron39 |
+
+### WaylandWindowDecorations feature
+Added in 2026-03-18. Enables server-side window decorations on Wayland, making titlebars consistent with the compositor theme.
+
+*Last updated: 2026-03-18*

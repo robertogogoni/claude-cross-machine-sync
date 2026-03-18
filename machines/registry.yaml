@@ -44,21 +44,23 @@ machines:
       hypr: "/home/rob/.config/hypr"
 
   samsung-laptop:
-    hostname: samsung-arch
+    hostname: omarchy
     platform: linux
     os: Arch Linux
     desktop: omarchy
     hardware:
-      vendor: Samsung
-      model: TBD
+      vendor: SAMSUNG ELECTRONICS CO., LTD.
+      model: 270E5J/2570EJ
       type: laptop
-    status: pending
-    primary_user: rob
+      cpu: Intel Core i7-4510U @ 2.00GHz
+      gpu: Intel Haswell-ULT Integrated Graphics
+    status: active
+    primary_user: robthepirate
     config_paths:
-      home: "/home/rob"
-      claude: "/home/rob/.claude"
-      sync_repo: "/home/rob/claude-cross-machine-sync"
-      hypr: "/home/rob/.config/hypr"
+      home: "/home/robthepirate"
+      claude: "/home/robthepirate/.claude"
+      sync_repo: "/home/robthepirate/claude-cross-machine-sync"
+      hypr: "/home/robthepirate/.config/hypr"
 
 # Platform definitions
 platforms:

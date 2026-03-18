@@ -26,6 +26,15 @@ Thumbs.db
 .credentials.json
 **/credentials.json
 
+# Database files
+*.db
+
+# Memory profile
+**/memory-profile.md
+
+# Environment files (all directories)
+**/.env
+
 # Temporary files
 tmp/
 temp/
