@@ -2,151 +2,148 @@
 
 All notable changes to this project are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-
-Scope tags: `[universal]` = all machines, `[linux]` = Linux only, `[windows]` = Windows only, `[machine:name]` = single machine.
-
----
-
-## [Unreleased]
+Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## 2026-03-18
+## [1.0.0] - 2026-03-18 — Full Ecosystem
+
+The repo graduates from a sync tool to a complete Claude Code ecosystem manager. Samsung laptop fully onboarded, memory bridge built, comprehensive documentation layer added.
 
 ### Added
-- `[universal]` INSIGHTS.md: rationale and reasoning behind every major decision (`b933c7f`)
-- `[universal]` Comprehensive visual docs covering full repo content (`59cc268`)
-- `[universal]` Visual documentation: 6 Mermaid diagram sets (ecosystem, repo structure, MCP topology, memory architecture, hooks lifecycle, knowledge graph, and more) (`859983c`)
-- `[machine:samsung-laptop]` `[universal]` `[linux]` Full Samsung laptop setup: configs, 8 new learnings, machine-specific memory, MCP sync bridge (`d34fa6e`)
-
-## 2026-03-17
-
-### Added
-- Claude PR Assistant GitHub Actions workflow (`59e8675`)
-- Claude Code Review GitHub Actions workflow (`c1954be`)
-- Merge pull request #1 (`2f0be4d`)
-
-## 2026-03-03
+- `[machine:samsung-laptop]` Samsung 270E5J fully registered with 10 config files, 4 memories
+- `[universal]` 3 skills (debugging, code-review, testing), 3 agents, 4 commands deployed to universal/
+- `[universal]` Memory-sync MCP server bridging CLI memories to Claude Desktop (`get_user_profile`, `sync_memories` tools)
+- `[universal]` Claude Desktop config template with `${HOME}` and `${BRAVE_API_KEY}` placeholders
+- `[universal]` Bootstrap steps 5a-5i: deploy skills, agents, commands, scripts, machine detection, memory (3-layer merge), MCP servers, platform scripts, Desktop config
+- `[universal]` 11 Mermaid diagram sets (30+ charts): ecosystem map, memory architecture, MCP topology, chrome extension bridge, hooks lifecycle, repo structure, knowledge graph, AI history, multi-machine state, hookify rules, full repo map
+- `[universal]` INSIGHTS.md: 12 rationale documents explaining WHY behind every major decision
+- `[universal]` RUNBOOK.md: 15 troubleshooting scenarios with copy-paste diagnosis and fix commands
+- `[universal]` INDEX.md: "I need to..." quick-start navigation linking all docs
+- `[universal]` 8 Architecture Decision Records
+- `[universal]` Tools inventory, backup strategy with rsync script, restore procedures
+- `[universal]` `claude-health` script: 14 system health indicators with color-coded output
+- `[universal]` `claude-backup` script: rsync-based, 7-day rotation
+- `[linux]` Claude Desktop auto-updater script + systemd timer/service
+- `[linux]` 3 platform memories (Chrome Canary, Claude Desktop, system packages)
+- `[universal]` 6 new learnings: chrome-performance-tuning, claude-desktop-linux, memory-sync-bridge, native-messaging-chrome-canary, system-diagnostics-patterns, custom-instructions-optimization
 
 ### Changed
-- Omarchy configs synced from macbook-air (4 commits: `ee7b286`, `01b08d9`, `0f86f91`, `f3fc1a2`)
+- `[universal]` README.md completely rewritten to reflect full repo scope
+- `[universal]` CHANGELOG.md rewritten with semantic versioning and release tags
+- `[universal]` Updated: electron-wayland, chrome-extension-troubleshooting, code-reviewer agent, electron-flags.conf, .gitignore
+- `[machine:samsung-laptop]` registry.yaml fixed: hostname, user, status, hardware specs
 
-## 2026-03-02
+---
 
-### Added
-- Design docs: skill activator v4, cortex vector, beeper extended v2, beeper knowledge base (`dc8fc1c`)
-
-## 2026-02-25
-
-### Added
-- `[machine:macbook-air]` `[universal]` Cedilla (c-cedilha) support for dead_acute + c via XCompose (`bda57af`)
-- Design doc for wayland-cedilla-fix open source project (`a283f60`)
-- Wayland-cedilla-fix implementation plan (`df2501f`)
-
-### Changed
-- Omarchy configs synced from macbook-air (6 commits)
-
-## 2026-02-02
+## [0.10.0] - 2026-03-17 — CI/CD
 
 ### Added
-- `[linux]` Production-ready v1.0 architecture (`9978972`)
-- GitHub profile widgets troubleshooting guide (`0ae7257`)
-- Beeper package conflict fix documentation (`12e6d2c`)
+- Claude Code Review GitHub Action workflow
+- Claude PR Assistant workflow
 
-### Changed
-- Rebranded as public tool with professional README (`3996acf`)
-- Redesigned architecture diagram with tree-style layout (`9cd060e`)
-- Upgraded progress bars to Unicode triangular blocks (`05d59e1`)
-- Added logo assets and improved README formatting (`704ce21`)
+---
 
-### Fixed
-- ASCII alignment in architecture diagram and progress bars (`c89c77c`)
-- Updated CLAUDE.md with 2026-02-02 session summary (`71429e9`)
-
-## 2026-02-01
-
-### Changed
-- Omarchy configs synced from macbook-air (18 commits via auto-sync daemon)
-
-## 2026-01-27
+## [0.9.0] - 2026-02-25 — Cedilla & Design Docs
 
 ### Added
-- Cortex v2.0.0 release session documentation (`a49a3be`)
+- `[machine:macbook-air][universal]` Wayland cedilla fix configuration
+- `[docs]` Wayland-cedilla-fix design and implementation plan
+- Design docs: skill activator v4, unified Cortex vector DB, Beeper Extended v2, Beeper knowledge base
 
-### Changed
-- Omarchy configs synced from macbook-air (3 commits)
+---
 
-## 2026-01-24
-
-### Added
-- `[universal]` CLI Intelligence Engine: Phase 1, 2, and 3 implementation (`1ac03ff`, `2f29faf`, `abd4a1e`)
-- `[universal]` CLI Intelligence Engine documentation and design (`3b7f665`, `2583d67`)
-- `[universal]` CLI intelligence research and unified system design (`6ebc3b7`)
-- `[universal]` SuperNavigator 6.1.0 enhancement plan (`77e5de2`)
-- `[universal]` GitHub Actions workflows for automation (`eb42a12`)
-- `[universal]` Beeper Scout learnings: Matrix API adapter implementation (`53c5efe`)
-
-## 2026-01-23
+## [0.8.0] - 2026-02-02 — Public Release
 
 ### Added
-- `[universal]` Machine sync auto-categorization system (`1a4ad6c`)
-- `[universal]` Auto-categorization system v2.0 documentation (`572f769`)
-- `[universal]` Community Claude Code configurations pulled (`24262d8`)
-- Episodic memory summaries from MacBook and Windows sessions (`05aac3d`)
+- `[docs]` Professional README with badges, progress bars, collapsible sections
+- Logo and banner SVG assets
+- Architecture diagram (tree-style layout)
 
-### Fixed
-- `[windows]` Sync daemon now runs completely hidden (`f62440d`)
-- `[windows]` Fixed 'False' output in sync daemon (`7f55d04`)
-- `[windows]` Fixed reserved variable name in sync-daemon status (`9cafa6f`)
+---
 
-## 2026-01-22
+## [0.7.0] - 2026-02-02 — Production Architecture
 
 ### Added
-- One-command setup script (bootstrap.sh) for new machines (`42c72d2`)
-- Omarchy config sync with automatic machine categorization (`959ac5c`)
-- Auto-sync daemon for bidirectional omarchy config sync (`a4ca307`)
+- `[linux]` Production-ready v1.0 architecture
+- `[universal]` Validator library (`lib/validator.sh`): pre-flight checks
+- `[universal]` Rollback library (`lib/rollback.sh`): snapshot/restore
+- Beeper package conflict fix documentation
+- GitHub profile widgets troubleshooting
 
-### Changed
-- Omarchy configs synced from macbook-air (2 commits)
+---
 
-## 2026-01-21
-
-### Added
-- Vercel GitHub widgets learnings and session summary (`d40343b`)
-- Chrome extension troubleshooting from 2026-01-21 session (`926826e`)
-
-### Changed
-- Enabled additional plugins and updated permissions (`1299550`)
-- Updated Windows Desktop status to configured (`338b378`)
-
-## 2026-01-18
+## [0.6.0] - 2026-01-24 — CLI Intelligence
 
 ### Added
-- Hookify rule files and gitignore exception (`f6ab87f`)
-- Automatic skill-enforcement hooks (`4d5e2dc`)
+- `[universal]` CLI Intelligence Engine (Phases 1-3): AI-powered skill activation, intent detection, caching
+- `[universal]` SuperNavigator 6.1.0 enhancement plan
+- `[universal]` GitHub Actions workflows
+- `[universal]` Beeper Scout learnings (Matrix API adapter)
 
-## 2026-01-17
+---
 
-### Added
-- Comprehensive cross-machine sync setup (`338b4ef`)
-- Windows setup guide (`6e86bf7`)
-- Automated setup scripts for Windows and Linux (`fc92aea`)
-- Jarvis Mode docs with platform categorization (`e1b1417`)
-- Connections registry and personal communication patterns (`6449405`)
-- Warp AI history and additional docs (`70c1eb0`)
-- Session learnings and patterns documentation (`3f4e6c5`)
-
-### Changed
-- Redesigned README with comprehensive documentation (`edb57e8`)
-- Set full system-wide permissions: bypass all prompts (`1c270d5`)
-
-## 2026-01-06
+## [0.5.0] - 2026-01-22 — One-Command Bootstrap
 
 ### Added
-- Initial cross-machine sync setup (`98dc492`)
-- Quick setup guide for new machines (`04bb187`)
-- MacBook Air machine profile with full system specs (`87fcc31`)
+- `bootstrap.sh`: one-command setup with hardware detection
+- Auto-sync daemon (inotifywait + systemd / FileSystemWatcher + Task Scheduler)
+- Omarchy config sync with automatic machine categorization
+- Bidirectional sync support
 
-### Changed
-- Renamed hostname from omarchy to macbook-air (`ae9bf7d`)
+---
+
+## [0.4.0] - 2026-01-23 — Auto-Categorization
+
+### Added
+- `[universal]` Machine sync auto-categorization system v2.0
+- Three-tier classification: universal / platform / machine
+- Episodic memory summaries from multiple machines
+- Community Claude Code configurations
+- `[windows]` Sync daemon fixes
+
+---
+
+## [0.3.0] - 2026-01-18 — Skill Enforcement
+
+### Added
+- `[universal]` 5 hookify rules: brainstorming, writing-plans, tdd, systematic-debugging, subagent-development
+- Connections registry
+- Personal communication patterns
+
+---
+
+## [0.2.0] - 2026-01-17 — Multi-Machine Foundation
+
+### Added
+- Comprehensive cross-machine sync (MacBook Air + Windows Desktop)
+- Windows setup guide
+- Warp AI history extraction: 1,708 queries + 49 agent conversations
+- Antigravity/Gemini Brain: 14 sessions
+- Claude Code episodic memory archive (128MB)
+- 10 initial learnings
+- Chrome extension troubleshooting
+
+---
+
+## [0.1.0] - 2026-01-06 — Initial Setup
+
+### Added
+- Initial repository structure
+- MacBook Air machine registration
+- Basic settings and skills sync
+
+---
+
+[1.0.0]: https://github.com/robertogogoni/claude-cross-machine-sync/compare/v0.10.0...v1.0.0
+[0.10.0]: https://github.com/robertogogoni/claude-cross-machine-sync/compare/v0.9.0...v0.10.0
+[0.9.0]: https://github.com/robertogogoni/claude-cross-machine-sync/compare/v0.8.0...v0.9.0
+[0.8.0]: https://github.com/robertogogoni/claude-cross-machine-sync/compare/v0.7.0...v0.8.0
+[0.7.0]: https://github.com/robertogogoni/claude-cross-machine-sync/compare/v0.6.0...v0.7.0
+[0.6.0]: https://github.com/robertogogoni/claude-cross-machine-sync/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/robertogogoni/claude-cross-machine-sync/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/robertogogoni/claude-cross-machine-sync/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/robertogogoni/claude-cross-machine-sync/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/robertogogoni/claude-cross-machine-sync/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/robertogogoni/claude-cross-machine-sync/releases/tag/v0.1.0
