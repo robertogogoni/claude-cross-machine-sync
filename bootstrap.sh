@@ -434,27 +434,263 @@ if [ -d "$HOME/.config/hypr" ] && [ -d "$REPO_DIR/platform/linux/omarchy" ]; the
     fi
 fi
 
+# Step 5a: Deploy Skills
+step "Deploying skills..."
+SKILLS_SRC="$REPO_DIR/universal/claude/skills"
+SKILLS_DST="$CLAUDE_DIR/skills"
+if [ -d "$SKILLS_SRC" ]; then
+    if dry_run "Copy skills to $SKILLS_DST"; then
+        :
+    else
+        mkdir -p "$SKILLS_DST"
+        cp -r "$SKILLS_SRC/"* "$SKILLS_DST/" 2>/dev/null || true
+    fi
+    success "Deployed skills ($(ls -d "$SKILLS_SRC"/*/ 2>/dev/null | wc -l) skills)"
+fi
+# Create omarchy skill symlink on Linux+Omarchy
+if [ -d "$HOME/.local/share/omarchy/default/omarchy-skill" ]; then
+    if dry_run "Create omarchy skill symlink"; then
+        :
+    else
+        ln -sf "$HOME/.local/share/omarchy/default/omarchy-skill" "$SKILLS_DST/omarchy" 2>/dev/null || true
+    fi
+    success "Linked omarchy skill"
+fi
+
+# Step 5b: Deploy Agents
+step "Deploying agents..."
+AGENTS_SRC="$REPO_DIR/universal/claude/agents"
+AGENTS_DST="$CLAUDE_DIR/agents"
+if [ -d "$AGENTS_SRC" ]; then
+    if dry_run "Copy agents to $AGENTS_DST"; then
+        :
+    else
+        mkdir -p "$AGENTS_DST"
+        cp -r "$AGENTS_SRC/"* "$AGENTS_DST/" 2>/dev/null || true
+    fi
+    success "Deployed agents ($(ls "$AGENTS_SRC"/*.md 2>/dev/null | wc -l) agents)"
+fi
+
+# Step 5c: Deploy Commands
+step "Deploying commands..."
+COMMANDS_SRC="$REPO_DIR/universal/claude/commands"
+COMMANDS_DST="$CLAUDE_DIR/commands"
+if [ -d "$COMMANDS_SRC" ]; then
+    if dry_run "Copy commands to $COMMANDS_DST"; then
+        :
+    else
+        mkdir -p "$COMMANDS_DST"
+        cp -r "$COMMANDS_SRC/"* "$COMMANDS_DST/" 2>/dev/null || true
+    fi
+    success "Deployed commands ($(ls "$COMMANDS_SRC"/*.md 2>/dev/null | wc -l) commands)"
+fi
+
+# Step 5d: Deploy Scripts
+step "Deploying scripts..."
+SCRIPTS_SRC="$REPO_DIR/universal/claude/scripts"
+SCRIPTS_DST="$CLAUDE_DIR/scripts"
+if [ -d "$SCRIPTS_SRC" ]; then
+    if dry_run "Copy scripts to $SCRIPTS_DST"; then
+        :
+    else
+        mkdir -p "$SCRIPTS_DST"
+        cp -r "$SCRIPTS_SRC/"* "$SCRIPTS_DST/" 2>/dev/null || true
+        find "$SCRIPTS_DST" -type f \( -name "*.sh" -o ! -name "*.*" \) -exec chmod +x {} \;
+    fi
+    success "Deployed scripts"
+fi
+
+# Step 5e: Deploy Machine Detection
+step "Deploying machine detection..."
+MACHINES_SRC="$REPO_DIR/universal/claude/machines"
+MACHINES_DST="$CLAUDE_DIR/machines"
+if [ -d "$MACHINES_SRC" ]; then
+    if dry_run "Copy machine detection to $MACHINES_DST"; then
+        :
+    else
+        mkdir -p "$MACHINES_DST"
+        cp "$MACHINES_SRC/"*.sh "$MACHINES_DST/" 2>/dev/null || true
+        cp "$MACHINES_SRC/"*.md "$MACHINES_DST/" 2>/dev/null || true
+        chmod +x "$MACHINES_DST/"*.sh 2>/dev/null || true
+    fi
+    # Copy machine-specific JSON profile
+    if [ -f "$MACHINE_DIR/claude/"*.json ]; then
+        cp "$MACHINE_DIR/claude/"*.json "$MACHINES_DST/" 2>/dev/null || true
+    fi
+    success "Deployed machine detection"
+fi
+
+# Step 5f: Deploy Memory Files (3-layer merge)
+step "Deploying memory files..."
+MEMORY_DST="$CLAUDE_DIR/projects/-home-$(whoami)/memory"
+MEMORY_UNIVERSAL="$REPO_DIR/universal/claude/memory"
+MEMORY_PLATFORM="$REPO_DIR/platform/linux/memory"
+MEMORY_MACHINE="$MACHINE_DIR/memory"
+
+if dry_run "Merge memory files from universal + platform + machine layers"; then
+    :
+else
+    mkdir -p "$MEMORY_DST"
+    # Layer 1: Universal (base)
+    cp "$MEMORY_UNIVERSAL/"*.md "$MEMORY_DST/" 2>/dev/null || true
+    # Layer 2: Platform (overrides universal)
+    cp "$MEMORY_PLATFORM/"*.md "$MEMORY_DST/" 2>/dev/null || true
+    # Layer 3: Machine (overrides both)
+    cp "$MEMORY_MACHINE/"*.md "$MEMORY_DST/" 2>/dev/null || true
+
+    # Regenerate MEMORY.md index
+    MEMORY_INDEX="$MEMORY_DST/MEMORY.md"
+    echo "# Memory Index" > "$MEMORY_INDEX"
+    echo "" >> "$MEMORY_INDEX"
+    for section in user feedback project reference; do
+        case "$section" in
+            user) header="User" ;;
+            feedback) header="Feedback" ;;
+            project) header="Project" ;;
+            reference) header="Reference" ;;
+        esac
+        files=$(ls "$MEMORY_DST/${section}_"*.md 2>/dev/null || true)
+        if [ -n "$files" ]; then
+            echo "## $header" >> "$MEMORY_INDEX"
+            for f in $files; do
+                fname=$(basename "$f")
+                name=$(sed -n 's/^name: //p' "$f" 2>/dev/null | head -1)
+                desc=$(sed -n 's/^description: //p' "$f" 2>/dev/null | head -1)
+                [ -z "$name" ] && name="$fname"
+                [ -z "$desc" ] && desc=""
+                echo "- [$name]($fname) — $desc" >> "$MEMORY_INDEX"
+            done
+            echo "" >> "$MEMORY_INDEX"
+        fi
+    done
+fi
+MEMORY_COUNT=$(ls "$MEMORY_DST/"*.md 2>/dev/null | grep -v MEMORY.md | wc -l)
+success "Deployed $MEMORY_COUNT memory files (3-layer merge)"
+
+# Step 5g: Deploy MCP Servers
+step "Deploying MCP servers..."
+MCP_SRC="$REPO_DIR/universal/claude/mcp-servers"
+MCP_DST="$HOME/.local/share/mcp-servers"
+if [ -d "$MCP_SRC/memory-sync" ]; then
+    if dry_run "Copy memory-sync MCP server to $MCP_DST"; then
+        :
+    else
+        mkdir -p "$MCP_DST/memory-sync"
+        cp "$MCP_SRC/memory-sync/server.cjs" "$MCP_DST/memory-sync/"
+        # Register with Claude CLI if available
+        if command -v claude &>/dev/null; then
+            claude mcp add memory-sync -- node "$MCP_DST/memory-sync/server.cjs" 2>/dev/null || true
+        fi
+    fi
+    success "Deployed memory-sync MCP server"
+fi
+
+# Step 5h: Deploy Platform Scripts (Linux only)
+if [[ "$(uname -s)" == "Linux" ]]; then
+    step "Deploying platform scripts..."
+
+    # Auto-updater script
+    UPDATER_SRC="$REPO_DIR/platform/linux/scripts/claude-desktop-update"
+    if [ -f "$UPDATER_SRC" ]; then
+        if dry_run "Copy auto-updater to ~/.local/bin/"; then
+            :
+        else
+            mkdir -p "$HOME/.local/bin"
+            cp "$UPDATER_SRC" "$HOME/.local/bin/claude-desktop-update"
+            chmod +x "$HOME/.local/bin/claude-desktop-update"
+        fi
+        success "Deployed Claude Desktop auto-updater"
+    fi
+
+    # systemd units
+    SYSTEMD_SRC="$REPO_DIR/platform/linux/systemd"
+    SYSTEMD_DST="$HOME/.config/systemd/user"
+    if [ -d "$SYSTEMD_SRC" ]; then
+        if dry_run "Copy systemd units to $SYSTEMD_DST"; then
+            :
+        else
+            mkdir -p "$SYSTEMD_DST"
+            cp "$SYSTEMD_SRC/"*.service "$SYSTEMD_DST/" 2>/dev/null || true
+            cp "$SYSTEMD_SRC/"*.timer "$SYSTEMD_DST/" 2>/dev/null || true
+            systemctl --user daemon-reload 2>/dev/null || true
+            systemctl --user enable --now claude-desktop-update.timer 2>/dev/null || true
+        fi
+        success "Deployed systemd timers"
+    fi
+
+    # Memory sync script
+    MEMSYNC_SRC="$REPO_DIR/universal/claude/scripts/claude-memory-sync"
+    if [ -f "$MEMSYNC_SRC" ]; then
+        if dry_run "Copy memory sync script to ~/.local/bin/"; then
+            :
+        else
+            cp "$MEMSYNC_SRC" "$HOME/.local/bin/claude-memory-sync"
+            chmod +x "$HOME/.local/bin/claude-memory-sync"
+        fi
+        success "Deployed memory sync script"
+    fi
+fi
+
+# Step 5i: Deploy Claude Desktop Config
+step "Deploying Claude Desktop config..."
+DESKTOP_TEMPLATE="$REPO_DIR/universal/claude/claude-desktop-config.template.json"
+DESKTOP_TARGET="$HOME/.config/Claude/claude_desktop_config.json"
+if [ -f "$DESKTOP_TEMPLATE" ]; then
+    # Source API key from .env if not in environment
+    if [ -z "$BRAVE_API_KEY" ] && [ -f "$HOME/.claude/.env" ]; then
+        source "$HOME/.claude/.env" 2>/dev/null || true
+    fi
+
+    if dry_run "Generate Claude Desktop config from template"; then
+        :
+    else
+        mkdir -p "$HOME/.config/Claude"
+        # Backup existing
+        if [ -f "$DESKTOP_TARGET" ]; then
+            cp "$DESKTOP_TARGET" "${DESKTOP_TARGET}.bak.$(date +%Y%m%d%H%M%S)"
+        fi
+        # Substitute variables
+        sed -e "s|\${HOME}|$HOME|g" \
+            -e "s|\${BRAVE_API_KEY}|${BRAVE_API_KEY:-SET_VIA_ENV}|g" \
+            "$DESKTOP_TEMPLATE" > "$DESKTOP_TARGET"
+        # Validate JSON
+        if command -v jq &>/dev/null; then
+            if jq . "$DESKTOP_TARGET" >/dev/null 2>&1; then
+                MCP_COUNT=$(jq '.mcpServers | length' "$DESKTOP_TARGET" 2>/dev/null)
+                success "Deployed Claude Desktop config ($MCP_COUNT MCP servers)"
+            else
+                warn "Generated config has invalid JSON, restoring backup"
+                mv "${DESKTOP_TARGET}.bak."* "$DESKTOP_TARGET" 2>/dev/null || true
+            fi
+        else
+            success "Deployed Claude Desktop config (jq not available for validation)"
+        fi
+    fi
+fi
+
 # Step 6: Commit and Push
 step "Committing registration..."
 
 if [[ "$DRY_RUN" == "true" ]]; then
-    dry_run "git add machines/"
-    dry_run "git commit -m '[machine:$MACHINE_NAME] Register new machine: $HOSTNAME'"
+    dry_run "git add machines/ universal/ platform/"
+    dry_run "git commit -m '[machine:$MACHINE_NAME] Bootstrap: register + deploy all configs'"
     dry_run "git push"
 else
     cd "$REPO_DIR"
-    git add machines/
+    git add machines/ universal/ platform/
     if git diff --cached --quiet; then
         info "No changes to commit"
     else
-        git commit -m "[machine:$MACHINE_NAME] Register new machine: $HOSTNAME
+        git commit -m "[machine:$MACHINE_NAME] Bootstrap: register $HOSTNAME + deploy configs
 
 Hardware: $VENDOR $MODEL
 OS: $OS_NAME
 Desktop: $DESKTOP
 User: $USER
 
-Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>"
+Deployed: settings, skills, agents, commands, scripts, memory, MCP servers, systemd timers, Desktop config
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 
         if git push 2>/dev/null; then
             success "Registration pushed to remote"
@@ -486,11 +722,13 @@ else
     echo "  ╚═══════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
 
-    echo "  Machine: $MACHINE_NAME"
-    echo "  Config:  $MACHINE_DIR"
-    echo "  Daemon:  $(if $SKIP_DAEMON; then echo 'Skipped'; else echo 'Installed'; fi)"
+    echo "  Machine:   $MACHINE_NAME"
+    echo "  Config:    $MACHINE_DIR"
+    echo "  Daemon:    $(if $SKIP_DAEMON; then echo 'Skipped'; else echo 'Installed'; fi)"
+    echo "  Deployed:  settings, skills, agents, commands, scripts, memory, MCP, Desktop config"
     echo ""
     echo -e "  ${CYAN}Sync will happen automatically every 5 minutes.${NC}"
+    echo -e "  ${CYAN}Health check: claude-health${NC}"
     echo -e "  ${CYAN}Manual sync: ./platform/linux/scripts/sync-daemon.sh --status${NC}"
     echo ""
     echo -e "  ${YELLOW}To rollback: ./bootstrap.sh --rollback${NC}"
