@@ -8,33 +8,25 @@
 [![CI](https://github.com/robertogogoni/claude-cross-machine-sync/actions/workflows/ci.yml/badge.svg)](https://github.com/robertogogoni/claude-cross-machine-sync/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Linux%20|%20Windows%20|%20macOS-blue)]()
-[![Tests](https://img.shields.io/badge/tests-24%20passing-brightgreen)]()
-[![Bash](https://img.shields.io/badge/bash-4.0+-green)]()
-[![PowerShell](https://img.shields.io/badge/powershell-5.1+-blue)]()
+[![Machines](https://img.shields.io/badge/machines-3%20registered-green)]()
+[![Learnings](https://img.shields.io/badge/learnings-20%20docs-purple)]()
+[![Diagrams](https://img.shields.io/badge/diagrams-11%20sets-orange)]()
 
-**[Features](#-features)** · **[Installation](#-installation)** · **[Roadmap](#-roadmap)** · **[Contributing](#-contributing)**
+**[Ecosystem](#-the-ecosystem)** · **[Features](#-features)** · **[What's Inside](#-whats-inside)** · **[Quick Start](#-quick-start)** · **[Docs](#-documentation)**
 
 </div>
 
 ---
 
-## 🤔 The Problem
+## The Problem
 
-You use Claude Code on multiple machines. You've configured permissions, installed skills, set up hooks, and tuned settings *just right*. Then you switch to your laptop and... **start from scratch**.
+You use Claude Code on multiple machines. You've configured permissions, installed skills, set up hooks, tuned MCP servers, built memory files, and customized Desktop configs *just right*. Then you switch to your laptop and... **start from scratch**.
 
-| Pain Point | Description |
-|:-----------|:------------|
-| ❌ No sync | Settings don't sync between machines |
-| ❌ Manual drift | Copying leads to configs getting out of sync |
-| ❌ Merge fear | Git conflicts in configs are scary to resolve |
-| ❌ No undo | No rollback when things break |
-| ❌ Offline chaos | Offline work creates sync nightmares |
-
-**Claude Sync solves this.** Production-grade config synchronization with safety built in.
+**Claude Sync solves this.** One repo, one bootstrap command, full sync across every machine.
 
 ---
 
-## 🌐 The Ecosystem
+## The Ecosystem
 
 ```mermaid
 graph LR
@@ -78,35 +70,39 @@ graph LR
 
 ---
 
-## ✨ Features
+## Features
 
-### 🚀 Core Sync
+### Core Sync
 
 | Feature | Description |
 |:--------|:------------|
-| One-command bootstrap | `./bootstrap.sh` and you're done |
-| Real-time watching | Changes sync automatically via `inotifywait` / `FileSystemWatcher` |
-| Smart categorization | Auto-tags commits as `[universal]`, `[linux]`, `[windows]`, `[machine:hostname]` |
+| One-command bootstrap | `./bootstrap.sh` deploys settings, skills, agents, commands, scripts, memory, MCP servers, systemd timers, and Desktop config |
+| Three-tier classification | Every config auto-categorized as `universal`, `platform/<os>`, or `machines/<hostname>` |
+| Real-time watching | Changes sync via `inotifywait` (Linux) / `FileSystemWatcher` (Windows) |
+| Smart commits | Auto-tagged `[universal]`, `[linux]`, `[windows]`, `[machine:hostname]` |
 | Background daemon | systemd (Linux) or Task Scheduler (Windows) |
 
-### 🛡️ Safety First
+### Memory System
 
 | Feature | Description |
 |:--------|:------------|
-| Pre-flight validation | Checks git, network, disk, permissions **before** running |
-| Snapshot & rollback | Every bootstrap creates a restore point |
-| Dry-run mode | `--dry-run` previews changes without executing |
-| Path sanitization | Protects against path traversal attacks |
+| 3-layer merge | Universal memories + platform memories + machine memories, later layers override |
+| Memory-sync MCP | Custom MCP server bridges CLI memories to Claude Desktop via `get_user_profile` tool |
+| Auto-index | MEMORY.md regenerated from frontmatter on every deploy |
+| Cortex integration | Vector-searchable memory via FTS5 + HNSW embeddings |
 
-### 🌐 Network Resilience
+### Safety
 
 | Feature | Description |
 |:--------|:------------|
-| Offline queue | Commits save locally when offline, push when connected |
-| Exponential backoff | Failed pushes retry at `5s → 15s → 60s` |
-| Conflict resolution | Auto-resolve → Stash & retry → Conflict branch |
+| Snapshot & rollback | Every bootstrap creates a restore point. `--rollback` to undo |
+| Dry-run mode | `--dry-run` previews all changes without executing |
+| Pre-flight validation | Checks git, network, disk, permissions before running |
+| Secret protection | API keys templatized with `${BRAVE_API_KEY}` placeholders, never committed |
+| Health check | `claude-health` script validates 14 system indicators with color output |
+| Backup script | `claude-backup` with rsync, 7-day rotation, and restore procedures |
 
-### 💻 Cross-Platform Support
+### Cross-Platform
 
 | Platform | Stack |
 |:---------|:------|
@@ -116,226 +112,253 @@ graph LR
 
 ---
 
-## 📦 Installation
+## What's Inside
 
-### Quick Start
+### Configuration (deployed by bootstrap.sh)
 
-**Linux / macOS:**
+| Component | Universal | Platform | Machine | Total |
+|:----------|:---------:|:--------:|:-------:|:-----:|
+| Skills | 3 | - | - | 3 |
+| Agents | 4 | - | - | 4 |
+| Commands | 6 | - | - | 6 |
+| Scripts | 6 | 1 | - | 7 |
+| Memory files | 8 | 3 | 4 | 15 |
+| MCP servers | 1 | - | - | 1 |
+| Systemd units | - | 2 | - | 2 |
+| Settings | 1 | - | 2 | 3 |
+| Desktop config template | 1 | - | - | 1 |
+| Chrome/Hypr configs | - | - | 2 | 2 |
+
+### Knowledge Base (20 learnings)
+
+| Topic | Documents |
+|:------|:----------|
+| System & Infrastructure | electron-wayland, system-diagnostics-patterns, claude-desktop-linux |
+| Chrome & Browser | chrome-performance-tuning, chrome-extension-troubleshooting, native-messaging-chrome-canary |
+| Claude Code & AI | custom-instructions-optimization, cli-intelligence-patterns, skill-enforcement-hooks, ai-data-extraction |
+| Sync & Memory | cross-machine-sync, machine-sync-patterns, memory-sync-bridge, claude-code-permissions |
+| Applications | beeper, beeper-package-conflict-fix, vercel-github-widgets, github-profile-widgets-troubleshooting |
+| Other | bash-patterns, personal-communication |
+
+### Visual Documentation (11 diagram sets, 30+ Mermaid charts)
+
+All in [`docs/diagrams/`](docs/diagrams/):
+
+| Diagram | Shows |
+|:--------|:------|
+| [ecosystem-map](docs/diagrams/ecosystem-map.md) | Machine network + data flow |
+| [memory-architecture](docs/diagrams/memory-architecture.md) | Three-layer memory system + classification |
+| [mcp-topology](docs/diagrams/mcp-topology.md) | MCP server distribution + communication |
+| [chrome-extension-bridge](docs/diagrams/chrome-extension-bridge.md) | Native messaging chain + failure modes |
+| [hooks-lifecycle](docs/diagrams/hooks-lifecycle.md) | Session state machine + file protection |
+| [full-repo-map](docs/diagrams/full-repo-map.md) | All 2,300+ files by category |
+| [knowledge-graph](docs/diagrams/knowledge-graph.md) | 20 learnings with cross-connections |
+| [ai-history-map](docs/diagrams/ai-history-map.md) | Warp AI + Antigravity + episodic memory |
+| [multi-machine-state](docs/diagrams/multi-machine-state.md) | 3 machines: config overlap |
+| [hookify-rules-flow](docs/diagrams/hookify-rules-flow.md) | Skill enforcement + omarchy sync |
+| [repo-structure](docs/diagrams/repo-structure.md) | Directory tree + classification decision tree |
+
+### AI History Archive
+
+| Source | Records | Format |
+|:-------|:--------|:-------|
+| Claude Code episodic memory | 1,402 sessions | JSONL + summaries |
+| Warp Terminal AI | 1,708 queries + 49 agents | CSV + JSON |
+| Antigravity/Gemini Brain | 14 sessions | Markdown |
+
+### Registered Machines
+
+| Machine | Platform | Status | Configs |
+|:--------|:---------|:------:|:-------:|
+| Samsung 270E5J | Arch Linux + Hyprland | Active | 10 files |
+| MacBook Air | Arch Linux + Hyprland | Active | 11 files |
+| Dell G15 | Windows 11 | Pending | 1 file |
+
+---
+
+## Quick Start
+
+### Linux / macOS
 
 ```bash
 git clone https://github.com/robertogogoni/claude-cross-machine-sync.git ~/machine-sync
 cd ~/machine-sync && ./bootstrap.sh
 ```
 
-**Windows PowerShell:**
+### Windows PowerShell
 
 ```powershell
 git clone https://github.com/robertogogoni/claude-cross-machine-sync.git $HOME\machine-sync
 cd $HOME\machine-sync; .\bootstrap.ps1
 ```
 
-### What Happens
+### What Bootstrap Deploys
 
 ```
-Step 1  ✅  Hardware auto-detected (vendor, model, CPU, GPU, RAM)
-Step 2  ✅  Machine registered in machines/registry.yaml
-Step 3  ✅  Sync daemon installed (systemd or Task Scheduler)
-Step 4  ✅  Configs deployed to ~/.claude/
-Step 5  ✅  First sync pushed to git
+Step 0   Pre-flight validation (git, network, disk, permissions)
+Step 1   Hardware auto-detection (vendor, model, CPU, GPU, RAM)
+Step 2   Machine registered in machines/registry.yaml
+Step 3   Machine directory created with machine.yaml
+Step 4   Sync daemon installed (systemd / Task Scheduler)
+Step 5   Settings deployed (universal + machine-specific)
+Step 5a  Skills (debugging, code-review, testing + omarchy symlink)
+Step 5b  Agents (code-reviewer, debugger, test-writer, planner)
+Step 5c  Commands (analyze, explain, refactor, security-scan, think-harder, eureka)
+Step 5d  Scripts (bash logger, audit tools, memory-sync) + chmod +x
+Step 5e  Machine detection scripts
+Step 5f  Memory files (3-layer merge: universal -> platform -> machine)
+Step 5g  MCP servers (memory-sync + registration via claude mcp add)
+Step 5h  Platform scripts + systemd timers (Linux only)
+Step 5i  Claude Desktop config (template substitution, JSON validation)
+Step 6   Git commit + push
 ```
 
 ### CLI Options
 
 | Flag | Description |
 |:-----|:------------|
-| `--dry-run` | Preview changes without executing |
+| `--dry-run` | Preview all changes without executing |
+| `--skip-daemon` | Skip sync daemon installation |
 | `--skip-preflight` | Skip validation checks |
 | `--rollback` | Undo last bootstrap |
-| `--status` | Show daemon status |
+| `--machine-name NAME` | Override auto-detected machine name |
 
----
+### Post-Bootstrap
 
-## 🏗️ Architecture
-
-```
-                         +------------------+
-                         |  CLI Interface   |
-                         +------------------+
-                                  |
-         +------------+----------+----------+------------+
-         |            |                     |            |
-         v            v                     v            v
-   +-----------+ +-----------+       +-----------+ +-----------+
-   | bootstrap | |   sync    |       | validator | | rollback  |
-   |    .sh    | | daemon.sh |       |    .sh    | |    .sh    |
-   +-----------+ +-----------+       +-----------+ +-----------+
-         |            |                     |            |
-         +------------+----------+----------+------------+
-                                 |
-                    +------------+------------+
-                    |     Core Library        |
-                    |        (lib/)           |
-                    +-------------------------+
-                    | validator | rollback    |
-                    | git ops   | file watch  |
-                    | offline q | categorizer |
-                    +-------------------------+
-                                 |
-                    +------------+------------+
-                    |   Platform Adapters     |
-                    +-------------------------+
-                    | Linux    | Windows      |
-                    | (systemd)| (Task Sched) |
-                    | macOS    | (launchd)    |
-                    +-------------------------+
-```
-
-### Directory Structure
-
-```
-machine-sync/
-├── bootstrap.sh            # Linux/macOS setup
-├── bootstrap.ps1           # Windows setup
-├── lib/
-│   ├── validator.sh        # Pre-flight checks (454 lines)
-│   └── rollback.sh         # Snapshot/restore (370 lines)
-├── machines/
-│   ├── registry.yaml       # Machine definitions
-│   └── <hostname>/         # Machine-specific configs
-├── platform/
-│   ├── linux/scripts/      # Linux daemon (667 lines)
-│   └── windows/scripts/    # Windows daemon
-├── universal/              # Cross-platform shared configs
-└── tests/                  # 24 unit tests
+```bash
+claude-health          # Check 14 health indicators
+claude-backup          # Backup everything not in git
+claude-memory-sync     # Manually sync CLI memories to Desktop
 ```
 
 ---
 
-## 🗺️ Roadmap
+## Documentation
 
-### Progress
-
-```
-Overall    ▰▰▰▰▰▰▰▰▰▰▰▰▱▱▱▱▱▱▱▱  60%
-```
-
-| Phase | Name | Status | Progress |
-|:-----:|:-----|:------:|:--------:|
-| 1 | Foundation | ✅ | 100% |
-| 2 | Reliability | 🔄 | 80% |
-| 3 | Security | 🔄 | 40% |
-| 4 | Cross-Platform | ⏳ | 0% |
-| 5 | Testing & CI | 🔄 | 80% |
-| 6 | Documentation | 🔄 | 60% |
-
-### v1.0.0 — Current Sprint
-
-| Category | Item | Status |
-|:---------|:-----|:------:|
-| Foundation | Pre-flight validation | ✅ |
-| Foundation | Dry-run mode | ✅ |
-| Foundation | Snapshot & rollback | ✅ |
-| Reliability | Retry with backoff | ✅ |
-| Reliability | Offline queue | ✅ |
-| Reliability | Conflict resolution | ✅ |
-| Testing | Unit tests (24) | ✅ |
-| Testing | CI/CD pipeline | ✅ |
-| Docs | README rewrite | ✅ |
-| Docs | CONTRIBUTING.md | ✅ |
-
-### v1.1.0 — Next
-
-| Item | Description |
-|:-----|:------------|
-| macOS support | Full fswatch + launchd integration |
-| Secrets encryption | age/GPG at-rest encryption |
-| Selective sync | `.syncignore` pattern file |
-| Web dashboard | Status monitoring UI |
-
-See [ROADMAP.md](ROADMAP.md) for the complete roadmap.
+| Document | Purpose |
+|:---------|:--------|
+| **[INDEX.md](docs/INDEX.md)** | "I need to..." quick-start navigation |
+| **[INSIGHTS.md](docs/INSIGHTS.md)** | WHY behind every major decision (12 insights) |
+| **[RUNBOOK.md](docs/RUNBOOK.md)** | 15 troubleshooting scenarios with copy-paste fixes |
+| **[Architecture Decisions](docs/decisions/architecture-decisions.md)** | 8 ADRs with context, decision, consequences |
+| **[Tools Inventory](docs/system/tools-inventory.md)** | Full software/package inventory per machine |
+| **[Backup Strategy](docs/system/BACKUP-STRATEGY.md)** | What's NOT in git, how to back it up, restore procedures |
+| **[CHANGELOG.md](CHANGELOG.md)** | 83 commits grouped by date, Keep a Changelog format |
+| **[CONTRIBUTING.md](CONTRIBUTING.md)** | How to contribute |
+| **[ROADMAP.md](ROADMAP.md)** | Full roadmap with phases and progress |
 
 ---
 
-## 🔧 Configuration
+## Directory Structure
+
+```
+claude-cross-machine-sync/
+├── bootstrap.sh / .ps1         # One-command setup (Linux/Windows)
+├── CHANGELOG.md                # Version history
+│
+├── universal/                  # Cross-platform (works everywhere)
+│   ├── claude/
+│   │   ├── skills/             # 3 skills (debugging, code-review, testing)
+│   │   ├── agents/             # 4 agents (code-reviewer, debugger, test-writer, planner)
+│   │   ├── commands/           # 6 slash commands
+│   │   ├── scripts/            # Bash logger, audit tools, health check, memory-sync
+│   │   ├── machines/           # Hardware detection scripts
+│   │   ├── memory/             # 8 universal memory files
+│   │   └── mcp-servers/        # memory-sync MCP server
+│   └── electron/               # Wayland flags for all Electron apps
+│
+├── platform/                   # OS-specific
+│   ├── linux/                  # systemd units, auto-updater, 3 platform memories
+│   └── windows/                # PowerShell scripts, Task Scheduler
+│
+├── machines/                   # Hardware-specific
+│   ├── registry.yaml           # Machine ecosystem definition
+│   ├── samsung-laptop/         # Settings, chrome flags, hypr, 4 memories
+│   ├── macbook-air/            # Browser flags, fcitx5, hypr
+│   └── dell-g15/               # Minimal (pending bootstrap)
+│
+├── learnings/                  # 20 reusable knowledge documents
+├── docs/
+│   ├── diagrams/               # 11 Mermaid diagram sets (30+ charts)
+│   ├── decisions/              # 8 Architecture Decision Records
+│   ├── sessions/               # Detailed session logs
+│   ├── plans/                  # Design documents
+│   ├── guides/                 # How-to guides
+│   └── system/                 # Inventory, backup strategy
+│
+├── episodic-memory/            # 1,402 conversation archives
+├── warp-ai/                    # 1,708 AI queries from Warp Terminal
+├── antigravity-history/        # 14 Gemini Brain sessions
+├── hookify-rules/              # 5 skill enforcement rules
+├── scripts/                    # claude-health, claude-backup
+├── lib/                        # validator.sh, rollback.sh
+└── tests/                      # 24 unit tests
+```
+
+---
+
+## Configuration
 
 ### Machine Registry
 
 ```yaml
 # machines/registry.yaml
 machines:
-  my-laptop:
-    hostname: my-laptop
+  samsung-laptop:
+    hostname: omarchy
     platform: linux
     status: active
     hardware:
-      vendor: Dell
-      model: XPS 15
-      cpu: Intel i7-12700H
-      memory: 32GB
+      vendor: Samsung
+      model: 270E5J
+      cpu: Intel Core i7-4510U
+      gpu: Intel HD 4400
 ```
 
-### Environment Variables
+### Three-Tier Classification
 
-| Variable | Default | Description |
-|:---------|:--------|:------------|
-| `SNAPSHOT_DIR` | `~/.local/state/machine-sync/snapshots` | Snapshot storage |
-| `SNAPSHOT_RETENTION_DAYS` | `30` | Auto-cleanup threshold |
-| `RETRY_COUNT` | `3` | Push retry attempts |
-| `OFFLINE_QUEUE_DIR` | `~/.local/state/machine-sync/offline-queue` | Offline commits |
-
----
-
-## 🤝 Contributing
-
-Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-```bash
-# Development setup
-git clone https://github.com/robertogogoni/claude-cross-machine-sync.git
-cd claude-cross-machine-sync
-
-# Run tests
-./tests/run_all.sh
-
-# Lint
-shellcheck -x lib/*.sh bootstrap.sh
-```
+| Tier | Path | Rule | Example |
+|:-----|:-----|:-----|:--------|
+| Universal | `universal/` | Works on any machine, no hardcoded paths | Skills, agents, commands |
+| Platform | `platform/<os>/` | Uses OS-specific tools (systemd, pacman) | Auto-updater, systemd units |
+| Machine | `machines/<name>/` | Contains hardware values or hardcoded paths | Chrome scale factor, display DPI |
 
 ### Commit Tags
 
 | Tag | Use Case |
 |:----|:---------|
-| `[universal]` | Changes for all platforms |
+| `[universal]` | Cross-platform changes |
 | `[linux]` | Linux-specific |
 | `[windows]` | Windows-specific |
 | `[machine:hostname]` | Machine-specific configs |
-| `[docs]` | Documentation only |
-| `[tests]` | Test changes |
 
 ---
 
-## 📄 License
+## Contributing
 
-[MIT License](LICENSE) — see LICENSE file for details.
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+```bash
+git clone https://github.com/robertogogoni/claude-cross-machine-sync.git
+cd claude-cross-machine-sync
+./tests/run_all.sh       # Run tests
+shellcheck -x lib/*.sh   # Lint
+```
 
 ---
 
-## 🙏 Credits
+## License
 
-Built with [Claude Code](https://claude.ai/code) by Anthropic.
-
-**Inspired by:** [chezmoi](https://www.chezmoi.io/) · [yadm](https://yadm.io/) · [stow](https://www.gnu.org/software/stow/)
+[MIT License](LICENSE)
 
 ---
 
 <div align="center">
 
-**[Docs](docs/)** · **[Report Bug](https://github.com/robertogogoni/claude-cross-machine-sync/issues)** · **[Request Feature](https://github.com/robertogogoni/claude-cross-machine-sync/issues)**
+**[Docs](docs/)** · **[Diagrams](docs/diagrams/)** · **[Report Bug](https://github.com/robertogogoni/claude-cross-machine-sync/issues)** · **[Request Feature](https://github.com/robertogogoni/claude-cross-machine-sync/issues)**
 
 <br>
 
-Made with ☕ and Claude Code
-
-⭐ **Star this repo if it helps you!**
+Built with [Claude Code](https://claude.ai/code) by Anthropic
 
 </div>
