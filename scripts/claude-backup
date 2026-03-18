@@ -1,0 +1,174 @@
+set -euo pipefail
+
+# ── Configuration ──────────────────────────────────────────────
+BACKUP_ROOT="${BACKUP_ROOT:-$HOME/backups/claude-ecosystem}"
+KEEP_DAYS=7
+TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
+BACKUP_DIR="$BACKUP_ROOT/$TIMESTAMP"
+
+# ── Colors ─────────────────────────────────────────────────────
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+log()  { echo -e "${GREEN}[backup]${NC} $*"; }
+warn() { echo -e "${YELLOW}[warn]${NC} $*"; }
+err()  { echo -e "${RED}[error]${NC} $*" >&2; }
+
+# ── Pre-flight ─────────────────────────────────────────────────
+if ! command -v rsync &>/dev/null; then
+    err "rsync is required but not installed"
+    exit 1
+fi
+
+mkdir -p "$BACKUP_DIR"
+log "Backup target: $BACKUP_DIR"
+
+# ── Backup function ───────────────────────────────────────────
+backup_dir() {
+    local label="$1"
+    local src="$2"
+    local dest="$BACKUP_DIR/$3"
+    shift 3
+    # remaining args are extra rsync flags (e.g., --exclude)
+
+    if [ -d "$src" ]; then
+        log "Backing up $label..."
+        mkdir -p "$dest"
+        rsync -a "$@" "$src/" "$dest/"
+        local size
+        size=$(du -sh "$dest" | cut -f1)
+        log "  -> $dest ($size)"
+    else
+        warn "Skipping $label (not found: $src)"
+    fi
+}
+
+backup_file() {
+    local label="$1"
+    local src="$2"
+    local dest="$BACKUP_DIR/$3"
+
+    if [ -f "$src" ]; then
+        log "Backing up $label..."
+        mkdir -p "$(dirname "$dest")"
+        cp -a "$src" "$dest"
+        log "  -> $dest"
+    else
+        warn "Skipping $label (not found: $src)"
+    fi
+}
+
+# ── Critical ──────────────────────────────────────────────────
+log ""
+log "=== CRITICAL ==="
+
+backup_dir "Cortex DB" \
+    "$HOME/.claude-cortex" "claude-cortex"
+
+backup_dir "Chrome Canary profile" \
+    "$HOME/.config/google-chrome-canary" "chrome-canary" \
+    --exclude='Cache' \
+    --exclude='Code Cache' \
+    --exclude='GPUCache' \
+    --exclude='Service Worker/CacheStorage' \
+    --exclude='ShaderCache'
+
+backup_dir "Keyring" \
+    "$HOME/.local/share/keyrings" "keyrings"
+
+backup_dir "SSH keys" \
+    "$HOME/.ssh" "ssh"
+
+# ── Important ─────────────────────────────────────────────────
+log ""
+log "=== IMPORTANT ==="
+
+backup_dir "Claude Desktop config" \
+    "$HOME/.config/Claude" "claude-desktop"
+
+backup_dir "Beeper config" \
+    "$HOME/.config/Beeper" "beeper-config"
+
+backup_dir "Beeper data" \
+    "$HOME/.local/share/Beeper" "beeper-data"
+
+if command -v pacman &>/dev/null; then
+    log "Backing up package lists..."
+    mkdir -p "$BACKUP_DIR/packages"
+    pacman -Qqe > "$BACKUP_DIR/packages/pacman-explicit.txt"
+    pacman -Qqm > "$BACKUP_DIR/packages/aur-packages.txt" 2>/dev/null || true
+    log "  -> $BACKUP_DIR/packages/"
+fi
+
+# ── Nice to Have ──────────────────────────────────────────────
+log ""
+log "=== NICE TO HAVE ==="
+
+backup_dir "Warp config" \
+    "$HOME/.warp" "warp" 2>/dev/null || true
+
+backup_dir "Warp Terminal config" \
+    "$HOME/.config/warp-terminal" "warp-terminal" 2>/dev/null || true
+
+backup_dir "Ghostty config" \
+    "$HOME/.config/ghostty" "ghostty" 2>/dev/null || true
+
+# ── Rotation ──────────────────────────────────────────────────
+log ""
+log "=== CLEANUP ==="
+
+# Keep only the last KEEP_DAYS daily backups
+# Each backup dir is named YYYY-MM-DD_HHMMSS
+backup_count=$(find "$BACKUP_ROOT" -maxdepth 1 -mindepth 1 -type d | wc -l)
+
+if [ "$backup_count" -gt "$KEEP_DAYS" ]; then
+    remove_count=$((backup_count - KEEP_DAYS))
+    log "Removing $remove_count old backup(s) (keeping $KEEP_DAYS)..."
+
+    find "$BACKUP_ROOT" -maxdepth 1 -mindepth 1 -type d \
+        | sort \
+        | head -n "$remove_count" \
+        | while read -r old_backup; do
+            log "  Removing $(basename "$old_backup")"
+            rm -rf "$old_backup"
+        done
+else
+    log "No old backups to remove ($backup_count of $KEEP_DAYS max)"
+fi
+
+# ── Summary ───────────────────────────────────────────────────
+log ""
+total_size=$(du -sh "$BACKUP_DIR" | cut -f1)
+log "Backup complete: $BACKUP_DIR ($total_size)"
+log "Backups on disk: $(find "$BACKUP_ROOT" -maxdepth 1 -mindepth 1 -type d | wc -l) of $KEEP_DAYS max"
+```
+```bash
+# Run manually
+~/bin/claude-backup.sh
+
+# Custom backup location
+BACKUP_ROOT=/mnt/external/backups ~/bin/claude-backup.sh
+
+# Automate with cron (daily at 2 AM)
+# crontab -e
+0 2 * * * /home/robthepirate/bin/claude-backup.sh >> /home/robthepirate/.local/share/claude-backup.log 2>&1
+
+# Automate with systemd timer
+# See platform/linux/systemd/ for timer unit examples
+```
+```bash
+# List available backups
+ls ~/backups/claude-ecosystem/
+
+# Restore a specific backup (example: Cortex DB)
+rsync -a ~/backups/claude-ecosystem/2026-03-18_020000/claude-cortex/ ~/.claude-cortex/
+
+# Restore everything (close all apps first)
+rsync -a ~/backups/claude-ecosystem/2026-03-18_020000/chrome-canary/ ~/.config/google-chrome-canary/
+rsync -a ~/backups/claude-ecosystem/2026-03-18_020000/keyrings/ ~/.local/share/keyrings/
+rsync -a ~/backups/claude-ecosystem/2026-03-18_020000/ssh/ ~/.ssh/
+# ... fix permissions after restore
+chmod 700 ~/.ssh ~/.local/share/keyrings
+chmod 600 ~/.ssh/id_* ~/.local/share/keyrings/*

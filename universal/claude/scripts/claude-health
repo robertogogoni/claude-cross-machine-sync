@@ -1,0 +1,386 @@
+#!/usr/bin/env bash
+#
+# claude-health — Color-coded health check for the Claude Code environment
+#
+# Checks MCP servers, Chrome, Claude Desktop, keyring, auto-updaters,
+# memory freshness, Cortex DB, system resources, and more.
+#
+# Exit codes:
+#   0 = all checks passed
+#   1 = one or more checks failed
+#
+
+set -euo pipefail
+
+# ─── Colors & Symbols ────────────────────────────────────────────────────────
+
+if [ -t 1 ] && command -v tput &>/dev/null && [ "$(tput colors 2>/dev/null || echo 0)" -ge 8 ]; then
+    GREEN=$(tput setaf 2)
+    RED=$(tput setaf 1)
+    YELLOW=$(tput setaf 3)
+    BOLD=$(tput bold)
+    RESET=$(tput sgr0)
+else
+    GREEN='\033[0;32m'
+    RED='\033[0;31m'
+    YELLOW='\033[0;33m'
+    BOLD='\033[1m'
+    RESET='\033[0m'
+fi
+
+PASS_ICON="${GREEN}[PASS]${RESET}"
+FAIL_ICON="${RED}[FAIL]${RESET}"
+WARN_ICON="${YELLOW}[WARN]${RESET}"
+
+# ─── Counters ────────────────────────────────────────────────────────────────
+
+PASS_COUNT=0
+FAIL_COUNT=0
+WARN_COUNT=0
+
+pass() {
+    printf "  %b  %s\n" "$PASS_ICON" "$1"
+    (( PASS_COUNT++ )) || true
+}
+
+fail() {
+    printf "  %b  %s\n" "$FAIL_ICON" "$1"
+    (( FAIL_COUNT++ )) || true
+}
+
+warn() {
+    printf "  %b  %s\n" "$WARN_ICON" "$1"
+    (( WARN_COUNT++ )) || true
+}
+
+header() {
+    printf "\n${BOLD}── %s ──${RESET}\n" "$1"
+}
+
+# ─── Checks ──────────────────────────────────────────────────────────────────
+
+printf "${BOLD}Claude Code Environment Health Check${RESET}\n"
+printf "Date: %s\n" "$(date '+%Y-%m-%d %H:%M:%S')"
+
+# ── MCP Servers ──────────────────────────────────────────────────────────────
+
+header "MCP Servers"
+
+if command -v claude &>/dev/null; then
+    mcp_output=$(claude mcp list 2>&1) || true
+    if [ -n "$mcp_output" ] && [ "$mcp_output" != "" ]; then
+        # Count total servers and look for failure indicators
+        total_servers=$(echo "$mcp_output" | grep -cE "^\s*\S+" 2>/dev/null || echo "0")
+        failed_servers=$(echo "$mcp_output" | grep -ciE "fail|error|disconnect|unavailable" 2>/dev/null || echo "0")
+        if [ "$failed_servers" -gt 0 ]; then
+            fail "MCP servers: $failed_servers of $total_servers have issues"
+            echo "$mcp_output" | grep -iE "fail|error|disconnect|unavailable" 2>/dev/null | while read -r line; do
+                printf "         %s\n" "$line"
+            done
+        else
+            pass "MCP servers: $total_servers configured, no failures detected"
+        fi
+    else
+        warn "MCP server list returned empty output"
+    fi
+else
+    fail "Claude Code CLI not found in PATH"
+fi
+
+# ── Chrome Canary ────────────────────────────────────────────────────────────
+
+header "Chrome Canary"
+
+if pgrep -f "chrome.*canary" &>/dev/null; then
+    chrome_procs=$(pgrep -fc "chrome.*canary" 2>/dev/null || echo "0")
+    chrome_mem=$(ps aux 2>/dev/null | grep "chrome.*canary" | grep -v grep | awk '{sum+=$6} END {printf "%.0f", sum/1024}')
+    pass "Chrome Canary running ($chrome_procs processes, ${chrome_mem}MB RSS)"
+
+    if [ "${chrome_mem:-0}" -gt 4096 ]; then
+        warn "Chrome Canary using >4GB RAM (${chrome_mem}MB)"
+    fi
+elif pgrep -f "chromium\|google-chrome" &>/dev/null; then
+    warn "Chrome Canary not running, but another Chrome/Chromium is"
+else
+    fail "Chrome Canary is not running"
+fi
+
+# ── Native Messaging Host ────────────────────────────────────────────────────
+
+header "Native Messaging Host"
+
+NMH_DIRS=(
+    "$HOME/.config/google-chrome-canary/NativeMessagingHosts"
+    "$HOME/.config/google-chrome/NativeMessagingHosts"
+    "$HOME/.config/chromium/NativeMessagingHosts"
+    "$HOME/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts"
+)
+
+nmh_found=false
+for nmh_dir in "${NMH_DIRS[@]}"; do
+    if [ -d "$nmh_dir" ]; then
+        manifest_count=$(find "$nmh_dir" -name "*.json" 2>/dev/null | wc -l)
+        if [ "$manifest_count" -gt 0 ]; then
+            nmh_found=true
+            # Check if referenced binaries exist
+            all_binaries_ok=true
+            while IFS= read -r manifest; do
+                binary_path=$(python3 -c "
+import json, sys
+try:
+    with open('$manifest') as f:
+        print(json.load(f).get('path', ''))
+except: pass
+" 2>/dev/null)
+                if [ -n "$binary_path" ] && [ ! -x "$binary_path" ]; then
+                    fail "Native host binary missing or not executable: $binary_path (from $manifest)"
+                    all_binaries_ok=false
+                fi
+            done < <(find "$nmh_dir" -name "*.json" 2>/dev/null)
+
+            if $all_binaries_ok; then
+                pass "Native messaging manifests OK in $nmh_dir ($manifest_count found)"
+            fi
+        fi
+    fi
+done
+
+if ! $nmh_found; then
+    warn "No native messaging host manifests found in any Chrome config directory"
+fi
+
+# Check for native host socket/process
+if pgrep -f "native.messaging\|chrome_mcp\|superpowers" &>/dev/null; then
+    pass "Native messaging host process is running"
+else
+    warn "No native messaging host process detected (may start on demand)"
+fi
+
+# ── Claude Desktop ───────────────────────────────────────────────────────────
+
+header "Claude Desktop"
+
+if pgrep -f "claude-desktop\|Claude Desktop\|claude_desktop" &>/dev/null; then
+    pass "Claude Desktop is running"
+else
+    warn "Claude Desktop is not running"
+fi
+
+# ── GNOME Keyring ────────────────────────────────────────────────────────────
+
+header "Credential Store"
+
+if pgrep -f "gnome-keyring-daemon" &>/dev/null; then
+    # Try to open a session to check if unlocked
+    keyring_test=$(busctl --user call org.freedesktop.secrets /org/freedesktop/secrets org.freedesktop.Secret.Service OpenSession "sv" "plain" "s" "" 2>&1) || true
+    if echo "$keyring_test" | grep -q "vo "; then
+        pass "gnome-keyring-daemon running and unlocked"
+    else
+        warn "gnome-keyring-daemon running but may be locked"
+    fi
+else
+    # Check for alternative keyrings
+    if pgrep -f "kwalletd\|keepassxc\|secret-service" &>/dev/null; then
+        pass "Alternative credential store running (not gnome-keyring)"
+    else
+        fail "No credential store (gnome-keyring-daemon) running"
+    fi
+fi
+
+# ── Auto-Updater ─────────────────────────────────────────────────────────────
+
+header "Auto-Updater"
+
+updater_found=false
+
+# Check systemd user timers
+if systemctl --user list-timers 2>/dev/null | grep -qiE "update\|upgrade\|claude\|beeper"; then
+    active_timers=$(systemctl --user list-timers 2>/dev/null | grep -ciE "update\|upgrade\|claude\|beeper" || echo "0")
+    pass "Found $active_timers active update timer(s)"
+    updater_found=true
+fi
+
+# Check crontab
+if crontab -l 2>/dev/null | grep -qiE "update\|upgrade"; then
+    pass "Update jobs found in crontab"
+    updater_found=true
+fi
+
+# Check for Beeper updater specifically
+if [ -x "$HOME/.local/bin/update-beeper" ]; then
+    pass "Beeper updater script present at $HOME/.local/bin/update-beeper"
+    updater_found=true
+fi
+
+if ! $updater_found; then
+    warn "No auto-update timers, cron jobs, or updater scripts found"
+fi
+
+# ── Memory Profile Freshness ─────────────────────────────────────────────────
+
+header "Memory Profile"
+
+memory_files=(
+    "$HOME/.claude/projects/-home-robthepirate/memory/MEMORY.md"
+    "$HOME/.claude/CLAUDE.md"
+)
+
+memory_checked=false
+for memfile in "${memory_files[@]}"; do
+    if [ -f "$memfile" ]; then
+        memory_checked=true
+        age_sec=$(( $(date +%s) - $(stat -c %Y "$memfile" 2>/dev/null || echo "0") ))
+        age_hours=$(( age_sec / 3600 ))
+        age_days=$(( age_sec / 86400 ))
+
+        if [ "$age_hours" -lt 24 ]; then
+            pass "$(basename "$memfile") is fresh (${age_hours}h old)"
+        elif [ "$age_days" -lt 7 ]; then
+            warn "$(basename "$memfile") is ${age_days} days old (>24h)"
+        else
+            fail "$(basename "$memfile") is ${age_days} days old (stale)"
+        fi
+    fi
+done
+
+if ! $memory_checked; then
+    warn "No memory profile files found"
+fi
+
+# ── Cortex DB ─────────────────────────────────────────────────────────────────
+
+header "Cortex Database"
+
+cortex_db=$(find "$HOME" -maxdepth 5 -name "cortex*.db" -o -name "cortex*.sqlite" 2>/dev/null | head -1)
+
+if [ -n "$cortex_db" ]; then
+    db_size=$(du -h "$cortex_db" 2>/dev/null | cut -f1)
+    db_bytes=$(stat -c %s "$cortex_db" 2>/dev/null || echo "0")
+
+    if [ "$db_bytes" -lt 100 ]; then
+        fail "Cortex DB exists but appears empty ($db_size): $cortex_db"
+    else
+        # Check integrity
+        if command -v sqlite3 &>/dev/null; then
+            integrity=$(sqlite3 "$cortex_db" "PRAGMA integrity_check;" 2>&1 | head -1)
+            if [ "$integrity" = "ok" ]; then
+                table_count=$(sqlite3 "$cortex_db" "SELECT COUNT(*) FROM sqlite_master WHERE type='table';" 2>/dev/null || echo "?")
+                pass "Cortex DB OK ($db_size, $table_count tables): $cortex_db"
+            else
+                fail "Cortex DB integrity check failed: $integrity"
+            fi
+        else
+            warn "Cortex DB exists ($db_size) but sqlite3 not available to verify integrity"
+        fi
+    fi
+else
+    warn "No Cortex database found (searched \$HOME, max depth 5)"
+fi
+
+# ── System Resources ─────────────────────────────────────────────────────────
+
+header "System Resources"
+
+# Disk space
+disk_pct=$(df / 2>/dev/null | awk 'NR==2 {gsub(/%/,"",$5); print $5}')
+disk_avail=$(df -h / 2>/dev/null | awk 'NR==2 {print $4}')
+if [ -n "$disk_pct" ]; then
+    if [ "$disk_pct" -ge 90 ]; then
+        fail "Disk usage at ${disk_pct}% (${disk_avail} free) - less than 10% remaining"
+    elif [ "$disk_pct" -ge 80 ]; then
+        warn "Disk usage at ${disk_pct}% (${disk_avail} free)"
+    else
+        pass "Disk usage at ${disk_pct}% (${disk_avail} free)"
+    fi
+else
+    warn "Could not determine disk usage"
+fi
+
+# Available RAM
+if command -v free &>/dev/null; then
+    avail_mb=$(free -m 2>/dev/null | awk '/^Mem:/ {print $7}')
+    total_mb=$(free -m 2>/dev/null | awk '/^Mem:/ {print $2}')
+    if [ -n "$avail_mb" ]; then
+        if [ "$avail_mb" -lt 1024 ]; then
+            fail "Available RAM: ${avail_mb}MB (less than 1GB) of ${total_mb}MB total"
+        elif [ "$avail_mb" -lt 2048 ]; then
+            warn "Available RAM: ${avail_mb}MB of ${total_mb}MB total"
+        else
+            pass "Available RAM: ${avail_mb}MB of ${total_mb}MB total"
+        fi
+    fi
+fi
+
+# CPU temperature
+cpu_temp_found=false
+for zone in /sys/class/thermal/thermal_zone*/temp; do
+    if [ -r "$zone" ]; then
+        temp_raw=$(cat "$zone" 2>/dev/null || echo "0")
+        temp_c=$(( temp_raw / 1000 ))
+        zone_name=$(basename "$(dirname "$zone")")
+        zone_type=$(cat "$(dirname "$zone")/type" 2>/dev/null || echo "$zone_name")
+
+        if [ "$temp_c" -ge 85 ]; then
+            fail "CPU temperature: ${temp_c}C ($zone_type) - CRITICAL"
+        elif [ "$temp_c" -ge 75 ]; then
+            warn "CPU temperature: ${temp_c}C ($zone_type)"
+        else
+            pass "CPU temperature: ${temp_c}C ($zone_type)"
+        fi
+        cpu_temp_found=true
+        break  # Usually the first zone is the CPU package
+    fi
+done
+
+if ! $cpu_temp_found; then
+    warn "CPU temperature not available (no thermal zones readable)"
+fi
+
+# ── Chrome Resource Usage ────────────────────────────────────────────────────
+
+header "Chrome Resources"
+
+if pgrep -f "chrome.*canary" &>/dev/null; then
+    chrome_procs=$(pgrep -fc "chrome.*canary" 2>/dev/null || echo "0")
+    chrome_mem_mb=$(ps aux 2>/dev/null | grep "chrome.*canary" | grep -v grep | awk '{sum+=$6} END {printf "%.0f", sum/1024}')
+    chrome_cpu=$(ps aux 2>/dev/null | grep "chrome.*canary" | grep -v grep | awk '{sum+=$3} END {printf "%.1f", sum}')
+
+    if [ "${chrome_procs:-0}" -gt 50 ]; then
+        warn "Chrome Canary has $chrome_procs processes (consider closing tabs)"
+    else
+        pass "Chrome Canary: $chrome_procs processes"
+    fi
+
+    if [ "${chrome_mem_mb:-0}" -gt 4096 ]; then
+        warn "Chrome Canary memory: ${chrome_mem_mb}MB (>4GB)"
+    else
+        pass "Chrome Canary memory: ${chrome_mem_mb}MB"
+    fi
+
+    if [ "$(echo "${chrome_cpu:-0} > 50" | bc -l 2>/dev/null || echo 0)" -eq 1 ]; then
+        warn "Chrome Canary CPU: ${chrome_cpu}%"
+    else
+        pass "Chrome Canary CPU: ${chrome_cpu}%"
+    fi
+else
+    warn "Chrome Canary not running - skipping resource check"
+fi
+
+# ─── Summary ─────────────────────────────────────────────────────────────────
+
+TOTAL=$(( PASS_COUNT + FAIL_COUNT + WARN_COUNT ))
+
+printf "\n${BOLD}── Summary ──${RESET}\n"
+printf "  Total checks: %d\n" "$TOTAL"
+printf "  ${GREEN}Passed: %d${RESET}  ${RED}Failed: %d${RESET}  ${YELLOW}Warnings: %d${RESET}\n\n" "$PASS_COUNT" "$FAIL_COUNT" "$WARN_COUNT"
+
+if [ "$FAIL_COUNT" -gt 0 ]; then
+    printf "${RED}${BOLD}HEALTH CHECK FAILED${RESET} — %d issue(s) require attention.\n" "$FAIL_COUNT"
+    exit 1
+elif [ "$WARN_COUNT" -gt 0 ]; then
+    printf "${YELLOW}${BOLD}HEALTH CHECK PASSED WITH WARNINGS${RESET} — %d warning(s).\n" "$WARN_COUNT"
+    exit 0
+else
+    printf "${GREEN}${BOLD}ALL CHECKS PASSED${RESET}\n"
+    exit 0
+fi
