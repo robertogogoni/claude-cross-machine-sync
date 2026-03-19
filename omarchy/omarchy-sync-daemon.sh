@@ -1,6 +1,6 @@
 #!/bin/bash
 # Omarchy Auto-Sync Daemon
-# Watches for changes in ~/.config/ and auto-syncs to/from repo
+# Watches for changes in ~/.config/ and Claude Code knowledge, auto-syncs to/from repo
 #
 # Usage:
 #   ./omarchy-sync-daemon.sh          # Run in foreground
@@ -12,9 +12,11 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
 CONFIG_DIR="$HOME/.config"
+CLAUDE_DIR="$HOME/.claude"
 HOSTNAME=$(hostname)
 PID_FILE="/tmp/omarchy-sync-daemon.pid"
 LOG_FILE="$HOME/.local/state/omarchy-sync.log"
+STATUS_FILE="$HOME/.local/state/omarchy-sync-status.json"
 DEBOUNCE_SECONDS=3
 
 # Colors (for terminal output)
@@ -24,8 +26,8 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# Directories to watch
-WATCH_DIRS=(
+# Desktop config directories
+DESKTOP_WATCH_DIRS=(
     "$CONFIG_DIR/hypr"
     "$CONFIG_DIR/waybar"
     "$CONFIG_DIR/alacritty"
@@ -34,6 +36,22 @@ WATCH_DIRS=(
     "$CONFIG_DIR/walker"
     "$CONFIG_DIR/mako"
 )
+
+# Claude Code knowledge directories
+CLAUDE_WATCH_DIRS=(
+    "$CLAUDE_DIR/agents"
+    "$CLAUDE_DIR/commands"
+    "$CLAUDE_DIR/skills"
+)
+
+# Claude memory directories (project-scoped)
+CLAUDE_MEMORY_DIRS=()
+for proj_dir in "$CLAUDE_DIR"/projects/*/memory; do
+    [ -d "$proj_dir" ] && CLAUDE_MEMORY_DIRS+=("$proj_dir")
+done
+
+# Combined watch list
+WATCH_DIRS=("${DESKTOP_WATCH_DIRS[@]}" "${CLAUDE_WATCH_DIRS[@]}" "${CLAUDE_MEMORY_DIRS[@]}")
 
 # Ensure log directory exists
 mkdir -p "$(dirname "$LOG_FILE")"
@@ -92,16 +110,149 @@ stop_daemon() {
     fi
 }
 
+# Determine sync category from changed path
+get_sync_category() {
+    local path="$1"
+    case "$path" in
+        */.claude/projects/*/memory/*)  echo "claude-memory" ;;
+        */.claude/agents/*)             echo "claude-agents" ;;
+        */.claude/commands/*)           echo "claude-commands" ;;
+        */.claude/skills/*)             echo "claude-skills" ;;
+        */.config/*)                    echo "desktop-config" ;;
+        *)                              echo "unknown" ;;
+    esac
+}
+
+# Sync Claude Code knowledge to repo
+sync_claude_to_repo() {
+    local category="$1"
+    local changed_dir="$2"
+    local machine_dir="$REPO_DIR/machines/$(resolve_machine_name)/memory"
+    local universal_dir="$REPO_DIR/universal/claude"
+    local changed=false
+
+    case "$category" in
+        claude-memory)
+            # Memory files go to machine-specific directory
+            mkdir -p "$machine_dir"
+            for f in "$CLAUDE_DIR"/projects/*/memory/*.md; do
+                [ -f "$f" ] || continue
+                local basename=$(basename "$f")
+                [ "$basename" = "MEMORY.md" ] && continue  # Skip index
+                if ! diff -q "$f" "$machine_dir/$basename" &>/dev/null 2>&1; then
+                    cp "$f" "$machine_dir/$basename"
+                    changed=true
+                    log "  Memory synced: $basename"
+                fi
+            done
+            # Also sync MEMORY.md index
+            for idx in "$CLAUDE_DIR"/projects/*/memory/MEMORY.md; do
+                [ -f "$idx" ] || continue
+                if ! diff -q "$idx" "$machine_dir/MEMORY.md" &>/dev/null 2>&1; then
+                    cp "$idx" "$machine_dir/MEMORY.md"
+                    changed=true
+                    log "  Memory index synced"
+                fi
+            done
+            ;;
+        claude-agents|claude-commands|claude-skills)
+            # Agents/commands/skills go to universal
+            local src_type="${category#claude-}"
+            local src_dir="$CLAUDE_DIR/$src_type"
+            local dst_dir="$universal_dir/$src_type"
+            mkdir -p "$dst_dir"
+            for f in "$src_dir"/*.md "$src_dir"/*/SKILL.md; do
+                [ -f "$f" ] || continue
+                local relpath="${f#$src_dir/}"
+                mkdir -p "$dst_dir/$(dirname "$relpath")"
+                if ! diff -q "$f" "$dst_dir/$relpath" &>/dev/null 2>&1; then
+                    cp "$f" "$dst_dir/$relpath"
+                    changed=true
+                    log "  $src_type synced: $relpath"
+                fi
+            done
+            ;;
+    esac
+
+    echo "$changed"
+}
+
+# Resolve machine name from registry
+resolve_machine_name() {
+    local reg="$REPO_DIR/machines/registry.yaml"
+    if [ -f "$reg" ]; then
+        local current_machine="" found=""
+        while IFS= read -r line; do
+            if [[ "$line" =~ ^[[:space:]]{2}([a-zA-Z0-9_-]+):$ ]]; then
+                current_machine="${BASH_REMATCH[1]}"
+            fi
+            if [[ "$line" =~ hostname:[[:space:]]*(.+) ]]; then
+                local reg_hostname="${BASH_REMATCH[1]}"
+                if [[ "$reg_hostname" == "$HOSTNAME" ]] || [[ "$reg_hostname" == "${HOSTNAME%%.*}" ]]; then
+                    found="$current_machine"; break
+                fi
+            fi
+        done < "$reg"
+        [ -n "$found" ] && echo "$found" && return
+    fi
+    echo "$HOSTNAME"
+}
+
+# Write status file for tray applet
+write_status() {
+    local event="$1"
+    local detail="$2"
+    local status="${3:-ok}"
+    mkdir -p "$(dirname "$STATUS_FILE")"
+    cat > "$STATUS_FILE" << EOF
+{
+  "timestamp": "$(date -Iseconds)",
+  "event": "$event",
+  "detail": "$detail",
+  "status": "$status",
+  "hostname": "$HOSTNAME",
+  "machine": "$(resolve_machine_name)",
+  "pid": $$
+}
+EOF
+}
+
 # Sync system changes to repo
 sync_system_to_repo() {
-    log "Syncing system → repo..."
+    local trigger_dir="${1:-}"
+    local category=$(get_sync_category "$trigger_dir")
+    local claude_changed=false
 
-    cd "$SCRIPT_DIR"
-    ./sync-to-repo.sh --commit --push 2>&1 | while read line; do
-        log "  $line"
-    done
+    # Sync Claude knowledge if triggered by Claude directories
+    if [[ "$category" == claude-* ]]; then
+        log "Syncing Claude $category → repo..."
+        claude_changed=$(sync_claude_to_repo "$category" "$trigger_dir")
+    fi
+
+    # Sync desktop configs via existing omarchy sync script
+    if [[ "$category" == "desktop-config" ]] || [[ -z "$trigger_dir" ]]; then
+        log "Syncing desktop config → repo..."
+        cd "$SCRIPT_DIR"
+        ./sync-to-repo.sh --commit --push 2>&1 | while read line; do
+            log "  $line"
+        done
+    fi
+
+    # Commit Claude changes if any
+    if [[ "$claude_changed" == "true" ]]; then
+        cd "$REPO_DIR"
+        git add machines/*/memory/ universal/claude/ 2>/dev/null || true
+        if ! git diff --cached --quiet 2>/dev/null; then
+            local msg="[auto-sync] Claude knowledge from $HOSTNAME ($(resolve_machine_name))"
+            git commit -m "$msg" 2>&1 | while read line; do log "  $line"; done
+            git push origin master 2>&1 | while read line; do log "  $line"; done
+            log "Claude knowledge pushed"
+            write_status "sync" "$category" "ok"
+        fi
+    fi
 
     log "Sync complete"
+    write_status "idle" "watching" "ok"
 }
 
 # Pull repo changes and deploy
@@ -182,12 +333,13 @@ watch_loop() {
         if (( now - last_sync >= DEBOUNCE_SECONDS )); then
             log "Change detected: $directory$filename ($event)"
             last_sync=$now
+            write_status "change" "$directory$filename" "syncing"
 
             # Wait a moment for any batch changes to complete
             sleep 1
 
-            # Sync to repo
-            sync_system_to_repo
+            # Sync to repo (pass the trigger directory for categorization)
+            sync_system_to_repo "$directory"
         fi
     done
 }
@@ -240,10 +392,12 @@ main() {
             echo "  $0 --status     Check daemon status"
             echo ""
             echo "What it does:"
-            echo "  - Watches ~/.config/hypr, waybar, terminals for changes"
-            echo "  - Auto-syncs changes to git repo with categorization"
+            echo "  - Watches ~/.config/hypr, waybar, terminals for desktop changes"
+            echo "  - Watches ~/.claude/ for memory, agents, commands, skills changes"
+            echo "  - Auto-syncs everything to git repo with smart categorization"
             echo "  - Periodically checks for repo updates from other machines"
             echo "  - Auto-deploys incoming changes"
+            echo "  - Writes status to $STATUS_FILE for tray applet"
             exit 0
             ;;
         "")
@@ -257,6 +411,7 @@ main() {
 
             # Initial sync
             sync_repo_to_system
+            write_status "started" "watching ${#WATCH_DIRS[@]} directories" "ok"
 
             # Start watching
             watch_loop

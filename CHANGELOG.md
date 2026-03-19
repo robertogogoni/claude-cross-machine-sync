@@ -21,6 +21,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `[docs]` Omarchy sync status table added to README.md
 - `[docs]` New learning: sync-daemon-architecture.md (daemon comparison, bugs, recommendations)
 - `[machine:samsung-laptop]` Omarchy sync daemon installed and enabled via systemd (omarchy-sync.service)
+- `[universal]` Daemon now watches Claude Code knowledge dirs: agents/, commands/, skills/, projects/*/memory/
+- `[universal]` Daemon writes JSON status file for tray applet at ~/.local/state/omarchy-sync-status.json
+- `[universal]` Claude memory files auto-sync to machines/*/memory/, agents/commands/skills to universal/claude/
+- `[universal]` Go tray applet (tools/sync-tray): SNI tray icon showing sync status, last event, manual sync trigger
+- `[universal]` Tray applet uses color-coded icons: green (synced), blue (syncing), red (daemon down)
+- `[universal]` Tray menu: status, last sync, machine name, watched dirs count, sync now, view log, restart daemon
 
 ### Changed
 - `[machine:samsung-laptop]` machine.yaml: kernel updated to 6.19.8, added apps section (Telegram), bumped to v1.1
