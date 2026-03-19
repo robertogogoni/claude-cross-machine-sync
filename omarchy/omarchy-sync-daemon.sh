@@ -314,10 +314,12 @@ watch_loop() {
 
     if [ ${#watch_args[@]} -eq 0 ]; then
         log_error "No directories to watch!"
+        write_status "error" "no directories to watch" "error"
         exit 1
     fi
 
     local last_sync=0
+    write_status "idle" "watching ${#watch_args[@]} dirs" "ok"
 
     # Watch for file changes
     inotifywait -m -r -e modify,create,delete,move \
