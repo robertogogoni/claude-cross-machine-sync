@@ -84,16 +84,24 @@ if [ -d "$REPO_DIR/.git" ]; then
     [ ${#last_knowledge_commit} -gt 55 ] && last_knowledge_commit="${last_knowledge_commit:0:52}..."
 fi
 
-# ── Recent events from log ───────────────────────────────────────────────────
+# ── Recent events from log (São Paulo timezone) ──────────────────────────────
 
 last_events=()
 if [ -f "$LOG_FILE" ]; then
     while IFS= read -r line; do
+        # Strip ANSI escape codes
         clean=$(echo "$line" | sed 's/\x1b\[[0-9;]*m//g')
-        msg="${clean#*] }"
-        [ ${#msg} -gt 55 ] && msg="${msg:0:52}..."
-        last_events+=("$msg")
-    done < <(grep -E "(synced|pushed|Change detected|Sync complete|knowledge pushed|Deploy complete)" "$LOG_FILE" 2>/dev/null | tail -4)
+        # Extract timestamp and message
+        if [[ "$clean" =~ ^\[([0-9]{4}-[0-9]{2}-[0-9]{2}\ [0-9]{2}:[0-9]{2}:[0-9]{2})\]\ (.*) ]]; then
+            ts="${BASH_REMATCH[1]}"
+            msg="${BASH_REMATCH[2]}"
+            # Convert to São Paulo time (BRT) and format as HH:MM:SS
+            sp_time=$(TZ=America/Sao_Paulo date -d "$ts" '+%H:%M:%S' 2>/dev/null || echo "${ts:11:8}")
+            # Trim message but keep more context
+            [ ${#msg} -gt 65 ] && msg="${msg:0:62}..."
+            last_events+=("$sp_time  $msg")
+        fi
+    done < <(grep -E "(synced|pushed|Change detected|Sync complete|knowledge pushed|Deploy complete|Learnings pushed|Checking for repo|deploy|pulling)" "$LOG_FILE" 2>/dev/null | tail -10)
 fi
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -182,10 +190,10 @@ else
         tooltip+=$'\n'"    $last_knowledge_commit"
     fi
 
-    # Recent events
+    # Recent events (full timestamps, São Paulo time)
     if [ ${#last_events[@]} -gt 0 ]; then
         tooltip+=$'\n'"────────────────────────────"
-        tooltip+=$'\n'"  Recent"
+        tooltip+=$'\n'"  Recent (BRT)"
         for line in "${last_events[@]}"; do
             tooltip+=$'\n'"    $line"
         done
