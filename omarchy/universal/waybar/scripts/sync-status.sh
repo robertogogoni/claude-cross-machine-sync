@@ -39,7 +39,7 @@ count_files() { ls "$1" 2>/dev/null | wc -l; }
 count_md() { ls "$1"/*.md 2>/dev/null | wc -l; }
 count_dirs() { ls -d "$1"/*/ 2>/dev/null | wc -l; }
 
-n_memories=$(count_md "$MEMORY_DIR")
+n_memories=$(ls "$MEMORY_DIR"/*.md 2>/dev/null | grep -cv '/MEMORY\.md$')
 n_learnings=$(count_md "$REPO_DIR/learnings")
 n_agents=$(count_md "$HOME/.claude/agents")
 n_commands=$(count_md "$HOME/.claude/commands")
@@ -51,8 +51,8 @@ mem_lines=$(cat "$MEMORY_DIR"/*.md 2>/dev/null | wc -l)
 learn_lines=$(cat "$REPO_DIR/learnings"/*.md 2>/dev/null | wc -l)
 total_lines=$(( mem_lines + learn_lines ))
 
-# Machines in registry
-n_machines=$(grep -c "^  [a-z].*:$" "$REPO_DIR/machines/registry.yaml" 2>/dev/null || echo 0)
+# Machines in registry (only entries under the 'machines:' section, before 'platforms:')
+n_machines=$(sed -n '/^machines:/,/^[a-z]/p' "$REPO_DIR/machines/registry.yaml" 2>/dev/null | grep -c "^  [a-z].*:$" || echo 0)
 
 # ── Watched directories ──────────────────────────────────────────────────────
 
