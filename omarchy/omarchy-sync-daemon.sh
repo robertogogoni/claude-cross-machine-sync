@@ -198,7 +198,7 @@ resolve_machine_name() {
     echo "$HOSTNAME"
 }
 
-# Write status file for tray applet
+# Write status file for tray applet + signal waybar
 write_status() {
     local event="$1"
     local detail="$2"
@@ -215,6 +215,8 @@ write_status() {
   "pid": $$
 }
 EOF
+    # Signal waybar to refresh sync-status module instantly
+    pkill -RTMIN+11 waybar 2>/dev/null || true
 }
 
 # Sync system changes to repo

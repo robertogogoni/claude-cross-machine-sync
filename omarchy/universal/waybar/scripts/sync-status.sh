@@ -146,9 +146,12 @@ else
     ago=""
     [ -n "$status_ts" ] && [ "$ts_epoch" -gt 0 ] && ago="$(format_ago "$age")"
 
-    # Bar text: icon + memory count
-    mem_bar=$(progress_bar "$n_memories" 30)
-    text="󰑐 ${mem_bar}"
+    # Bar text: icon + time since last status update
+    if [ -n "$ago" ]; then
+        text="󰑐 ${ago}"
+    else
+        text="󰑐"
+    fi
 
     # ── Tooltip ──
     tooltip="Claude Sync  ·  ${status_machine}"
