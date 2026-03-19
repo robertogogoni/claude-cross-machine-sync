@@ -221,7 +221,8 @@
   "custom/sync-status": {
     "exec": "/home/robthepirate/.config/waybar/scripts/sync-status.sh",
     "return-type": "json",
-    "interval": 5,
+    "interval": 10,
+    "signal": 11,
     "tooltip": true,
     "format": "{}",
     "on-click": "omarchy-launch-floating-terminal-with-presentation 'journalctl --user -u omarchy-sync.service -f --no-hostname'",
