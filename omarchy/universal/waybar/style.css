@@ -99,70 +99,24 @@ tooltip {
   color: #a55555;
 }
 
-
-
-#custom-ai-usage.ai-ok { color: #a6e3a1; }
-#custom-ai-usage.ai-warn { color: #FFC107; }
-#custom-ai-usage.ai-crit { color: #D35F5F; }
-#custom-ai-usage:hover { color: #e68e0d; }
-
-/* Light theme overrides */
-#custom-ai-usage.ai-usage-light.ai-ok { color: #40a02b; }
-#custom-ai-usage.ai-usage-light.ai-warn { color: #df8e1d; }
-#custom-ai-usage.ai-usage-light.ai-crit { color: #d20f39; }
-#custom-ai-usage.ai-usage-light:hover { color: #fe640b; }
-
-
-
-#custom-ai-usage.ai-ok { color: #a6e3a1; }
-#custom-ai-usage.ai-warn { color: #FFC107; }
-#custom-ai-usage.ai-crit { color: #D35F5F; }
-#custom-ai-usage:hover { color: #e68e0d; }
-
-/* Light theme overrides */
-#custom-ai-usage.ai-usage-light.ai-ok { color: #40a02b; }
-#custom-ai-usage.ai-usage-light.ai-warn { color: #df8e1d; }
-#custom-ai-usage.ai-usage-light.ai-crit { color: #d20f39; }
-#custom-ai-usage.ai-usage-light:hover { color: #fe640b; }
-
-
-
-#custom-ai-usage.ai-ok { color: #a6e3a1; }
-#custom-ai-usage.ai-warn { color: #FFC107; }
-#custom-ai-usage.ai-crit { color: #D35F5F; }
-#custom-ai-usage:hover { color: #e68e0d; }
-
-/* Light theme overrides */
-#custom-ai-usage.ai-usage-light.ai-ok { color: #40a02b; }
-#custom-ai-usage.ai-usage-light.ai-warn { color: #df8e1d; }
-#custom-ai-usage.ai-usage-light.ai-crit { color: #d20f39; }
-#custom-ai-usage.ai-usage-light:hover { color: #fe640b; }
-
 /* ===== Claude Sync ===== */
 
 #custom-sync-status {
   padding: 0 6px;
   font-size: 13px;
-  transition: all 0.3s ease;
 }
 
 #custom-sync-status.sync-ok { color: #a6e3a1; }
-#custom-sync-status.sync-active { color: #89b4fa; animation: sync-pulse 1.5s ease-in-out infinite; }
+#custom-sync-status.sync-active { color: #89b4fa; }
 #custom-sync-status.sync-warn { color: #FFC107; }
 #custom-sync-status.sync-off { color: #585b70; }
 #custom-sync-status:hover { color: #e68e0d; }
-
-@keyframes sync-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
 
 /* ===== AI Usage ===== */
 
 #custom-ai-usage {
   padding: 0 10px;
   font-size: 14px;
-  transition: all 0.2s ease;
 }
 
 #custom-ai-usage.ai-ok { color: #a6e3a1; }

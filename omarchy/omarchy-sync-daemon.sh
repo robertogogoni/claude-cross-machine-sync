@@ -258,6 +258,7 @@ sync_system_to_repo() {
 # Pull repo changes and deploy
 sync_repo_to_system() {
     log "Checking for repo updates..."
+    write_status "checking" "pulling from remote" "ok"
 
     cd "$REPO_DIR"
 
@@ -286,12 +287,16 @@ sync_repo_to_system() {
         fi
 
         log "Deploy complete"
+        write_status "deployed" "changes from remote" "ok"
+    else
+        write_status "idle" "watching" "ok"
     fi
 }
 
 # Main watch loop
 watch_loop() {
     log "Starting omarchy sync daemon for $HOSTNAME"
+    write_status "started" "initializing" "ok"
     log "Watching directories:"
     for dir in "${WATCH_DIRS[@]}"; do
         if [ -d "$dir" ]; then
