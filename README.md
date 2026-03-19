@@ -153,9 +153,17 @@ See [memory architecture diagram](docs/diagrams/memory-architecture.md) for the 
 
 | Machine | Platform | Status | Configs |
 |:--------|:---------|:------:|--------:|
-| Samsung 270E5J | Arch Linux + Hyprland | Active | 10 |
+| Samsung 270E5J | Arch Linux + Hyprland | Active | 16 |
 | MacBook Air | Arch Linux + Hyprland | Active | 11 |
 | Dell G15 | Windows 11 | Pending | 1 |
+
+#### Omarchy Sync Status
+
+| Machine | Hypr Configs | Input | Monitors | Envs | Bindings | Look & Feel |
+|:--------|:------------|:------|:---------|:-----|:---------|:------------|
+| Samsung 270E5J | 6/6 | BR ABNT2 | 1366x768@1x | DPI 80 | Synced | Synced |
+| MacBook Air | 5/5 | US Intl | Auto | Default | Synced | Synced |
+| Dell G15 | N/A | N/A | N/A | N/A | N/A | N/A |
 
 ---
 
@@ -179,7 +187,7 @@ claude-desktop-update  # Auto-update Claude Desktop from AUR (runs daily via sys
 **Navigate**
 - [INDEX.md](docs/INDEX.md) -- "I need to..." quick start
 - [RUNBOOK.md](docs/RUNBOOK.md) -- 15 troubleshooting scenarios
-- [CHANGELOG.md](CHANGELOG.md) -- 11 releases, 97 commits
+- [CHANGELOG.md](CHANGELOG.md) -- 12 releases, 100+ commits
 
 </td>
 <td width="50%" valign="top">
@@ -267,7 +275,7 @@ claude-cross-machine-sync/
 │
 ├── machines/                        # Per-host configs
 │   ├── registry.yaml
-│   ├── samsung-laptop/              #   10 files
+│   ├── samsung-laptop/              #   16 files
 │   ├── macbook-air/                 #   11 files
 │   └── dell-g15/                    #   1 file (pending)
 │

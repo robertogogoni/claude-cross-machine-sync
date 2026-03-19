@@ -15,10 +15,22 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `[machine:samsung-laptop]` Samsung omarchy config: monitors.conf, envs.conf, input.conf (BR ABNT2 keyboard)
 - `[machine:samsung-laptop]` Samsung omarchy machine.yaml with display/GPU/input specs
 - `[machine:samsung-laptop]` Updated system packages memory with Telegram section (2026-03-19)
+- `[machine:samsung-laptop]` Synced all 6 machine-specific Hyprland configs (bindings, input, looknfeel, monitors, envs, autostart)
+- `[machine:samsung-laptop]` Omarchy bindings.conf and looknfeel.conf synced to omarchy/machines/samsung-laptop/
+- `[universal]` Deployed missing planner agent, eureka and think-harder commands to live system
+- `[docs]` Omarchy sync status table added to README.md
 
 ### Changed
 - `[machine:samsung-laptop]` machine.yaml: kernel updated to 6.19.8, added apps section (Telegram), bumped to v1.1
 - `[machine:samsung-laptop]` hypr/envs.conf synced with current system state
+- `[universal]` Desktop config template: sidebarMode corrected from "task" to "chat" to match live
+
+### Fixed
+- `[docs]` CLAUDE.md: Samsung hostname corrected from "samsung-arch" to "omarchy", user from "TBD" to "robthepirate"
+- `[docs]` CLAUDE.md: Samsung machine status updated from "Pending" to "Active"
+- `[docs]` SETUP.md: Machine comparison table fully updated with current status for all 3 machines
+- `[docs]` README.md: Commit count and Samsung config count updated
+- `[docs]` Design doc (2026-01-23): Stale hostname "samsung-arch" replaced with "omarchy"
 
 ---
 

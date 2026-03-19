@@ -1,6 +1,6 @@
 # Claude Code Cross-Machine Setup
 
-**Last Updated**: 2026-02-02
+**Last Updated**: 2026-03-19
 **Machines**: Dell G15 (Windows), MacBook Air (Linux), Samsung Laptop (Linux)
 **Repository**: https://github.com/robertogogoni/claude-cross-machine-sync
 
@@ -9,7 +9,7 @@
 This repository syncs configuration across:
 - **Dell G15 5530** (Windows 11) - Gaming laptop, hostname: Rob-Dell, user: rober
 - **MacBook Air** (Arch Linux/Omarchy) - hostname: macbook-air, user: rob
-- **Samsung Laptop** (Arch Linux/Omarchy) - hostname: samsung-arch, user: TBD (pending)
+- **Samsung Laptop** (Arch Linux/Omarchy) - hostname: omarchy, user: robthepirate
 
 See `machines/registry.yaml` for the complete machine ecosystem configuration.
 
@@ -136,7 +136,7 @@ Bootstrap automatically:
 |---------|----------|----------|--------|--------|
 | Dell G15 5530 | Rob-Dell | Windows 11 | Running | ✅ Active |
 | MacBook Air | macbook-air | Arch Linux | Pending | ⏳ Migration |
-| Samsung Laptop | samsung-arch | Arch Linux | Pending | ⏳ Setup |
+| Samsung 270E5J | omarchy | Arch Linux | Manual | ✅ Active |
 
 ---
 

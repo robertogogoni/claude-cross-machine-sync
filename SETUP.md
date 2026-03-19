@@ -115,22 +115,20 @@ git push
 
 ## Machine Comparison
 
-| Feature | MacBook Air (Main) | Linux Notebook 2 | Windows Desktop |
-|---------|-------------------|------------------|-----------------|
-| **Status** | ✅ Configured | ⏳ Pending | ⏳ Pending |
-| **Hardware** | MacBookAir7,2 | TBD | TBD |
-| **OS** | Arch Linux | TBD | Windows |
-| **Claude Version** | 2.0.76 | TBD | TBD |
-| **MCP: Beeper** | ✅ Configured | TBD | TBD |
-| **MCP: Chrome** | ⏳ Extension pending | TBD | TBD |
-| **Tool Discovery** | ✅ Installed | TBD | TBD |
-| **SSH Access** | ⏳ To configure | TBD | TBD |
+| Feature | MacBook Air | Samsung 270E5J | Dell G15 |
+|---------|-------------|----------------|----------|
+| **Status** | ✅ Active | ✅ Active | ⏳ Pending |
+| **Hardware** | MacBookAir7,2 (i5-5250U) | 270E5J (i7-4510U) | G15 5530 (TBD) |
+| **OS** | Arch Linux + Hyprland | Arch Linux + Hyprland | Windows 11 |
+| **Claude Code** | ✅ Configured | ✅ Configured | ✅ Configured |
+| **MCP Servers** | ✅ 12 servers | ✅ 13 servers | TBD |
+| **Omarchy Sync** | ✅ 5 hypr configs | ✅ 6 hypr configs | N/A (Windows) |
+| **Chrome Flags** | ✅ Synced | ✅ Synced | N/A |
+| **Memory** | ✅ Synced | ✅ 5 memories | TBD |
 
 ---
 
 **Next Steps**:
-1. Push this repository to GitHub/GitLab
-2. Set up Linux Notebook 2
-3. Set up Windows Desktop
-4. Configure SSH between all machines
-5. Test cross-machine workflows
+1. Complete Dell G15 bootstrap (hardware detection, full config)
+2. Install and enable omarchy sync daemon on Samsung and MacBook
+3. Test cross-machine sync workflows

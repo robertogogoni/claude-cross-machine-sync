@@ -15,7 +15,7 @@ A comprehensive system for automatically categorizing and syncing configurations
 |---------|----------|----------|-----|---------|--------|
 | Dell G15 5530 | `Rob-Dell` | windows | Windows 11 | Native | Active |
 | MacBook Air | `macbook-air` | linux | Arch Linux | Omarchy/Hyprland | Active |
-| Samsung Laptop | `samsung-arch` | linux | Arch Linux | Omarchy/Hyprland | Pending |
+| Samsung 270E5J | `omarchy` | linux | Arch Linux | Omarchy/Hyprland | Active |
 
 ---
 
@@ -88,7 +88,7 @@ machines:
     primary_user: rob
 
   samsung-laptop:
-    hostname: samsung-arch
+    hostname: omarchy
     platform: linux
     os: Arch Linux
     desktop: omarchy
