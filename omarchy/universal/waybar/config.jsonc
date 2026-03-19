@@ -17,9 +17,9 @@
     "custom/notification-silencing-indicator"
   ],
   "modules-right": [
-    "custom/sync-status",
     "custom/ai-usage",
     "custom/separator-right",
+    "custom/sync-status",
     "group/tray-expander",
     "bluetooth",
     "network",

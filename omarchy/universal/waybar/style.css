@@ -112,11 +112,25 @@ tooltip {
 #custom-sync-status.sync-off { color: #585b70; }
 #custom-sync-status:hover { color: #e68e0d; }
 
+
+
+#custom-ai-usage.ai-ok { color: #a6e3a1; }
+#custom-ai-usage.ai-warn { color: #FFC107; }
+#custom-ai-usage.ai-crit { color: #D35F5F; }
+#custom-ai-usage:hover { color: #e68e0d; }
+
+/* Light theme overrides */
+#custom-ai-usage.ai-usage-light.ai-ok { color: #40a02b; }
+#custom-ai-usage.ai-usage-light.ai-warn { color: #df8e1d; }
+#custom-ai-usage.ai-usage-light.ai-crit { color: #d20f39; }
+#custom-ai-usage.ai-usage-light:hover { color: #fe640b; }
+
 /* ===== AI Usage ===== */
 
 #custom-ai-usage {
   padding: 0 10px;
   font-size: 14px;
+  transition: all 0.2s ease;
 }
 
 #custom-ai-usage.ai-ok { color: #a6e3a1; }
