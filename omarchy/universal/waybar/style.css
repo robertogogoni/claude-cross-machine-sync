@@ -138,6 +138,25 @@ tooltip {
 #custom-ai-usage.ai-usage-light.ai-crit { color: #d20f39; }
 #custom-ai-usage.ai-usage-light:hover { color: #fe640b; }
 
+/* ===== Claude Sync ===== */
+
+#custom-sync-status {
+  padding: 0 6px;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+#custom-sync-status.sync-ok { color: #a6e3a1; }
+#custom-sync-status.sync-active { color: #89b4fa; animation: sync-pulse 1.5s ease-in-out infinite; }
+#custom-sync-status.sync-warn { color: #FFC107; }
+#custom-sync-status.sync-off { color: #585b70; }
+#custom-sync-status:hover { color: #e68e0d; }
+
+@keyframes sync-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 /* ===== AI Usage ===== */
 
 #custom-ai-usage {
