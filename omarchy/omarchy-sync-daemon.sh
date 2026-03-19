@@ -50,8 +50,11 @@ for proj_dir in "$CLAUDE_DIR"/projects/*/memory; do
     [ -d "$proj_dir" ] && CLAUDE_MEMORY_DIRS+=("$proj_dir")
 done
 
+# Learnings directory (auto-captured insights from Cortex)
+LEARNINGS_DIR="$REPO_DIR/learnings"
+
 # Combined watch list
-WATCH_DIRS=("${DESKTOP_WATCH_DIRS[@]}" "${CLAUDE_WATCH_DIRS[@]}" "${CLAUDE_MEMORY_DIRS[@]}")
+WATCH_DIRS=("${DESKTOP_WATCH_DIRS[@]}" "${CLAUDE_WATCH_DIRS[@]}" "${CLAUDE_MEMORY_DIRS[@]}" "$LEARNINGS_DIR")
 
 # Ensure log directory exists
 mkdir -p "$(dirname "$LOG_FILE")"
@@ -118,6 +121,7 @@ get_sync_category() {
         */.claude/agents/*)             echo "claude-agents" ;;
         */.claude/commands/*)           echo "claude-commands" ;;
         */.claude/skills/*)             echo "claude-skills" ;;
+        */learnings/*)                   echo "learnings" ;;
         */.config/*)                    echo "desktop-config" ;;
         *)                              echo "unknown" ;;
     esac
@@ -238,6 +242,19 @@ sync_system_to_repo() {
         ./sync-to-repo.sh --commit --push 2>&1 | while read line; do
             log "  $line"
         done
+    fi
+
+    # Commit learnings if triggered by cortex bridge
+    if [[ "$category" == "learnings" ]]; then
+        cd "$REPO_DIR"
+        git add learnings/ 2>/dev/null || true
+        if ! git diff --cached --quiet 2>/dev/null; then
+            local msg="[auto-sync] Learnings from $(resolve_machine_name)"
+            git commit -m "$msg" 2>&1 | while read line; do log "  $line"; done
+            git push origin master 2>&1 | while read line; do log "  $line"; done
+            log "Learnings pushed"
+            write_status "sync" "learnings" "ok"
+        fi
     fi
 
     # Commit Claude changes if any
