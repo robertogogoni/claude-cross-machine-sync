@@ -48,7 +48,7 @@ hardware:
 os:
   distribution: Arch Linux
   id: arch
-  kernel: 6.18.3-arch1-1
+  kernel: 6.19.8-arch1-1
   architecture: x86_64
   init: systemd
 
@@ -121,7 +121,20 @@ usage:
   location: Home/Office
   notes: Primary development machine with Arch Linux. Good for Docker, general development, and CLI work.
 
+apps:
+  telegram:
+    package: telegram-desktop-bin
+    version: 6.6.2-1
+    source: AUR
+    type: static-binary
+    scaling: QT_SCALE_FACTOR=0.8 (via custom .desktop)
+    spellcheck:
+      - hunspell-en_us
+      - hunspell-pt-br
+    extras:
+      - qt6-imageformats
+
 metadata:
   created: "2026-01-07"
-  last_updated: "2026-01-07"
-  profile_version: "1.0"
+  last_updated: "2026-03-19"
+  profile_version: "1.1"

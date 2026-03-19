@@ -1,0 +1,22 @@
+# Samsung 270E5J - Omarchy Configuration
+# Display: 1366x768 60Hz eDP-1 (AU Optronics)
+# GPU: Intel HD 4400 (Haswell-ULT, i915)
+# Input: BR ABNT2 keyboard, touchpad
+
+display:
+  resolution: 1366x768
+  refresh: 60
+  connector: eDP-1
+  scale: 1
+  dpi_override: 80  # QT_WAYLAND_FORCE_DPI for compact UI
+
+gpu:
+  driver: i915
+  generation: haswell
+  performance: low
+  notes: "No blur/shadows, keep animations minimal"
+
+input:
+  keyboard_layout: br
+  keyboard_model: abnt2
+  touchpad_scroll_factor: 0.4

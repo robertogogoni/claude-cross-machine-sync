@@ -7,6 +7,21 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [Unreleased]
+
+### Added
+- `[machine:samsung-laptop]` Telegram Desktop setup: telegram-desktop-bin 6.6.2, qt6-imageformats, hunspell-en_us, hunspell-pt-br
+- `[machine:samsung-laptop]` Custom .desktop launcher with QT_SCALE_FACTOR=0.8 for static Qt binary scaling
+- `[machine:samsung-laptop]` Samsung omarchy config: monitors.conf, envs.conf, input.conf (BR ABNT2 keyboard)
+- `[machine:samsung-laptop]` Samsung omarchy machine.yaml with display/GPU/input specs
+- `[machine:samsung-laptop]` Updated system packages memory with Telegram section (2026-03-19)
+
+### Changed
+- `[machine:samsung-laptop]` machine.yaml: kernel updated to 6.19.8, added apps section (Telegram), bumped to v1.1
+- `[machine:samsung-laptop]` hypr/envs.conf synced with current system state
+
+---
+
 ## [1.0.0] - 2026-03-18 — Full Ecosystem
 
 The repo graduates from a sync tool to a complete Claude Code ecosystem manager. Samsung laptop fully onboarded, memory bridge built, comprehensive documentation layer added.
