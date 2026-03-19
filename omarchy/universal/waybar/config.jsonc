@@ -17,6 +17,7 @@
     "custom/notification-silencing-indicator"
   ],
   "modules-right": [
+    "custom/sync-status",
     "custom/ai-usage",
     "custom/separator-right",
     "group/tray-expander",
