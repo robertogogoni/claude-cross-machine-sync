@@ -79,3 +79,4 @@ When invoked to debug an issue:
 - **Document Your Findings**: Explain what caused it and how you fixed it
 
 Start debugging immediately when invoked. Work efficiently and explain your reasoning as you investigate.
+
