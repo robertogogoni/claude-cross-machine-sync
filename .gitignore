@@ -35,6 +35,9 @@ Thumbs.db
 # Environment files (all directories)
 **/.env
 
+# Compiled binaries
+tools/sync-tray/sync-tray
+
 # Temporary files
 tmp/
 temp/

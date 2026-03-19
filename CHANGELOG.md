@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- `[universal]` Waybar sync-status module script tracked in repo (`omarchy/universal/waybar/scripts/sync-status.sh`)
 - `[machine:samsung-laptop]` Telegram Desktop setup: telegram-desktop-bin 6.6.2, qt6-imageformats, hunspell-en_us, hunspell-pt-br
 - `[machine:samsung-laptop]` Custom .desktop launcher with QT_SCALE_FACTOR=0.8 for static Qt binary scaling
 - `[machine:samsung-laptop]` Samsung omarchy config: monitors.conf, envs.conf, input.conf (BR ABNT2 keyboard)
