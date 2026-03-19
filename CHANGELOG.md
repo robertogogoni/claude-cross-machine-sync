@@ -19,6 +19,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `[machine:samsung-laptop]` Omarchy bindings.conf and looknfeel.conf synced to omarchy/machines/samsung-laptop/
 - `[universal]` Deployed missing planner agent, eureka and think-harder commands to live system
 - `[docs]` Omarchy sync status table added to README.md
+- `[docs]` New learning: sync-daemon-architecture.md (daemon comparison, bugs, recommendations)
+- `[machine:samsung-laptop]` Omarchy sync daemon installed and enabled via systemd (omarchy-sync.service)
 
 ### Changed
 - `[machine:samsung-laptop]` machine.yaml: kernel updated to 6.19.8, added apps section (Telegram), bumped to v1.1
@@ -26,6 +28,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `[universal]` Desktop config template: sidebarMode corrected from "task" to "chat" to match live
 
 ### Fixed
+- `[linux]` Platform daemon hostname bug: added registry lookup so conflict resolution matches `machines/samsung-laptop/` not `machines/samsung-omarchy/`
 - `[docs]` CLAUDE.md: Samsung hostname corrected from "samsung-arch" to "omarchy", user from "TBD" to "robthepirate"
 - `[docs]` CLAUDE.md: Samsung machine status updated from "Pending" to "Active"
 - `[docs]` SETUP.md: Machine comparison table fully updated with current status for all 3 machines

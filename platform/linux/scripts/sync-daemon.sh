@@ -16,6 +16,34 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 HOSTNAME=$(hostname)
+# Resolve machine directory name from registry (hostname may differ from dir name)
+resolve_machine_dir() {
+    local reg="$REPO_DIR/machines/registry.yaml"
+    if [ -f "$reg" ]; then
+        # Find machine entry whose hostname matches
+        local current_machine=""
+        local found=""
+        while IFS= read -r line; do
+            if [[ "$line" =~ ^[[:space:]]{2}([a-zA-Z0-9_-]+):$ ]]; then
+                current_machine="${BASH_REMATCH[1]}"
+            fi
+            if [[ "$line" =~ hostname:[[:space:]]*(.+) ]]; then
+                local reg_hostname="${BASH_REMATCH[1]}"
+                if [[ "$reg_hostname" == "$HOSTNAME" ]] || [[ "$reg_hostname" == "${HOSTNAME%%.*}" ]]; then
+                    found="$current_machine"
+                    break
+                fi
+            fi
+        done < "$reg"
+        if [ -n "$found" ]; then
+            echo "$found"
+            return
+        fi
+    fi
+    # Fallback: use hostname as-is
+    echo "$HOSTNAME"
+}
+MACHINE_DIR_NAME=$(resolve_machine_dir)
 LOG_FILE="$HOME/.local/state/machine-sync/sync.log"
 PID_FILE="$HOME/.local/state/machine-sync/daemon.pid"
 LOCK_FILE="$HOME/.local/state/machine-sync/daemon.lock"
@@ -324,7 +352,7 @@ resolve_conflicts() {
     local manual_required=0
 
     for file in $conflicted_files; do
-        if [[ "$file" =~ ^machines/$HOSTNAME/ ]] || [[ "$file" =~ ^machines/$(echo "$HOSTNAME" | tr '[:upper:]' '[:lower:]')/ ]]; then
+        if [[ "$file" =~ ^machines/$MACHINE_DIR_NAME/ ]] || [[ "$file" =~ ^machines/$(echo "$MACHINE_DIR_NAME" | tr '[:upper:]' '[:lower:]')/ ]]; then
             # Machine-specific: keep ours
             git checkout --ours "$file" 2>/dev/null && git add "$file"
             log "  Auto-resolved (ours): $file"
@@ -418,7 +446,7 @@ get_watch_dirs() {
 
 # Main watch loop
 watch_loop() {
-    log "Machine Sync Daemon starting on $HOSTNAME"
+    log "Machine Sync Daemon starting on $HOSTNAME (machine dir: $MACHINE_DIR_NAME)"
 
     # Check for existing instance
     if [ -f "$LOCK_FILE" ]; then
