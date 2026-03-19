@@ -44,7 +44,7 @@ machines:
       hypr: "/home/rob/.config/hypr"
 
   samsung-laptop:
-    hostname: omarchy
+    hostname: samsung-omarchy
     platform: linux
     os: Arch Linux
     desktop: omarchy
