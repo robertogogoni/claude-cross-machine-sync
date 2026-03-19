@@ -218,6 +218,15 @@
     "icon-size": 12,
     "spacing": 17
   },
+  "custom/sync-status": {
+    "exec": "/home/robthepirate/.config/waybar/scripts/sync-status.sh",
+    "return-type": "json",
+    "interval": 5,
+    "tooltip": true,
+    "format": "{}",
+    "on-click": "omarchy-launch-floating-terminal-with-presentation 'journalctl --user -u omarchy-sync.service -f --no-hostname'",
+    "on-click-right": "systemctl --user restart omarchy-sync.service"
+  },
   "custom/ai-usage": {
     "exec": "/home/robthepirate/.config/waybar/scripts/ai-usage.sh",
     "return-type": "json",
