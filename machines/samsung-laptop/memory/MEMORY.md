@@ -13,6 +13,7 @@
 - [System updates must route through Claude Code](feedback_supervised_updates.md) — All upgrades intercepted via /system-update, shell wrappers, omarchy hook
 
 ## Project
+- [AI usage monitoring overlay](project_ai_usage_overlay.md) — Permanent overlay fetcher with JSONL fallback, rate-limit backoff, survives package updates
 - [System tuning applied 2026-03-28](project_system_tuning_2026_03_28.md) — zram VM tunables, 4GB disk swap, nvidia blacklist, mkinitcpio i915, 104GB cache cleaned
 - [Sync daemon audit 2026-03-19](project_sync_daemon_audit.md) — Two daemons (omarchy + platform), neither running on Samsung, platform has hostname bug
 - [Cortex Claude — user's own memory system](project_cortex_claude.md) — cortex-claude v3.0.0 installed as MCP server with 4 hooks, NOT related to michaelv2's fork
