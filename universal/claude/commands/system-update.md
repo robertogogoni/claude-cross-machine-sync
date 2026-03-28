@@ -52,11 +52,17 @@ sudo pacman -Syu --noconfirm
 ```
 
 ### 4c. AUR packages
-```bash
-yay -Sua --noconfirm --cleanafter
-```
 
-If yay prompts about replacing packages or conflicts, pause and explain the situation before proceeding.
+**IMPORTANT**: Before running yay, build the `--ignore` list dynamically. Scan pending AUR updates for any `electron*` package that is NOT a `-bin` variant:
+```bash
+# Build ignore list: any electron source package in the update queue
+IGNORE_LIST=$(command yay -Qua 2>/dev/null | awk '{print $1}' | grep -E '^electron[0-9]+$' | paste -sd,)
+```
+If the ignore list is non-empty, pre-install the `-bin` variant for each (e.g., `electron33-bin` for `electron33`), then run:
+```bash
+command yay -Sua --noconfirm --cleanafter --ignore "${IGNORE_LIST:-none}"
+```
+Always use `command yay` to bypass any shell wrapper. If yay prompts about replacing packages or conflicts, pause and explain the situation before proceeding.
 
 ### 4d. Omarchy updates (if available)
 Check if omarchy updates are pending:
