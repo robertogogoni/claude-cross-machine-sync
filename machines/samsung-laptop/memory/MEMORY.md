@@ -9,8 +9,10 @@
 - [User prefers action over discussion](feedback_action_oriented.md) — Execute immediately on clear tasks, don't ask for obvious confirmations
 - [No em/en dashes in public text](feedback_no_dashes.md) — Use commas/colons/parentheses instead of dashes in prose and public content
 - [Always annotate sync repo with versioning](feedback_changelog_sync_repo.md) — CHANGELOG.md entries required for every claude-cross-machine-sync update
+- [Always use prebuilt electron binaries](feedback_electron_bin_only.md) — Never build electron from source; use -bin variants, IgnorePkg in pacman.conf
 
 ## Project
+- [System tuning applied 2026-03-28](project_system_tuning_2026_03_28.md) — zram VM tunables, 4GB disk swap, nvidia blacklist, mkinitcpio i915, 104GB cache cleaned
 - [Sync daemon audit 2026-03-19](project_sync_daemon_audit.md) — Two daemons (omarchy + platform), neither running on Samsung, platform has hostname bug
 - [Cortex Claude — user's own memory system](project_cortex_claude.md) — cortex-claude v3.0.0 installed as MCP server with 4 hooks, NOT related to michaelv2's fork
 - [Chrome Canary configuration](project_chrome_canary.md) — Performance-tuned flags, Claude extension with native messaging, 46 extensions audited
