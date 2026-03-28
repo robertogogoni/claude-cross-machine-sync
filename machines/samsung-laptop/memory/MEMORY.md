@@ -10,6 +10,7 @@
 - [No em/en dashes in public text](feedback_no_dashes.md) — Use commas/colons/parentheses instead of dashes in prose and public content
 - [Always annotate sync repo with versioning](feedback_changelog_sync_repo.md) — CHANGELOG.md entries required for every claude-cross-machine-sync update
 - [Always use prebuilt electron binaries](feedback_electron_bin_only.md) — Never build electron from source; use -bin variants, IgnorePkg in pacman.conf
+- [System updates must route through Claude Code](feedback_supervised_updates.md) — All upgrades intercepted via /system-update, shell wrappers, omarchy hook
 
 ## Project
 - [System tuning applied 2026-03-28](project_system_tuning_2026_03_28.md) — zram VM tunables, 4GB disk swap, nvidia blacklist, mkinitcpio i915, 104GB cache cleaned
