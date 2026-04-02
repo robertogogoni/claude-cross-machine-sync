@@ -78,7 +78,7 @@ Gmail, Google Calendar, Supabase MCP servers need browser OAuth. Auth is trigger
 - **GitHub**: beeper-community/update-beeper | **Local**: `~/repos/update-beeper/`
 - Two-tier updates (AUR → direct download) with pacman desync prevention
 - Desktop shortcut validation, icon installation, stale cleanup (v1.8.0)
-- Runs via omarchy post-update hook + systemd timer
+- Runs via systemd timer only (post-update hook removed 2026-04-02)
 
 ### awesome-beeper
 - **GitHub**: robertogogoni/awesome-beeper | **Local**: `~/awesome-beeper/`
