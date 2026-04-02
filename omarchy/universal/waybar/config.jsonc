@@ -231,9 +231,8 @@
   "custom/ai-usage": {
     "exec": "/home/robthepirate/.config/waybar/scripts/ai-usage.sh",
     "return-type": "json",
-    "interval": 30,
+    "interval": 60,
     "signal": 9,
-    "exec-on-event": true,
     "tooltip": true,
     "format": "{}",
     "on-click": "omarchy-launch-floating-terminal-with-presentation /home/robthepirate/.config/waybar/scripts/ai-usage-tui.sh"
