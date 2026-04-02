@@ -435,6 +435,16 @@ main() {
             REPO_CHECK_PID=$!
             trap "kill $REPO_CHECK_PID 2>/dev/null; exit" EXIT INT TERM
 
+            # Auto-regenerate machine-info.json if stale or wrong hostname
+            local gen_script="$REPO_DIR/scripts/generate-machine-info.sh"
+            if [ -x "$gen_script" ]; then
+                local gen_result
+                gen_result=$("$gen_script" --auto 2>/dev/null)
+                if [ "$gen_result" = "regenerated" ]; then
+                    log "machine-info.json regenerated for $(hostname)"
+                fi
+            fi
+
             # Initial sync
             sync_repo_to_system
             write_status "started" "watching ${#WATCH_DIRS[@]} directories" "ok"

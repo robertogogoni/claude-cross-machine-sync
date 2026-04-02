@@ -1,30 +1,30 @@
 {
-  "machineName": "MacBook Air",
-  "machineId": "macbook-air-main",
+  "machineName": "Samsung Laptop",
+  "machineId": "samsung-laptop",
   "hardware": {
-    "vendor": "Apple Inc.",
-    "model": "MacBookAir7,2",
+    "vendor": "SAMSUNG ELECTRONICS CO., LTD.",
+    "model": "270E5J/2570EJ",
     "chassis": "laptop",
     "cpu": {
-      "model": "Intel(R) Core(TM) i5-5250U CPU @ 1.60GHz",
+      "model": "Intel(R) Core(TM) i7-4510U CPU @ 2.00GHz",
       "architecture": "x86_64",
-      "cores": 2,
+      "cores": 4,
       "threads": 4,
       "vendor": "GenuineIntel"
     },
     "memory": {
       "total": "7.7Gi",
-      "available": "2.3Gi"
+      "available": "3.4Gi"
     },
     "disk": {
-      "total": "111G",
-      "used": "53G",
-      "available": "55G",
-      "usage": "49%"
+      "total": "930G",
+      "used": "225G",
+      "available": "703G",
+      "usage": "25%"
     },
     "firmware": {
-      "version": "489.0.0.0.0",
-      "date": "2023-10-07"
+      "version": "P07RCK.051.150623.XK",
+      "date": "06/23/2015"
     }
   },
   "system": {
@@ -32,55 +32,23 @@
     "osId": "arch",
     "prettyName": "Arch Linux",
     "buildId": "rolling",
-    "kernel": "Linux 6.18.3-arch1-1",
-    "hostname": "macbook-air",
-    "machineId": "cf8a2b5b5e754d27a86f158090bf5f8d"
+    "kernel": "Linux 6.19.9-arch1-1",
+    "hostname": "samsung-omarchy",
+    "machineId": "289969333a234ba5915b5f1378f0821c"
   },
   "software": {
     "claudeCode": {
-      "version": "2.0.76",
+      "version": "2.1.90 (Claude Code)",
       "installMethod": "global"
     },
-    "shell": "/bin/bash",
-    "git": "2.52.0",
-    "node": "v25.1.0",
-    "npm": "11.6.2"
+    "shell": "/usr/bin/bash",
+    "git": "2.53.0",
+    "node": "v25.2.1"
   },
-  "claude": {
-    "configDir": "~/.claude",
-    "projectDir": "/home/rob",
-    "mcpServers": [
-      {
-        "name": "beeper",
-        "type": "http",
-        "url": "http://0.0.0.0:23373/v0/mcp",
-        "status": "configured"
-      },
-      {
-        "name": "claude-in-chrome",
-        "type": "built-in",
-        "status": "extension-pending"
-      }
-    ],
-    "installedPlugins": [
-      "superpowers@superpowers-marketplace",
-      "episodic-memory@superpowers-marketplace"
-    ],
-    "customSkills": [
-      "tool-discovery"
-    ],
-    "permissions": "full-access"
-  },
-  "network": {
-    "primaryUser": "rob",
-    "homeDir": "/home/rob"
-  },
-  "lastUpdated": "2026-01-06T18:36:00Z",
+  "lastUpdated": "2026-04-02T18:45:44-03:00",
   "notes": [
-    "MacBook Air 7,2 (Early 2015) running Arch Linux",
-    "Hostname: macbook-air (changed from omarchy on 2026-01-06)",
-    "Full permissive Claude Code configuration",
-    "Tool discovery skill installed",
-    "Episodic memory enabled for cross-machine history search"
+    "SAMSUNG ELECTRONICS CO., LTD. 270E5J/2570EJ running Arch Linux",
+    "Hostname: samsung-omarchy",
+    "Primary development machine for aifuel, cortex-claude"
   ]
 }
