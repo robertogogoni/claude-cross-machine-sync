@@ -203,6 +203,22 @@ Discarded `/etc/pacman.d/mirrorlist.pacnew` (generic default). Kept Reflector-ge
 ### 16. Omarchy git pull (77 files)
 New features: `omarchy-haptic-touchpad`, `omarchy-hw-match`, `omarchy-hw-vulkan`, `retro-82` theme, Apple T2 fixes, Dell XPS haptic touchpad support, Intel WiFi 7 EHT fix.
 
+### 17. Fixed Chrome Canary SIGILL crashes (Outlook wouldn't load)
+Chrome Canary v148 renderer processes crashed with SIGILL (Signal 4) on Broadwell i5-5250U.
+Cause: experimental flags triggering JIT codegen with unsupported CPU instructions.
+
+Removed 5 flags from `~/.config/google-chrome-canary/Local State`:
+- `enable-experimental-webassembly-features`
+- `enable-experimental-webassembly-shared-everything@1`
+- `enable-experimental-webassembly-stack-switching@1`
+- `enable-javascript-harmony`
+- `temporary-unexpire-flags-m146@1`
+
+Kept 37 other flags (autofill, payments, WebGL, QUIC, extensions).
+Backup: `~/.config/google-chrome-canary/Local State.bak-20260402`
+
+**Key lesson**: On older CPUs (pre-2018), avoid `enable-javascript-harmony` and `enable-experimental-webassembly-*` flags in Chrome Canary — the V8/WASM JIT may generate instructions the CPU doesn't support. Check `coredumpctl list` for SIGILL signals when pages fail to load.
+
 ## Disk Baseline (2026-02-26 post-cleanup)
 
 | Metric | Value |

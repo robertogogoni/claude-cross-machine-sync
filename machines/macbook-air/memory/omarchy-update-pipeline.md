@@ -6,13 +6,21 @@ Last updated: 2026-03-02
 
 ```
 omarchy-update
-├── omarchy-update-git          # git pull --autostash in ~/.local/share/omarchy/
-├── omarchy-update-perform      # runs the update sequence
-│   ├── omarchy-update-system-pkgs   # sudo pacman -Syu
-│   ├── omarchy-update-aur-pkgs      # yay -Sua --noconfirm
-│   └── omarchy-update-orphan-pkgs   # pacman -Rns orphans
-└── omarchy-hook post-update    # runs ~/.config/omarchy/hooks/post-update
+├── omarchy-update-git              # git pull --autostash in ~/.local/share/omarchy/
+├── omarchy-update-perform          # runs the update sequence (wraps in `script` for PTY)
+│   ├── omarchy-update-keyring      # refresh pacman keyring
+│   ├── omarchy-update-available-reset
+│   ├── omarchy-update-system-pkgs  # sudo pacman -Syu
+│   ├── omarchy-migrate             # run pending migrations from migrations/*.sh
+│   ├── omarchy-update-aur-pkgs     # yay -Sua --noconfirm
+│   ├── omarchy-update-orphan-pkgs  # pacman -Rns orphans
+│   ├── omarchy-hook post-update    # runs ~/.config/omarchy/hooks/post-update
+│   ├── omarchy-update-analyze-logs
+│   └── omarchy-update-restart      # restart waybar etc.
+└── (TTY confirmation prompt — blocks in non-interactive shells)
 ```
+
+**Non-interactive workaround**: Run individual steps directly (`omarchy-update-git`, then `yay -Syu --noconfirm`, then `omarchy-migrate`). The top-level `omarchy-update` requires a TTY for its gum confirmation prompt.
 
 ## Key Directories
 
