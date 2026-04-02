@@ -26,7 +26,8 @@
 - [System packages installed](project_system_packages.md) — GPU drivers, power management, media codecs, utilities installed 2026-03-17
 - [update-beeper project](project_update_beeper.md) — Self-healing Beeper updater at beeper-community/update-beeper, v1.8.1 API timeout fix, release workflow
 - [beeper-community GitHub org](project_beeper_community_org.md) — User owns the org, 5 repos, can push directly to all
-- [aifuel public distribution](project_aifuel.md) — Public repo for AI usage waybar module, Go Charm installer, v1.0.0 released
+- [aifuel public distribution](project_aifuel.md) — Public repo for AI usage waybar module, Go Charm installer, v1.2.1 released
+- [claude-sync distribution plan](project_claude_sync_distribution.md) — Research-backed plan to distribute cross-machine-sync publicly, 9 unique value props, resume from here
 
 ## Reference
 - [GitHub repo map](reference_github_repos.md) — Key repos under robertogogoni and beeper-community with branches and badge info
