@@ -80,7 +80,7 @@ As of 2026-03-02, Claude Code is managed solely by the AUR `claude-code` package
 |-----------|------|
 | Binary | `/usr/bin/claude` (wrapper script) |
 | Actual binary | `/opt/claude-code/bin/claude` |
-| Version | 2.1.63 |
+| Version | 2.1.90 (updated 2026-04-02) |
 | Updater | `DISABLE_AUTOUPDATER=1` (AUR handles it via yay) |
 
 **Previous self-managed binary** at `~/.local/share/claude/versions/` was removed (freed ~652MB).
