@@ -57,6 +57,9 @@ Gmail, Google Calendar, Supabase MCP servers need browser OAuth. Auth is trigger
 ### `claude doctor` Requires TTY
 `claude doctor` uses Ink (React TUI framework) and fails with "Raw mode is not supported" when run from non-interactive shell or nested session. Run diagnostics manually instead (`claude mcp list`, `claude plugin list`, etc.).
 
+### Chrome Canary Has Two Flag Layers
+Flags come from TWO sources: (1) `chrome://flags` saved in `~/.config/google-chrome-canary/Local State` → `browser.enabled_labs_experiments` array, and (2) `~/.config/chrome-canary-flags.conf` → command-line flags injected by `/usr/bin/google-chrome-canary` wrapper. Editing Local State alone won't work — Chrome re-saves it on startup. Must edit BOTH, and Chrome must be fully dead before editing Local State. Diagnostic: `coredumpctl list | grep SIGILL` for CPU-incompatible JIT flags on Broadwell.
+
 ## Active Projects
 
 ### Cortex v3.0 — Memory OS for Claude Code
@@ -105,7 +108,7 @@ Gmail, Google Calendar, Supabase MCP servers need browser OAuth. Auth is trigger
 - Claude Code: v2.1.90 via AUR `claude-code` package (only install)
 - Claude Desktop: v1.2.234 (AUR `claude-desktop-bin`, with Cowork support)
 - Claude Cowork Service: v1.0.40 (AUR, systemd user unit `claude-cowork.service` enabled)
-- Beeper: v4.2.605 (direct install, pacman deregistered, desktop shortcut validated)
+- Beeper: v4.2.692 (direct install, pacman deregistered, desktop shortcut validated)
 - Input method: fcitx5
 - Node.js v25.1.0, Python 3.14.3, Go 1.26.1, Rust 1.94.1, Git 2.53.0, Docker 29.3.1
 - Kernel: 6.19.9-arch1-1
