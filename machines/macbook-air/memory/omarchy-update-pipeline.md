@@ -1,6 +1,6 @@
 # Omarchy Update Pipeline & Recovery
 
-Last updated: 2026-03-02
+Last updated: 2026-04-02
 
 ## Update Chain
 
@@ -36,11 +36,12 @@ omarchy-update
 File: `~/.config/omarchy/hooks/post-update`
 ```bash
 #!/bin/bash
-if command -v update-beeper &>/dev/null; then
-  echo -e "\e[32m\nCheck Beeper updates\e[0m"
-  update-beeper --quiet 2>/dev/null || true
-fi
+# Post-update hook for omarchy-update
+# Claude Code is now managed by the claude-code AUR package (yay -Sua handles it)
+# Beeper updates are handled by its own systemd timer (update-beeper.timer, daily)
 ```
+
+Note: update-beeper was removed from the hook on 2026-04-02. Beeper updates now run solely via the `update-beeper.timer` systemd user unit (daily).
 
 ## Git Rebase Recovery (omarchy source)
 
