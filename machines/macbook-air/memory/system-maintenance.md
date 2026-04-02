@@ -168,6 +168,41 @@ If both AUR (`/usr/bin/claude`) and self-managed (`~/.local/bin/claude`) exist, 
 ### omarchy source git conflicts
 Never commit directly to `~/.local/share/omarchy/`. It's a git repo pulled by `omarchy-update-git`. Local commits cause rebase conflicts. Custom scripts go in `~/.local/bin/`.
 
+## Optimization Actions Performed (2026-04-02)
+
+### 11. Full system update (227 official + 3 AUR packages)
+Key upgrades:
+- `claude-code` 2.1.83 → 2.1.90
+- `claude-desktop-bin` 1.1.8629 → 1.2.234 (major version bump, Cowork VM support)
+- `google-chrome-canary` 147.0.7700.0 → 148.0.7766.0
+- `topgrade-bin` 17.1.0 → 17.2.1
+- Kernel unchanged: 6.19.9-arch1-1
+
+### 12. Installed claude-cowork-service (new)
+```bash
+yay -S claude-cowork-service  # v1.0.40 from AUR
+systemctl --user enable --now claude-cowork.service
+```
+- Binary: `/usr/bin/cowork-svc-linux`
+- Socket: `/run/user/1000/cowork-vm-service.sock`
+- Unit: `/usr/lib/systemd/user/claude-cowork.service`
+- Purpose: Native Linux backend for Claude Desktop Cowork (isolated VMs for code execution)
+- Imports Wayland env vars (WAYLAND_DISPLAY, HYPRLAND_INSTANCE_SIGNATURE, etc.)
+
+### 13. Cleaned orphan packages
+Removed: `minizip-ng`, `topgrade-bin-debug`, `claude-cowork-service-debug` (~4MB freed)
+
+### 14. Handled .pacnew
+Discarded `/etc/pacman.d/mirrorlist.pacnew` (generic default). Kept Reflector-generated mirrorlist (auto-updated weekly).
+
+### 15. Ran omarchy migrations (3 pending)
+- `1773506226` — voxtype GPU enable (no-op, voxtype not installed)
+- `1774642699` — T2 Mac Bluetooth driver (no-op, pre-T2 hardware)
+- `1775059710` — T2 Mac fan curve (no-op, pre-T2 hardware)
+
+### 16. Omarchy git pull (77 files)
+New features: `omarchy-haptic-touchpad`, `omarchy-hw-match`, `omarchy-hw-vulkan`, `retro-82` theme, Apple T2 fixes, Dell XPS haptic touchpad support, Intel WiFi 7 EHT fix.
+
 ## Disk Baseline (2026-02-26 post-cleanup)
 
 | Metric | Value |
