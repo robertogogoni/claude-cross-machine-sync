@@ -11,6 +11,7 @@
 - [Always annotate sync repo with versioning](feedback_changelog_sync_repo.md) — CHANGELOG.md entries required for every claude-cross-machine-sync update
 - [Always use prebuilt electron binaries](feedback_electron_bin_only.md) — Never build electron from source; use -bin variants, IgnorePkg in pacman.conf
 - [System updates must route through Claude Code](feedback_supervised_updates.md) — All upgrades intercepted via /system-update, shell wrappers, omarchy hook
+- [Release workflow for aifuel](feedback_release_workflow.md) — Full test, changelog, tag, verify release binary after every version
 
 ## Project
 - [AI usage monitoring overlay](project_ai_usage_overlay.md) — Permanent overlay fetcher with JSONL fallback, rate-limit backoff, survives package updates
