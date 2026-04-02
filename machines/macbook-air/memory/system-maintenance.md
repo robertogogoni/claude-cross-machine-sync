@@ -203,21 +203,32 @@ Discarded `/etc/pacman.d/mirrorlist.pacnew` (generic default). Kept Reflector-ge
 ### 16. Omarchy git pull (77 files)
 New features: `omarchy-haptic-touchpad`, `omarchy-hw-match`, `omarchy-hw-vulkan`, `retro-82` theme, Apple T2 fixes, Dell XPS haptic touchpad support, Intel WiFi 7 EHT fix.
 
-### 17. Fixed Chrome Canary SIGILL crashes (Outlook wouldn't load)
+### 17. Fixed Chrome Canary SIGILL crashes + page unresponsive (Outlook)
 Chrome Canary v148 renderer processes crashed with SIGILL (Signal 4) on Broadwell i5-5250U.
-Cause: experimental flags triggering JIT codegen with unsupported CPU instructions.
+Symptom: Outlook.com wouldn't load → then rendered but "Page Unresponsive" when opening emails.
+Root cause: experimental flags triggering V8/WASM JIT codegen with unsupported CPU instructions.
 
-Removed 5 flags from `~/.config/google-chrome-canary/Local State`:
+**Two-layer fix required** (Chrome has two flag sources):
+
+Layer 1 — `chrome://flags` (saved in `~/.config/google-chrome-canary/Local State`):
+Removed 5 flags from `enabled_labs_experiments` array:
 - `enable-experimental-webassembly-features`
 - `enable-experimental-webassembly-shared-everything@1`
 - `enable-experimental-webassembly-stack-switching@1`
 - `enable-javascript-harmony`
 - `temporary-unexpire-flags-m146@1`
 
-Kept 37 other flags (autofill, payments, WebGL, QUIC, extensions).
+Layer 2 — `~/.config/chrome-canary-flags.conf` (injected by `/usr/bin/google-chrome-canary` wrapper):
+Commented out:
+- `--enable-experimental-web-platform-features` (enables ThirdPartyStoragePartitioning, CookieSameSiteConsidersRedirectChain, and dozens more)
+- `--allow-running-insecure-content`
+
+**Critical**: Editing Local State alone is NOT enough — Chrome re-saves on startup. Must also edit `chrome-canary-flags.conf`. And Chrome must be fully killed before editing Local State (it overwrites on launch).
+
+Kept 37 chrome://flags (autofill, payments, WebGL, QUIC, extensions).
 Backup: `~/.config/google-chrome-canary/Local State.bak-20260402`
 
-**Key lesson**: On older CPUs (pre-2018), avoid `enable-javascript-harmony` and `enable-experimental-webassembly-*` flags in Chrome Canary — the V8/WASM JIT may generate instructions the CPU doesn't support. Check `coredumpctl list` for SIGILL signals when pages fail to load.
+**Diagnostic**: `coredumpctl list | grep SIGILL` — if Chrome renderer crashes with Signal 4, suspect experimental flags on older CPUs.
 
 ## Disk Baseline (2026-02-26 post-cleanup)
 
