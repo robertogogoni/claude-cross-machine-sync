@@ -225,7 +225,7 @@
     "signal": 11,
     "tooltip": true,
     "format": "{}",
-    "on-click": "omarchy-launch-floating-terminal-with-presentation 'journalctl --user -u omarchy-sync.service -f --no-hostname'",
+    "on-click": "omarchy-launch-floating-terminal-with-presentation '/home/robthepirate/claude-cross-machine-sync/scripts/sync-dashboard.sh'",
     "on-click-right": "systemctl --user restart omarchy-sync.service"
   },
   "custom/ai-usage": {
