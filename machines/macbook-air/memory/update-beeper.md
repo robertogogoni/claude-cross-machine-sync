@@ -1,6 +1,6 @@
 # update-beeper — Self-Healing Beeper Updater
 
-Last updated: 2026-03-09
+Last updated: 2026-04-03
 
 ## Overview
 
@@ -140,12 +140,13 @@ When `deregister_pacman_tracking()` removes `beeper-v4-bin` from pacman's DB, it
 - install.sh always fetches from `master` branch raw URL — no version-specific edits needed for releases
 - Full release checklist: code → CHANGELOG → README → install.sh review → profile README → GitHub releases
 
-## Current State (2026-03-09)
+## Current State (2026-04-03)
 
-- Beeper version: 4.2.605 (direct install, detected by badge workflow)
+- Beeper version: 4.2.692 (direct install)
+- update-beeper version: 1.9.0 (interactive CLI, branch support, beeper-intel)
 - pacman tracking: deregistered
 - Install location: `/opt/beeper/`
 - Runtime deps: preserved as explicit (v1.7.0)
 - Desktop shortcut: `beeper-wayland.desktop` → `~/bin/beeper-wayland` (validated, icon installed)
 - GitHub releases: v1.6.0 + v1.7.0 + v1.8.0 live
-- All repo files updated for v1.8.0 (CHANGELOG, README, install.sh, PKGBUILD, jarvis-beeper, checksums)
+- beeper-kb: 1,054 docs, 312 vectors (deep harvest Apr 3)
