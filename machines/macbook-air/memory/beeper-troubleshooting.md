@@ -133,20 +133,25 @@ REACT:    Use emoji reactions heavily — often instead of text
 - Contains profiles for people Claude has helped communicate with
 - Includes communication preferences, context, and style notes
 
-## Beeper Ecosystem Intelligence (2026-03-10)
+## Beeper Ecosystem Intelligence (2026-04-03)
 
 ### beeper-kb Knowledge Base
 - Location: `~/repos/beeper-kb/` | MCP server in `~/.claude.json`
-- **432 docs, 249 vectors** across 4 source types (docs, github, matrix-chat, seed)
+- **1,054 docs, 312 vectors** across 4 source types (docs: 58, github: 34, matrix-chat: 576, seed: 386)
+- Data: `~/.beeper-kb/` (SQLite + FAISS)
 - Port: **23374** (not 23373 — Beeper Desktop shifted ports)
 - Auth token: extracted from `~/.config/Claude/Claude Extensions/local.dxt.beeper.beepermcp-remote/.mcp-auth/mcp-remote-0.0.1/e05f01523d80585f44047a268665720f_tokens.json`
+- Deep harvest script: `~/repos/beeper-kb/scripts/deep-harvest.ts` (auto-detects port, reads MCP token, cursor-based pagination)
 
 ### Key Beeper API Details
 - Base URL: `http://localhost:23374/v1/`
 - Auth: Bearer token or OAuth 2.0 with PKCE
-- Pagination: uses `cursor` parameter (NOT `before` or `sortKey`)
+- Pagination: uses `cursor` parameter (NOT `before` — `before` returns same page!)
+- Pass sortKey of last item as cursor value for next page
 - Room IDs need URL encoding: `!` → `%21`, `:` → `%3A`
 - API always returns 20 messages per page, ignores limit parameter
+- Response has `items` and `hasMore` fields (no cursor field in response)
+- Port auto-detect: `ss -tlnp | grep beepertexts` → match `0.0.0.0:PORT` (not 127.0.0.1)
 
 ### Strategic Intelligence
 - **ai-bridge RENAMED to agentremote** — Beeper pivoting to AI agent platform
@@ -158,16 +163,22 @@ REACT:    Use emoji reactions heavily — often instead of text
 - WebSocket events (GET /v1/ws) added Feb 13, undocumented
 
 ### Desktop Versions
+- v4.2.692 (current install, Apr 2)
 - v4.2.630 (Mar 9): Settings search, iMessage Tahoe fix, faster chat catchup
 - v4.2.623: CRASH-LOOP bug ("Restart required"), fixed in nightly (Mar 7)
 - v4.2.605 (Mar 3): Sidebar redesign (Space Bar)
 - Nightly URL: `beeper.com/download/nightly/now`
 
 ### Harvested Chat Rooms
-| Room | Messages | Date Range |
-|------|----------|------------|
-| Beeper Developer Community | 4,020 | Sep 2025 – Mar 2026 |
-| Self-hosted bridges on Beeper | 16,374 | Feb 2023 – Mar 2026 |
+| Room | Messages Harvested | Date Range | KB Docs |
+|------|-------------------|------------|---------|
+| Beeper Developer Community | 820 (incremental from Feb 14) | Feb 2026 – Apr 2026 | 574 |
+| Self-hosted bridges on Beeper | prior harvest | Feb 2023 – Feb 2026 | 2 |
+
+### Seeded Docs (Apr 2026 deep harvest)
+- awesome-beeper: tools catalog, bridges, SDK examples, features, automation (5 docs, 35 chunks)
+- update-beeper: changelog v1.0–v1.9, architecture/roadmap, pacman conflict fix (3 docs, 28 chunks)
+- 157 unique authors in Dev Community, 559 conversation chunks from 820 messages
 
 ### Key People
 - **batuhan**: Lead Beeper dev, agentremote author, main info source
