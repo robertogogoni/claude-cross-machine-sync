@@ -137,7 +137,7 @@ REACT:    Use emoji reactions heavily — often instead of text
 
 ### beeper-kb Knowledge Base
 - Location: `~/repos/beeper-kb/` | MCP server in `~/.claude.json`
-- **1,054 docs, 312 vectors** across 4 source types (docs: 58, github: 34, matrix-chat: 576, seed: 386)
+- **4,188 docs, 4,188 vectors** across 4 source types (docs: 58, github: 34, matrix-chat: 3,710, seed: 386)
 - Data: `~/.beeper-kb/` (SQLite + FAISS)
 - Port: **23374** (not 23373 — Beeper Desktop shifted ports)
 - Auth token: extracted from `~/.config/Claude/Claude Extensions/local.dxt.beeper.beepermcp-remote/.mcp-auth/mcp-remote-0.0.1/e05f01523d80585f44047a268665720f_tokens.json`
