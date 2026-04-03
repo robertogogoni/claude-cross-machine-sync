@@ -81,20 +81,18 @@ Scripts originally in `~/.local/share/omarchy/bin/` must be copied to `~/.local/
 | `omarchy-scale-switcher` | Display scaling toggle |
 | `omarchy-smart-screensaver` | Smart screensaver |
 
-## Claude Code Installation (AUR only)
+## Claude Code Installation (Official Standalone)
 
-As of 2026-03-02, Claude Code is managed solely by the AUR `claude-code` package:
+As of 2026-04-02, Claude Code uses the official standalone installer. AUR `claude-code` and npm global were both removed.
 
 | Component | Path |
 |-----------|------|
-| Binary | `/usr/bin/claude` (wrapper script) |
-| Actual binary | `/opt/claude-code/bin/claude` |
-| Version | 2.1.90 (updated 2026-04-02) |
-| Updater | `DISABLE_AUTOUPDATER=1` (AUR handles it via yay) |
+| Symlink | `~/.local/bin/claude` |
+| Binary | `~/.local/share/claude/versions/2.1.91` |
+| Installer | `curl -fsSL https://claude.ai/install.sh \| sh` |
+| Updates | Self-managed (`claude update`), `"autoUpdates": true` in `~/.claude.json` |
 
-**Previous self-managed binary** at `~/.local/share/claude/versions/` was removed (freed ~652MB).
-
-**Important**: `~/.claude.json` should have `"autoUpdates": false` and `"installMethod": "native"` to prevent the self-managed updater from reinstalling.
+**No longer applies**: AUR package, `DISABLE_AUTOUPDATER`, `/usr/bin/claude`, `/opt/claude-code/`.
 
 ## Beeper Desync Problem
 
