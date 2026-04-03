@@ -37,7 +37,7 @@ File: `~/.config/omarchy/hooks/post-update`
 ```bash
 #!/bin/bash
 # Post-update hook for omarchy-update
-# Claude Code is now managed by the claude-code AUR package (yay -Sua handles it)
+# Claude Code self-updates via official standalone binary (~/.local/bin/claude)
 # Beeper updates are handled by its own systemd timer (update-beeper.timer, daily)
 ```
 
