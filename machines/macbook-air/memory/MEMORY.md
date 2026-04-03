@@ -105,7 +105,7 @@ Flags come from TWO sources: (1) `chrome://flags` saved in `~/.config/google-chr
 
 ## System Info
 - Machine: MacBook Air (2015), Arch Linux, Hyprland/Omarchy, user: rob
-- Claude Code: v2.1.90 via AUR `claude-code` package (only install)
+- Claude Code: v2.1.91 via official standalone installer (`~/.local/bin/claude` → `~/.local/share/claude/`)
 - Claude Desktop: v1.2.234 (AUR `claude-desktop-bin`, with Cowork support)
 - Claude Cowork Service: v1.0.40 (AUR, systemd user unit `claude-cowork.service` enabled)
 - Beeper: v4.2.692 (direct install, pacman deregistered, desktop shortcut validated)
