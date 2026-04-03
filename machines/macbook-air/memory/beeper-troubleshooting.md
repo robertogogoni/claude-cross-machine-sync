@@ -172,13 +172,20 @@ REACT:    Use emoji reactions heavily — often instead of text
 ### Harvested Chat Rooms
 | Room | Messages Harvested | Date Range | KB Docs |
 |------|-------------------|------------|---------|
-| Beeper Developer Community | 820 (incremental from Feb 14) | Feb 2026 – Apr 2026 | 574 |
+| Beeper Developer Community | 4,603 (full harvest) | Aug 2025 – Apr 2026 | 3,710 |
 | Self-hosted bridges on Beeper | prior harvest | Feb 2023 – Feb 2026 | 2 |
 
 ### Seeded Docs (Apr 2026 deep harvest)
 - awesome-beeper: tools catalog, bridges, SDK examples, features, automation (5 docs, 35 chunks)
 - update-beeper: changelog v1.0–v1.9, architecture/roadmap, pacman conflict fix (3 docs, 28 chunks)
-- 157 unique authors in Dev Community, 559 conversation chunks from 820 messages
+- 448 unique authors in Dev Community, 3,134 conversation chunks from 4,603 messages
+
+### Voyage AI Embeddings
+- Key: paid tier (stored in `~/.claude.json` beeper-kb MCP config)
+- Model: voyage-3, 1024 dimensions
+- Batch settings: 32/batch, 200ms delay (paid tier — NOT 4/batch 21s free tier)
+- Full re-embed (4,188 docs): ~30 seconds, 169K tokens
+- ALWAYS use Voyage — never FTS-only mode (user directive)
 
 ### Key People
 - **batuhan**: Lead Beeper dev, agentremote author, main info source
