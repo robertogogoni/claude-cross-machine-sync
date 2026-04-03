@@ -27,8 +27,8 @@ When starting daemons (fcitx5, waybar, etc.) from the Bash tool, NEVER pipe thei
 ### pacman -Rdd Removes Files Too
 `pacman -Rdd` is NOT database-only removal. It deletes package files AND the DB entry. To remove only tracking: move files aside → pacman -Rdd → restore files.
 
-### Dual Claude Installations
-If both AUR (`/usr/bin/claude`) and self-managed (`~/.local/bin/claude → ~/.local/share/claude/`) exist, they compete and version display gets confused. Keep only one (currently AUR). Set `"autoUpdates": false` in `~/.claude.json`.
+### Claude Code: Official Standalone Distribution Only
+As of 2026-04-02, Claude Code is installed via the official standalone installer (`curl -fsSL https://claude.ai/install.sh | sh`). Binary lives at `~/.local/bin/claude` → `~/.local/share/claude/versions/<ver>`. Self-updates via `claude update`. AUR `claude-code` and npm global installs were removed. `"autoUpdates": true` in `~/.claude.json`.
 
 ### omarchy Source is READ-ONLY
 Never commit to `~/.local/share/omarchy/`. It's git-managed by `omarchy-update-git`. Local commits cause rebase conflicts that block all future updates. Custom scripts → `~/.local/bin/`.
