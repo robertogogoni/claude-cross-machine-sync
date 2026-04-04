@@ -13,15 +13,18 @@ Hive is a composable plugin ecosystem and CLI for Beeper — transforms the Desk
 ## Architecture
 
 ```
-hive/ (monorepo, npm workspaces)
-├── cli/              @hive/cli — 12 commands, branded UI
-├── shared/           @hive/shared — typed API client, auth, pagination, dedup
+hive/ (monorepo, npm workspaces, 9 packages)
+├── shared/           @hive/shared — typed client, auth (OAuth+PKCE), EventStream, config
 ├── plugins/
-│   ├── toolkit/      @hive/toolkit — 18 MCP tools (full Beeper API)
-│   ├── intel/        @hive/intel — KB + harvesting (migrated from beeper-kb)
-│   ├── bridges/      @hive/bridges — bbctl wrapper (5 tools, 16 bridges)
-│   └── auto/         @hive/auto — monitors, rules, systemd (6 tools)
-├── skills/copilot/   Claude Code skill (orchestrates all 34 tools)
+│   ├── toolkit/      @hive/toolkit — 18 MCP tools (full Beeper CRUD)
+│   ├── intel/        @hive/intel — 8 MCP tools (KB, search, ask, trends, discover)
+│   ├── bridges/      @hive/bridges — 5 MCP tools (bbctl, 16 bridges)
+│   └── auto/         @hive/auto — 8 MCP tools (events, rules, watch, forward)
+├── cli/              @hive/cli — ~26 commands, branded UI
+├── gateway/          @hive/gateway — HTTP API (Hono, 17+ REST endpoints)
+├── widget/           Beeper Desktop sidebar (Next.js 15 + Widget API)
+├── extension/        Chrome Manifest V3 (side panel + popup + content script)
+├── skills/copilot/   Claude Code skill (orchestrates all 41 tools)
 └── tests/integration/ Live API tests (gated behind HIVE_INTEGRATION=1)
 ```
 
