@@ -100,9 +100,20 @@ Note: hive_ask + hive_discover require ANTHROPIC_API_KEY (auto-discovered from e
 - beeper-kb MCP server deprecated (removed from ~/.claude.json)
 - Experimental features design spec written
 
+## What's been done (session 2026-04-04 continued — WebSocket)
+- Probed live Beeper Desktop API: discovered /v1/ws endpoint EXISTS (returns 401 without auth)
+- Fetched full OpenAPI spec from /v1/spec — saved to `docs/beeper-desktop-api-spec.json`
+- Confirmed WebSocket protocol: ready → subscriptions.set → events (chat/message upserted/deleted)
+- Built EventStream client in shared/src/events.ts: reconnection, ring buffer, auto-discovery
+- Built 2 MCP tools: hive_events_subscribe (start/stop/status), hive_events_stream (poll/filter)
+- Built EventHandler: bridges WS events to rules engine (watch + forward rules with cooldown)
+- Built CLI: `hive events listen` (real-time) + `hive events status`
+- Also discovered: /oauth/authorize returns 400 (exists!), /v1/search returns 500 (needs query param)
+
 ## What's next (remaining)
-- **WebSocket events**: Live message monitoring via GET /v1/ws — needs endpoint discovery first (highest risk, undocumented). Design in `docs/superpowers/specs/2026-04-04-experimental-features-design.md` section 2.
-- **Run `hive install-services`**: Actually install systemd units on the machine
-- **Format codebase**: Run `npm run format` to apply Prettier to all files
-- **beeper-extended plugin removal**: Still installed as a Claude Code plugin (not just MCP server)
-- **Test OAuth against live Beeper**: Verify `/oauth/authorize` endpoint exists
+- **Run `hive install-services`**: Install systemd units on the machine
+- **Format codebase**: Run `npm run format` to apply Prettier
+- **beeper-extended plugin removal**: Still installed as Claude Code plugin
+- **Live WebSocket integration test**: Send a message from phone, verify event arrives
+- **Wire EventStream to auto rules**: Connect real EventStream factory in auto server.ts
+- **Test OAuth against live Beeper**: Confirmed endpoint exists (400), need to test full PKCE flow
