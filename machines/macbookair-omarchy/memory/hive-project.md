@@ -61,7 +61,7 @@ All 4 plugins registered in `~/.claude.json` (beeper-kb deprecated 2026-04-04):
 - `hive-toolkit`: 18 tools (chats, messages, reactions, accounts, contacts, assets, export)
 - `hive-intel`: 8 tools (search, ingest, harvest, stats, browse, trends, ask, discover)
 - `hive-bridges`: 5 tools (list, run, stop, status, bounties)
-- `hive-auto`: 6 tools (watch list/add/remove, rules list/add, forward add)
+- `hive-auto`: 8 tools (watch list/add/remove, rules list/add, forward add, events subscribe/stream)
 
 Note: hive_ask + hive_discover require ANTHROPIC_API_KEY (auto-discovered from env, ~/.hive/config.json, or ~/.claude.json).
 
