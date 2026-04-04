@@ -32,7 +32,7 @@ hive/ (monorepo, npm workspaces)
 - **Data dir**: `~/.hive/` (intel data, auto rules, exports, downloads)
 - **Binary**: `hive` globally linked via npm
 
-## Build status (all phases complete)
+## Build status (all phases complete + experimental)
 
 | Phase | Package | Tests | Status |
 |-------|---------|:---:|:---:|
@@ -45,7 +45,14 @@ hive/ (monorepo, npm workspaces)
 | 3 | bridges/ (bbctl, 16 bridges) | 58 | Done |
 | 4 | auto/ (rules, systemd) | 72 | Done |
 | 5 | copilot skill | — | Done (SKILL.md) |
-| **Total** | | **344 (+11 integration)** | |
+| DX | CI/CD + ESLint/Prettier | — | Done |
+| DX | systemd install CLI | 12 | Done |
+| DX | dashboard CLI | 7 | Done |
+| Exp-B | hive_trends (SQL analytics) | 38 | Done |
+| Exp-C | hive_ask (RAG + citations) | 32 | Done |
+| Exp-A | OAuth 2.0 + PKCE | 38 | Done |
+| Exp-D | hive_discover (AI insights) | 21 | Done |
+| **Total** | | **492 (+11 integration)** | |
 
 ## MCP server registration
 All 4 plugins registered in `~/.claude.json`:
