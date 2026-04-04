@@ -110,10 +110,24 @@ Note: hive_ask + hive_discover require ANTHROPIC_API_KEY (auto-discovered from e
 - Built CLI: `hive events listen` (real-time) + `hive events status`
 - Also discovered: /oauth/authorize returns 400 (exists!), /v1/search returns 500 (needs query param)
 
+## What's been done (session 2026-04-04 — Gateway + Widget + Extension)
+- Built HTTP API gateway (`gateway/`, Hono): 17+ REST endpoints, Beeper API proxy, intelligence
+- Built Beeper Desktop sidebar widget (`widget/`, Next.js 15): 5-tab UI (search/ask/trends/discover/suggest)
+  - @beeper/matrix-widget-toolkit installed from npm, capabilities registered properly
+  - Dual-mode: Widget API inside Beeper, gateway fallback standalone
+- Built Chrome extension (`extension/`, Manifest V3): side panel, popup, content script, context menus
+- All API keys validated and persisted to ~/.hive/config.json (Anthropic 108 chars, Voyage 46 chars)
+- Fixed all loose ends: EventStream wiring, chats.create mode bug, OAuth port, getRecentEvents args
+- Gateway URL configurable in widget (NEXT_PUBLIC_HIVE_GATEWAY_URL) and extension (chrome.storage.sync)
+- Beeper Desktop OpenAPI spec saved at docs/beeper-desktop-api-spec.json (v0.2.0, 123KB)
+- Created comprehensive README.md
+- Formatted codebase with Prettier
+
 ## What's next (remaining)
 - **Run `hive install-services`**: Install systemd units on the machine
-- **Format codebase**: Run `npm run format` to apply Prettier
+- **Test widget in Beeper Desktop**: Add http://localhost:3000 as widget, verify all tabs
+- **Load extension in Chrome Canary**: chrome://extensions → Developer mode → Load unpacked
+- **Test OAuth PKCE live**: `hive auth login` to get first-party token
+- **Live WebSocket test**: Send message from phone, verify event arrives
+- **KB harvest**: Run `hive harvest` to update stale data (last: 2026-04-03)
 - **beeper-extended plugin removal**: Still installed as Claude Code plugin
-- **Live WebSocket integration test**: Send a message from phone, verify event arrives
-- **Wire EventStream to auto rules**: Connect real EventStream factory in auto server.ts
-- **Test OAuth against live Beeper**: Confirmed endpoint exists (400), need to test full PKCE flow
