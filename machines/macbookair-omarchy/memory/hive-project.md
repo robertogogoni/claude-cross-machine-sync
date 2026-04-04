@@ -52,7 +52,9 @@ hive/ (monorepo, npm workspaces)
 | Exp-C | hive_ask (RAG + citations) | 32 | Done |
 | Exp-A | OAuth 2.0 + PKCE | 38 | Done |
 | Exp-D | hive_discover (AI insights) | 21 | Done |
-| **Total** | | **492 (+11 integration)** | |
+| Exp-E | WebSocket EventStream (shared/) | 35 | Done |
+| Exp-E | WS MCP tools + rules bridge (auto/) | 30 | Done |
+| **Total** | | **557 (+11 integration)** | |
 
 ## MCP server registration
 All 4 plugins registered in `~/.claude.json` (beeper-kb deprecated 2026-04-04):
