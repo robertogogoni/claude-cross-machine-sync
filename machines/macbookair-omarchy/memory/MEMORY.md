@@ -14,7 +14,7 @@
 | [vercel-cloud-services.md](vercel-cloud-services.md) | Vercel projects (8), cloud MCP auth (Gmail/Calendar/Supabase), Supabase projects |
 | [beeper-troubleshooting.md](beeper-troubleshooting.md) | Beeper blank screen fixes, wrapper script, sysctl tuning, persona model, ecosystem intelligence, beeper-kb |
 | [feedback_always_voyage.md](feedback_always_voyage.md) | Always use Voyage API key for beeper-kb — never FTS-only mode |
-| [hive-project.md](hive-project.md) | Hive — Beeper Intelligence Platform: 4 plugins, 34 MCP tools, 12 CLI commands, 344 tests, all phases complete, GitHub: robertogogoni/hive |
+| [hive-project.md](hive-project.md) | Hive — Beeper Intelligence Platform: 9 packages, 41 MCP tools, ~26 CLI commands, 586 tests, HTTP gateway, Beeper widget, Chrome extension. GitHub: robertogogoni/hive |
 
 ## Session Patterns & Gotchas
 
