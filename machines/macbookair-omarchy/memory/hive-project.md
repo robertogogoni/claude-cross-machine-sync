@@ -85,14 +85,22 @@ Note: hive_ask + hive_discover require ANTHROPIC_API_KEY (auto-discovered from e
 - Integration tests verified against live Beeper Desktop on port 23374
 - Copilot skill written at skills/copilot/SKILL.md
 
-## What's next (potential improvements)
-- **Use the MCP tools**: Restart Claude Code session → hive-toolkit/intel/bridges/auto tools appear
-- **OAuth flow**: Full browser-based OAuth 2.0 + PKCE (currently relies on cached MCP ext token)
-- **WebSocket events**: Live message monitoring via GET /v1/ws (experimental, Phase 4 design)
-- **hive_ask tool**: AI-generated answers with KB citations (needs Claude API integration)
-- **hive_trends / hive_discover**: Analytics tools from design spec (SQL aggregation + AI)
-- **CI/CD**: GitHub Actions for test + lint on push
-- **ESLint/Prettier**: Code formatting (no config yet)
-- **systemd services**: Actually install hive-monitor.service + hive-harvest.timer
-- **beeper-extended deprecation**: Can disable old MCP server once hive-toolkit is verified
-- **Dashboard**: Port beeper-kb dashboard.html to serve from `hive dashboard` command
+## What's been done (session 2026-04-04 continued)
+- CI/CD: GitHub Actions workflow (Node 22/24 matrix, typecheck + vitest)
+- ESLint v9 flat config + Prettier (matching existing code style)
+- `hive install-services` / `uninstall-services` / `services-status` CLI commands
+- `hive dashboard` — local HTTP server with KB stats API proxy
+- `hive trends` — SQL analytics (timeline, top authors, sources, spikes with z-score)
+- `hive_ask` — RAG over KB with Anthropic Claude, citations, confidence scoring, caching
+- `hive_discover` — AI-powered pattern discovery (topic clusters, knowledge gaps, notable authors)
+- OAuth 2.0 + PKCE auth flow (browser-based, token refresh, secure storage)
+- `hive auth login/logout/status/token` CLI commands
+- beeper-kb MCP server deprecated (removed from ~/.claude.json)
+- Experimental features design spec written
+
+## What's next (remaining)
+- **WebSocket events**: Live message monitoring via GET /v1/ws — needs endpoint discovery first (highest risk, undocumented). Design in `docs/superpowers/specs/2026-04-04-experimental-features-design.md` section 2.
+- **Run `hive install-services`**: Actually install systemd units on the machine
+- **Format codebase**: Run `npm run format` to apply Prettier to all files
+- **beeper-extended plugin removal**: Still installed as a Claude Code plugin (not just MCP server)
+- **Test OAuth against live Beeper**: Verify `/oauth/authorize` endpoint exists
