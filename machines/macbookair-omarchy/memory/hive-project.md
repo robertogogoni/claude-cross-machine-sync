@@ -1,6 +1,6 @@
 ---
 name: Hive — Beeper Intelligence Platform
-description: Composable plugin ecosystem and CLI for Beeper. Monorepo at ~/repos/hive/ with 4 plugins (toolkit, intel, bridges, auto) + CLI + copilot skill. All phases complete + experimental features (trends, ask, discover, OAuth). 492 tests, pushed to GitHub.
+description: Composable plugin ecosystem for Beeper. Monorepo at ~/repos/hive/ with 4 plugins, CLI, HTTP gateway (Hono), Beeper Desktop widget (Next.js), and Chrome extension. 41 MCP tools, 586 tests, all features complete.
 type: project
 ---
 
