@@ -67,3 +67,23 @@ All 4 plugins registered in `~/.claude.json`:
 - Account ID field is `accountID` (not `id`)
 - `encodeRoomId` uses explicit replace (not encodeURIComponent — `!` is unreserved)
 - beeper-kb migrated via symlink: ~/.hive/intel → ~/.beeper-kb
+
+## What's been done (session 2026-04-03/04)
+- Built entire Hive platform from zero: scaffold → 5 phases → live integration tests
+- 12 git commits, 65 source files, 44 test files, ~10,500 lines of TypeScript
+- `hive` CLI globally installed and working (`hive doctor` shows all 5 checks PASS)
+- 4 MCP servers registered in ~/.claude.json (restart Claude Code to activate)
+- Integration tests verified against live Beeper Desktop on port 23374
+- Copilot skill written at skills/copilot/SKILL.md
+
+## What's next (potential improvements)
+- **Use the MCP tools**: Restart Claude Code session → hive-toolkit/intel/bridges/auto tools appear
+- **OAuth flow**: Full browser-based OAuth 2.0 + PKCE (currently relies on cached MCP ext token)
+- **WebSocket events**: Live message monitoring via GET /v1/ws (experimental, Phase 4 design)
+- **hive_ask tool**: AI-generated answers with KB citations (needs Claude API integration)
+- **hive_trends / hive_discover**: Analytics tools from design spec (SQL aggregation + AI)
+- **CI/CD**: GitHub Actions for test + lint on push
+- **ESLint/Prettier**: Code formatting (no config yet)
+- **systemd services**: Actually install hive-monitor.service + hive-harvest.timer
+- **beeper-extended deprecation**: Can disable old MCP server once hive-toolkit is verified
+- **Dashboard**: Port beeper-kb dashboard.html to serve from `hive dashboard` command
