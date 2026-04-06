@@ -54,3 +54,26 @@ ps aux | grep chrome | wc -l        # process count
 ps aux | grep chrome | awk '{sum+=$6} END {printf "%.1f MB\n", sum/1024}'  # total RAM
 ```
 **Key insight**: Each Chrome extension can spawn its own renderer process. 46 extensions = 26 processes = 4.4 GB RAM on a 7.7 GB machine.
+
+### 7. MCP server health (Claude Desktop / CLI)
+```bash
+# Quick health check: did all servers connect?
+grep "started and connected" ~/.config/Claude/logs/mcp.log | tail -14
+
+# Check for disconnects/errors
+grep -E "error|disconnected|transport closed" ~/.config/Claude/logs/mcp.log | tail -20
+
+# Per-server stderr (the actual error messages)
+tail -20 ~/.config/Claude/logs/mcp-server-<name>.log
+
+# Test a specific npx MCP server
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | timeout 10 npx -y <package> 2>&1
+
+# npm cache corruption check (ECOMPROMISED / ENOTEMPTY)
+ls ~/.npm/_locks/ 2>/dev/null    # stale locks?
+ls ~/.npm/_npx/ 2>/dev/null      # cache exists?
+
+# Fix npm cache corruption
+rm -rf ~/.npm/_npx && rm -f ~/.npm/_locks/* && npm cache verify
+```
+**Key insight**: When multiple npx-based MCP servers fail simultaneously, it's almost always npm cache corruption, not individual server issues. Claude Desktop launches all servers in parallel, causing lock contention. Fix the cache first, investigate individual servers second. See `learnings/mcp-troubleshooting.md` for full playbook.

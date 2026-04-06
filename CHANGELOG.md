@@ -10,6 +10,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- `[universal]` New learning: mcp-troubleshooting.md (npm cache corruption, git MCP config, cortex reconnect, diagnostic commands)
+- `[universal]` Updated system-diagnostics-patterns.md with MCP server health check layer
 - `[universal]` Auto-capture pipeline: Cortex insights → `cortex-to-learnings` bridge → learnings/ → daemon auto-commit
 - `[universal]` SessionEnd hook chain: Cortex extracts → bridge converts JSONL to topic-based markdown → daemon pushes
 - `[universal]` Daemon now watches `learnings/` directory with `learnings` sync category

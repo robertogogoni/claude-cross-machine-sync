@@ -289,7 +289,8 @@ sync_repo_to_system() {
 
     if [ "$LOCAL" != "$REMOTE" ]; then
         log "New changes detected, pulling..."
-        git pull --rebase 2>&1 | while read line; do
+        # Auto-stash dirty working tree to prevent "cannot pull with rebase" failures
+        git pull --rebase --autostash 2>&1 | while read line; do
             log "  $line"
         done
 
@@ -371,10 +372,22 @@ watch_loop() {
 }
 
 # Periodic repo check (for changes from other machines)
+# Runs in a background subshell — must survive git errors (set -e would kill it)
 repo_check_loop() {
     while true; do
         sleep 300  # Check every 5 minutes
-        sync_repo_to_system
+        # Wrap in subshell with +e so git pull failures don't kill the loop
+        (
+            set +e
+            sync_repo_to_system
+            local rc=$?
+            if [ $rc -ne 0 ]; then
+                log_warn "repo check failed (exit $rc), will retry in 5 minutes"
+                write_status "idle" "watching (last check failed)" "ok"
+            fi
+        )
+        # Heartbeat: refresh status timestamp so waybar doesn't show stale
+        write_status "idle" "watching" "ok"
     done
 }
 

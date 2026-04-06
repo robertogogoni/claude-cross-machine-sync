@@ -4,6 +4,7 @@
 
 <p>
   <a href="https://github.com/robertogogoni/claude-cross-machine-sync/releases/latest"><img src="https://img.shields.io/github/v/release/robertogogoni/claude-cross-machine-sync?style=flat&color=7aa2f7" alt="Release"></a>
+  [![Downloads](https://img.shields.io/github/downloads/robertogogoni/claude-cross-machine-sync/total?style=flat-square&color=a6e3a1&label=downloads)](https://github.com/robertogogoni/claude-cross-machine-sync/releases)
   <a href="https://github.com/robertogogoni/claude-cross-machine-sync/actions/workflows/ci.yml"><img src="https://github.com/robertogogoni/claude-cross-machine-sync/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-9ece6a" alt="License"></a>
   <a href="https://github.com/robertogogoni/claude-cross-machine-sync/releases"><img src="https://img.shields.io/badge/tags-11%20releases-e0af68" alt="Releases"></a>

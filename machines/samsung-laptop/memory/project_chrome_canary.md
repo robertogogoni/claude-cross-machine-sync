@@ -1,10 +1,10 @@
 ---
 name: Chrome Canary configuration
-description: Chrome Canary 147 with performance-tuned flags, native messaging for Claude extension, and 46 extensions (audit completed)
+description: Chrome Canary 148 with performance-tuned flags, native messaging for Claude extension, dom-storage-sqlite disabled (broke X.com)
 type: project
 ---
 
-Chrome Canary 147.0.7700.0 is the default browser everywhere (XDG, MIME, $BROWSER env).
+Chrome Canary 148.0.7766.0 is the default browser everywhere (XDG, MIME, $BROWSER env).
 
 **Performance flags** (`~/.config/chrome-canary-flags.conf`):
 - `--disable-features=Vulkan,WebContentsForceDark,HistoryEmbeddings,HistoryEmbeddingsAnswers,BrowsingHistoryActorIntegrationM1,BrowsingHistoryActorIntegrationM2,BrowsingHistorySimilarVisitsGrouping`
@@ -17,6 +17,10 @@ Chrome Canary 147.0.7700.0 is the default browser everywhere (XDG, MIME, $BROWSE
 - Needs CLI session restart to connect (bridge initializes at session start)
 
 **Extensions:** 46 installed, audit completed 2026-03-18. 6 performance hotspots identified (Vercel, cat-catch, RSSHub Radar inject into all pages). 20 ghost entries from uninstalled extensions.
+
+**Dangerous flags (disabled after investigation 2026-04-04):**
+- `dom-storage-sqlite` — experimental SQLite localStorage backend, breaks X.com and other heavy SPAs. KEEP DISABLED.
+- `render-document` — still enabled but risky, monitor for breakage on other sites.
 
 **How to apply:**
 - Enterprise policy protected by PreToolUse hook

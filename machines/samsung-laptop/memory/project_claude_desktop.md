@@ -1,14 +1,15 @@
 ---
 name: Claude Desktop setup
-description: Claude Desktop installed via AUR with auto-updater, Wayland config, keyring unlock, and memory-sync MCP
+description: Claude Desktop installed via AUR with auto-updater, Wayland config, keyring unlock, 14 MCP servers all healthy as of 2026-04-04
 type: project
 ---
 
 ## Installation
 
-- **Package:** `claude-desktop-bin` (AUR) v1.1.7203
-- **Binary:** `/usr/bin/claude-desktop` (bash wrapper: `exec electron /usr/lib/claude-desktop-bin/app.asar`)
+- **Package:** `claude-desktop-bin` (AUR)
+- **Binary:** `/usr/bin/claude-desktop` (wrapper: `exec electron /usr/lib/claude-desktop-bin/app.asar`)
 - **App:** `/usr/lib/claude-desktop-bin/app.asar`
+- **Electron:** `/usr/lib/electron39/electron` (system electron)
 
 ## Auto-updater
 
@@ -30,10 +31,32 @@ type: project
 - `exec-once = echo -n "" | gnome-keyring-daemon --replace --unlock --components=pkcs11,secrets`
 - Required because SDDM auto-login bypasses PAM keyring unlock
 
-## MCP config
+## MCP Servers (14 total, all healthy as of 2026-04-04)
 
-- 13 servers in `~/.config/Claude/claude_desktop_config.json` (synced with CLI)
-- Includes memory-sync MCP for accessing CLI memories from Desktop
+Config: `~/.config/Claude/claude_desktop_config.json` (hook-protected, edit with python3 or manually).
+
+| Server | Type | Notes |
+|--------|------|-------|
+| memory | npx | Knowledge graph persistence |
+| sequential-thinking | npx | Enhanced reasoning |
+| chrome | node (local) | Superpowers Chrome MCP |
+| brave-search | npx | BRAVE_API_KEY in env block |
+| git | uvx | Points to ~/claude-cross-machine-sync (fixed 2026-04-04) |
+| sqlite | uvx | ~/test.db |
+| fetch | uvx | Web content fetching |
+| context7 | npx | Up-to-date library docs |
+| playwright | npx | Browser automation |
+| filesystem | npx | Home directory access |
+| time | uvx | America/Sao_Paulo timezone |
+| github | npx | PAT in env block |
+| memory-sync | node (local) | CLI memory bridge |
+| (total: 13) | | |
+
+## Troubleshooting
+
+- **Kill/restart:** `pkill -f "claude-desktop-bin" && sleep 2 && nohup claude-desktop &>/dev/null &`
+- **MCP logs:** `~/.config/Claude/logs/mcp.log` (main) + `mcp-server-*.log` (per-server stderr)
+- **npm cache corruption:** See MCP server inventory memory for fix
 
 **Why:** Claude Desktop was installed 2026-03-18. The auto-updater, Wayland config, and keyring unlock ensure zero-friction daily use on this Arch/Hyprland setup.
 
