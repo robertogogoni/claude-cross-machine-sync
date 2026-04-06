@@ -1,96 +1,70 @@
 {
+  "_comment": "Template for Claude Desktop MCP config. Replace ${NODE_PATH} with absolute path to node/npx binary. Updated 2026-04-06.",
   "mcpServers": {
+    "obra-superpowers": {
+      "command": "${NODE_PATH}/node",
+      "args": [
+        "${HOME}/obra-superpowers-mcp/index.js"
+      ]
+    },
+    "github": {
+      "command": "${NODE_PATH}/npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PAT}"
+      }
+    },
     "memory": {
-      "command": "npx",
+      "command": "${NODE_PATH}/npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-memory"
       ]
     },
     "sequential-thinking": {
-      "command": "npx",
+      "command": "${NODE_PATH}/npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-sequential-thinking"
       ]
     },
-    "chrome": {
-      "command": "node",
+    "cortex": {
+      "command": "${NODE_PATH}/node",
       "args": [
-        "${HOME}/.local/share/mcp-servers/superpowers-chrome/mcp/dist/index.js"
-      ]
-    },
-    "brave-search": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-brave-search"
+        "${HOME}/.claude/memory/cortex/server.cjs"
       ],
       "env": {
-        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+        "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}"
       }
     },
-    "git": {
-      "command": "uvx",
+    "hive-toolkit": {
+      "command": "${NODE_PATH}/node",
       "args": [
-        "mcp-server-git",
-        "--repository",
-        "${HOME}"
+        "${HOME}/repos/hive/plugins/toolkit/dist/index.js"
       ]
     },
-    "sqlite": {
-      "command": "uvx",
+    "hive-intel": {
+      "command": "${NODE_PATH}/node",
       "args": [
-        "mcp-server-sqlite",
-        "--db-path",
-        "${HOME}/test.db"
+        "${HOME}/repos/hive/plugins/intel/dist/index.js"
+      ],
+      "env": {
+        "VOYAGE_API_KEY": "${VOYAGE_API_KEY}"
+      }
+    },
+    "hive-bridges": {
+      "command": "${NODE_PATH}/node",
+      "args": [
+        "${HOME}/repos/hive/plugins/bridges/dist/index.js"
       ]
     },
-    "fetch": {
-      "command": "uvx",
+    "hive-auto": {
+      "command": "${NODE_PATH}/node",
       "args": [
-        "mcp-server-fetch"
-      ]
-    },
-    "context7": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp@latest"
-      ]
-    },
-    "playwright": {
-      "command": "npx",
-      "args": [
-        "@playwright/mcp@latest"
-      ]
-    },
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "${HOME}"
-      ]
-    },
-    "time": {
-      "command": "uvx",
-      "args": [
-        "mcp-server-time",
-        "--local-timezone=America/Sao_Paulo"
-      ]
-    },
-    "github": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ]
-    },
-    "memory-sync": {
-      "command": "node",
-      "args": [
-        "${HOME}/.local/share/mcp-servers/memory-sync/server.cjs"
+        "${HOME}/repos/hive/plugins/auto/dist/index.js"
       ]
     }
   },
@@ -98,10 +72,6 @@
     "coworkScheduledTasksEnabled": true,
     "ccdScheduledTasksEnabled": true,
     "sidebarMode": "chat",
-    "coworkWebSearchEnabled": true,
-    "keepAwakeEnabled": true,
-    "localAgentModeTrustedFolders": [
-      "${HOME}"
-    ]
+    "coworkWebSearchEnabled": true
   }
 }

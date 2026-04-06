@@ -126,11 +126,20 @@ Note: hive_ask + hive_discover require ANTHROPIC_API_KEY (auto-discovered from e
 - Created comprehensive README.md
 - Formatted codebase with Prettier
 
+## What's been done (session 2026-04-06 — Claude Desktop MCP + OAuth)
+- OAuth PKCE tested live: `hive auth login` → browser flow → token stored at `~/.hive/token.json`
+- Token: 24h expiry, not refreshable, scope: read write
+- All 4 Hive MCP servers added to Claude Desktop config (`~/.config/Claude/claude_desktop_config.json`)
+- All paths use absolute node binary path (mise-safe for desktop-launched apps)
+- Removed `beepermcp-remote` DXT extension (wrong port 23373, redundant with Hive)
+- Verified authenticated API call: 7 Beeper accounts visible
+- Template updated in sync repo (`universal/claude/claude-desktop-config.template.json`)
+
 ## What's next (remaining)
 - **Run `hive install-services`**: Install systemd units on the machine
 - **Test widget in Beeper Desktop**: Add http://localhost:3000 as widget, verify all tabs
 - **Load extension in Chrome Canary**: chrome://extensions → Developer mode → Load unpacked
-- **Test OAuth PKCE live**: `hive auth login` to get first-party token
 - **Live WebSocket test**: Send message from phone, verify event arrives
 - **KB harvest**: Run `hive harvest` to update stale data (last: 2026-04-03)
 - **beeper-extended plugin removal**: Still installed as Claude Code plugin
+- **OAuth token refresh**: Token expires daily — consider cron for `hive auth login`
