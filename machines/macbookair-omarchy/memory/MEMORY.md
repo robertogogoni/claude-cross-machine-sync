@@ -105,15 +105,22 @@ Flags come from TWO sources: (1) `chrome://flags` saved in `~/.config/google-chr
 - `memory` — ghost project, zero deployments (delete candidate)
 - Duplicates: `github-trophies` vs `github-profile-trophy` (consolidate)
 
+### Claude Desktop MCP: Use Absolute Node Paths
+Claude Desktop is an Electron app launched by the window manager, NOT a login shell. It doesn't source `~/.bashrc` or `~/.zshrc`, so `mise` shims aren't in PATH. Always use absolute paths like `/home/rob/.local/share/mise/installs/node/25.1.0/bin/node` in `claude_desktop_config.json`. Bare `node` or `npx` may silently fail.
+
+### Hive OAuth Token: 24h Expiry, No Refresh
+Beeper OAuth tokens from `hive auth login` expire in 24 hours and have NO refresh token. Re-auth required daily. Token stored at `~/.hive/token.json`. Shared by both Claude Code and Claude Desktop.
+
 ## System Info
 - Machine: MacBook Air (2015), Arch Linux, Hyprland/Omarchy, user: rob
 - Claude Code: v2.1.91 via official standalone installer (`~/.local/bin/claude` → `~/.local/share/claude/`)
-- Claude Desktop: v1.2.234 (AUR `claude-desktop-bin`, with Cowork support)
+- Claude Desktop: v1.569.0-11 (AUR `claude-desktop-bin`, 9 MCP servers + 6 DXT extensions)
 - Claude Cowork Service: v1.0.40 (AUR, systemd user unit `claude-cowork.service` enabled)
-- Beeper: v4.2.692 (direct install, pacman deregistered, desktop shortcut validated)
+- Beeper: v4.2.692 (direct install, pacman deregistered, desktop shortcut validated, API port 23374)
+- Hive OAuth: authenticated, token at `~/.hive/token.json` (24h expiry)
 - Input method: fcitx5
 - Node.js v25.1.0, Python 3.14.3, Go 1.26.1, Rust 1.94.1, Git 2.53.0, Docker 29.3.1
-- Kernel: 6.19.9-arch1-1
+- Kernel: 6.19.11-arch1-1
 
 # currentDate
-Today's date is 2026-04-02.
+Today's date is 2026-04-06.
