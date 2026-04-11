@@ -125,6 +125,12 @@ On 2026-04-06 a session replaced `~/.config/hypr/workspace-window-rules.conf` wi
 ### TypeScript: EventCallback Function Contravariance
 A callback typed as `(...args: unknown[]) => void` is NOT assignable to `(event: SpecificType) => void` — TypeScript enforces function parameter contravariance. When defining event callback interfaces that must accept typed listeners, define the callback as `(event: SpecificType) => void` (not `...args: unknown[]`). This bit `@hive/auto`'s `EventCallback` type when `EventStreamLike.on()` was called with a typed handler.
 
+### Playwright MCP: Chrome Stable Not Present — Use Chrome Canary
+Playwright MCP defaults to `channel: "chrome"` which expects `/opt/google/chrome/chrome` — not present (only Chrome Canary installed). Fix: set `--browser chromium --headed --executable-path /usr/bin/google-chrome-canary` in BOTH config files:
+- `~/.claude/plugins/cache/claude-plugins-official/playwright/unknown/.mcp.json`
+- `~/.claude/plugins/marketplaces/claude-plugins-official/external_plugins/playwright/.mcp.json`
+Requires session restart to take effect. See [multi-ai-workflow.md](multi-ai-workflow.md) for full config.
+
 ### MacBook Air 2015 Keyboard Stopped Working
 Firmware switched to SPI mode (SPI broken at hardware level — IRQ 21 never fires, NOT a kernel regression). **Quick fix (no SMC reset needed):**
 ```bash
