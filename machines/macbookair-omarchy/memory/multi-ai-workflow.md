@@ -12,34 +12,29 @@ Goal: make GPT-4o (and other OpenAI models) callable as native tools inside Clau
 
 ---
 
-## Current State (2026-04-11)
+## Current State (2026-04-11) — COMPLETE
 
 ### Done
 - Playwright MCP fixed to use Chrome Canary (see Playwright section below)
-- Architecture decided: OpenAI MCP server added to `~/.claude.json`
-- User confirmed they have an OpenAI API key
+- Custom OpenAI MCP server written at `~/.claude/mcp/openai/server.mjs`
+- Dependencies installed: `~/.claude/mcp/openai/node_modules/`
+- `OPENAI_API_KEY` added to `~/.bashrc`
+- OpenAI MCP server registered in `~/.claude.json` under key `"openai"`:
+  ```json
+  {
+    "command": "node",
+    "args": ["/home/rob/.claude/mcp/openai/server.mjs"],
+    "env": { "OPENAI_API_KEY": "..." }
+  }
+  ```
 
-### Pending (next session)
-1. Add `OPENAI_API_KEY` to `~/.bashrc`:
-   ```bash
-   echo 'export OPENAI_API_KEY="sk-..."' >> ~/.bashrc
-   source ~/.bashrc
-   ```
-2. Add OpenAI MCP server to `~/.claude.json`:
-   ```json
-   "openai": {
-     "command": "npx",
-     "args": ["-y", "mcp-openai"],
-     "env": {
-       "OPENAI_API_KEY": "${OPENAI_API_KEY}"
-     }
-   }
-   ```
-   **Verify package name first**: `npm info mcp-openai` before installing — this space moves fast.
-   Alternative package to check: `@openai/mcp-server-openai`
+### Pending (next session — requires restart)
+- Restart Claude to load the new MCP server
+- Verify tools appear: `ToolSearch("ask-openai")` and `ToolSearch("list-openai-models")`
 
-3. Restart Claude session for MCP to load
-4. Verify OpenAI tools appear in ToolSearch
+### Why custom server (not mcp-openai package)
+- `mcp-openai` v0.0.1 = 433 bytes, hardcodes gpt-4o-mini, no model selection
+- Custom server: uses `registerTool` (current SDK API), supports gpt-4o/gpt-4o-mini/o1-mini/o3-mini, system prompt param
 
 ---
 
