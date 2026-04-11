@@ -108,8 +108,14 @@ Flags come from TWO sources: (1) `chrome://flags` saved in `~/.config/google-chr
 ### Claude Desktop MCP: Use Absolute Node Paths
 Claude Desktop is an Electron app launched by the window manager, NOT a login shell. It doesn't source `~/.bashrc` or `~/.zshrc`, so `mise` shims aren't in PATH. Always use absolute paths like `/home/rob/.local/share/mise/installs/node/25.1.0/bin/node` in `claude_desktop_config.json`. Bare `node` or `npx` may silently fail.
 
-### Hive OAuth Token: 24h Expiry, No Refresh
-Beeper OAuth tokens from `hive auth login` expire in 24 hours and have NO refresh token. Re-auth required daily. Token stored at `~/.hive/token.json`. Shared by both Claude Code and Claude Desktop.
+### Hive OAuth Token: Auto-Refresh via systemd Timer (2026-04-11)
+Beeper OAuth tokens expire in ~24h. `refresh_token` is always null (server doesn't issue one). **Fixed**: `hive auth refresh` command + `hive-auth-refresh.timer` (runs every 20h, sends `notify-send` if expired). Token stored at `~/.hive/token.json`. The `mcp-cache` fallback in `hive auth status` is actually reading the stored token file without expiry check — Beeper's server accepts tokens past local expiry window. Re-auth: `hive auth login` (browser flow).
+
+### Hyprland Workspace Rules: Never Replace with Daemon That Doesn't Exist
+On 2026-04-06 a session replaced `~/.config/hypr/workspace-window-rules.conf` with a reference to `hypr-smart-workspace` daemon (never built). Result: zero workspace auto-assignment silently broken for 5 days. **Fixed 2026-04-11**: restored rules using `windowrule = workspace N, match:class ^(WMClass)$` syntax. Correct WM classes: `Google-chrome-canary`, `com.mitchellh.ghostty` (Ghostty), `Claude` (Claude Desktop), `Beeper`. Use `hyprctl configerrors` to verify after changes, `hyprctl reload` to apply.
+
+### Hyprland `CHyprError` in Log is NOT a Config Error
+`DEBUG ]: Creating the CHyprError!` appears in every Hyprland startup log — it's just class instantiation of the error-display overlay. Actual config errors appear via `hyprctl configerrors`. The EGL `eglQueryDevicesEXT EGL_BAD_ALLOC` errors from aquamarine are harmless Mesa init noise on Intel Broadwell — Hyprland works fine with them.
 
 ## System Info
 - Machine: MacBook Air (2015), Arch Linux, Hyprland/Omarchy, user: rob
