@@ -16,10 +16,10 @@
 | [feedback_always_voyage.md](feedback_always_voyage.md) | Always use Voyage API key for beeper-kb — never FTS-only mode |
 | [hive-project.md](hive-project.md) | Hive — Beeper Intelligence Platform: 9 packages, 41 MCP tools, ~26 CLI commands, 586 tests, HTTP gateway, Beeper widget, Chrome extension. GitHub: robertogogoni/hive |
 | [macbook-keyboard.md](macbook-keyboard.md) | MacBook Air 2015 keyboard — UIEN(1) ACPI call forces USB mode (no SMC reset); full GPIO/DSDT mechanism, permanent fix via modprobe hook + system-sleep hook |
-| [multi-ai-workflow.md](multi-ai-workflow.md) | Multi-AI: OpenAI MCP (`ask-openai`/`list-openai-models`), Codex MCP (`codex`/`codex-reply`/`codex-exec`/`codex-review`), Playwright MCP (Chrome Canary) |
-| [feedback_bypass_file_permissions.md](feedback_bypass_file_permissions.md) | Never ask for authorization before modifying/creating files |
+| [multi-ai-workflow.md](multi-ai-workflow.md) | Multi-AI: OpenAI MCP (`ask-openai`/`list-openai-models`), Codex MCP (`codex`/`codex-reply`/`codex-exec`/`codex-review`), Playwright MCP (Chrome Canary), live-verified model list |
+| [feedback_bypass_file_permissions.md](feedback_bypass_file_permissions.md) | Never ask for authorization — file edits, Codex approvals, bash commands all auto-approved |
 | [mcp-cli-tool.md](mcp-cli-tool.md) | `mcp` CLI (mcptools Go binary at `~/.local/bin/mcp`) — on-demand MCP server discovery and tool invocation |
-| [codex-cli.md](codex-cli.md) | Codex CLI v0.120.0 — capabilities, exec flags, MCP servers, auth modes, own memory/skills system at `~/.codex/` |
+| [codex-cli.md](codex-cli.md) | Codex CLI v0.120.0 — corrected flags (no -a), feature flags, OAuth vs API key models, local providers, bypass param |
 
 ## Session Patterns & Gotchas
 
