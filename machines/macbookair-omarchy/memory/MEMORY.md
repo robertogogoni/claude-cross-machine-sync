@@ -16,6 +16,7 @@
 | [feedback_always_voyage.md](feedback_always_voyage.md) | Always use Voyage API key for beeper-kb — never FTS-only mode |
 | [hive-project.md](hive-project.md) | Hive — Beeper Intelligence Platform: 9 packages, 41 MCP tools, ~26 CLI commands, 586 tests, HTTP gateway, Beeper widget, Chrome extension. GitHub: robertogogoni/hive |
 | [macbook-keyboard.md](macbook-keyboard.md) | MacBook Air 2015 keyboard — UIEN(1) ACPI call forces USB mode (no SMC reset); full GPIO/DSDT mechanism, permanent fix via modprobe hook + system-sleep hook |
+| [multi-ai-workflow.md](multi-ai-workflow.md) | Multi-AI workflow: OpenAI MCP server plan (pending API key + mcp-openai install); Playwright MCP fixed for Chrome Canary |
 
 ## Session Patterns & Gotchas
 
