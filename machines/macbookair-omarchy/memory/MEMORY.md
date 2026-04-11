@@ -15,7 +15,7 @@
 | [beeper-troubleshooting.md](beeper-troubleshooting.md) | Beeper blank screen fixes, wrapper script, sysctl tuning, persona model, ecosystem intelligence, beeper-kb |
 | [feedback_always_voyage.md](feedback_always_voyage.md) | Always use Voyage API key for beeper-kb — never FTS-only mode |
 | [hive-project.md](hive-project.md) | Hive — Beeper Intelligence Platform: 9 packages, 41 MCP tools, ~26 CLI commands, 586 tests, HTTP gateway, Beeper widget, Chrome extension. GitHub: robertogogoni/hive |
-| [macbook-keyboard.md](macbook-keyboard.md) | MacBook Air 2015 keyboard — UIEN(1) ACPI call forces USB mode (no SMC reset); full GPIO/DSDT mechanism, permanent fix via modprobe hook + system-sleep hook |
+| [macbook-keyboard.md](macbook-keyboard.md) | MacBook Air 2015 keyboard — SPI firmware mode breaks after Limine; durable fix requires UIEN(1), `acpi_call` inside the Limine UKI, resume hook, boot fallback, and auto UKI rebuilds |
 | [multi-ai-workflow.md](multi-ai-workflow.md) | Multi-AI: OpenAI MCP (`ask-openai`/`list-openai-models`), Codex MCP (`codex`/`codex-reply`/`codex-exec`/`codex-review`), Playwright MCP (Chrome Canary), live-verified model list |
 | [feedback_bypass_file_permissions.md](feedback_bypass_file_permissions.md) | Never ask for authorization — file edits, Codex approvals, bash commands all auto-approved |
 | [mcp-cli-tool.md](mcp-cli-tool.md) | `mcp` CLI (mcptools Go binary at `~/.local/bin/mcp`) — on-demand MCP server discovery and tool invocation |
@@ -72,6 +72,9 @@ Arch marks Python as "externally managed". Use `pipx install <pkg>` for CLI tool
 
 ### vfat /boot: chmod Does Nothing
 FAT32 ignores Unix permissions. Use `fmask`/`dmask` in `/etc/fstab`. `mount -o remount` does NOT apply new masks — must full `umount` then `mount`.
+
+### Limine UKI Debugging: Inspect Embedded `.initrd`, Not ESP mtimes
+On Omarchy systems booting a UKI from `/boot/EFI/Linux/*.efi`, the real boot-time initramfs is embedded inside the EFI file. If boot behavior disagrees with `/etc`, extract `.initrd` with `objcopy` and inspect it with `lsinitcpio`. The ESP file timestamp can be misleading.
 
 ### dmesg Requires Root
 Use `sudo dmesg` or `journalctl -k`.
@@ -164,11 +167,11 @@ Playwright MCP defaults to `channel: "chrome"` which expects `/opt/google/chrome
 Requires session restart to take effect. See [multi-ai-workflow.md](multi-ai-workflow.md) for full config.
 
 ### MacBook Air 2015 Keyboard Stopped Working
-Firmware switched to SPI mode (SPI broken at hardware level — IRQ 21 never fires, NOT a kernel regression). **Quick fix (no SMC reset needed):**
+Firmware can switch to SPI mode, which leaves the built-in keyboard and trackpad dead immediately after the Limine screen. SPI is broken on this machine (`applespi` timeouts; IRQ 21 never increments), but USB mode works immediately. **Quick fix (no SMC reset needed):**
 ```bash
 sudo bash -c 'modprobe acpi_call; echo "\_SB.PCI0.SPI1.SPIT.UIEN 0x01" > /proc/acpi/call'
 ```
-Permanent fix installed (2026-04-11): `/etc/modprobe.d/apple-keyboard-usb.conf` (boot hook) + `/etc/systemd/system-sleep/apple-keyboard-usb.sh` (resume hook). The resume hook uses the system-sleep mechanism — NOT a systemd service, which fires at the wrong time (pre-suspend, not post-resume). See [macbook-keyboard.md](macbook-keyboard.md) for full ACPI/GPIO diagnosis.
+Hardened fix installed (2026-04-11): `apple-keyboard-usb.conf` hooks `applespi`, `apple-keyboard-acpi-call.conf` embeds `acpi_call` into the Limine UKI, `apple-keyboard-usb.sh` handles resume, `apple-keyboard-usb-fallback.service` reasserts USB mode after boot, and `apple-keyboard-uki-rebuild.path` auto-runs `limine-update` when the keyboard boot config changes. Critical lesson: if `/etc` looks correct but boot still fails, inspect the embedded UKI `.initrd`, not just the live root filesystem. See [macbook-keyboard.md](macbook-keyboard.md) for the full diagnosis.
 
 ## System Info
 - Machine: MacBook Air (2015), Arch Linux, Hyprland/Omarchy, user: rob
