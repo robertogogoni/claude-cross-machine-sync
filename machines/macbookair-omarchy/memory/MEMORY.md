@@ -15,6 +15,7 @@
 | [beeper-troubleshooting.md](beeper-troubleshooting.md) | Beeper blank screen fixes, wrapper script, sysctl tuning, persona model, ecosystem intelligence, beeper-kb |
 | [feedback_always_voyage.md](feedback_always_voyage.md) | Always use Voyage API key for beeper-kb — never FTS-only mode |
 | [hive-project.md](hive-project.md) | Hive — Beeper Intelligence Platform: 9 packages, 41 MCP tools, ~26 CLI commands, 586 tests, HTTP gateway, Beeper widget, Chrome extension. GitHub: robertogogoni/hive |
+| [macbook-keyboard.md](macbook-keyboard.md) | MacBook Air 2015 SPI vs USB keyboard mode — kernel 6.19 breaks SPI, SMC reset procedure to restore USB mode |
 
 ## Session Patterns & Gotchas
 
