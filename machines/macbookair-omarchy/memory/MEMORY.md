@@ -110,8 +110,9 @@ Flags come from TWO sources: (1) `chrome://flags` saved in `~/.config/google-chr
 ### Multi-AI Workflow (OpenAI MCP) — IN PROGRESS
 > Full reference: [multi-ai-workflow.md](multi-ai-workflow.md)
 - **Goal**: GPT-4o callable as native MCP tool inside Claude Code sessions
-- **Pending**: add `OPENAI_API_KEY` to `~/.bashrc`, add `mcp-openai` server to `~/.claude.json`, restart session
-- **Verify package name first**: `npm info mcp-openai` (also check `@openai/mcp-server-openai`)
+- **Status**: installed — restart Claude to activate
+- **Tools**: `ask-openai` (gpt-4o default, model+system params), `list-openai-models`
+- **Server**: `~/.claude/mcp/openai/server.mjs` (custom, not mcp-openai package — that was 433 bytes/gpt-4o-mini only)
 - Playwright MCP already fixed for Chrome Canary (ready after session restart)
 
 ### Claude Desktop MCP: Use Absolute Node Paths
