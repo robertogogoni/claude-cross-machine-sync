@@ -12,7 +12,7 @@ Goal: make GPT-4o (and other OpenAI models) callable as native tools inside Clau
 
 ---
 
-## Current State (2026-04-11) — COMPLETE
+## Current State (2026-04-11) — COMPLETE + Codex added
 
 ### Done
 - Playwright MCP fixed to use Chrome Canary (see Playwright section below)
@@ -27,14 +27,24 @@ Goal: make GPT-4o (and other OpenAI models) callable as native tools inside Clau
     "env": { "OPENAI_API_KEY": "..." }
   }
   ```
+- **Codex CLI MCP** added (2026-04-11): two servers registered
+  - `"codex"` → `codex mcp-server` (native, tools: `codex`, `codex-reply`)
+  - `"codex-exec"` → `~/.claude/mcp/codex/server.mjs` (custom wrapper, tools: `codex-exec`, `codex-review`)
+  - Codex CLI binary: `/home/rob/.local/bin/codex` v0.120.0
+  - `mcp__codex__*` and `mcp__codex-exec__*` added to settings.json allow list
 
 ### Pending (next session — requires restart)
-- Restart Claude to load the new MCP server
-- Verify tools appear: `ToolSearch("ask-openai")` and `ToolSearch("list-openai-models")`
+- Restart Claude to load codex MCP servers
+- Verify tools appear: `ToolSearch("codex-exec")`, `ToolSearch("codex-review")`
 
 ### Why custom server (not mcp-openai package)
 - `mcp-openai` v0.0.1 = 433 bytes, hardcodes gpt-4o-mini, no model selection
 - Custom server: uses `registerTool` (current SDK API), supports gpt-4o/gpt-4o-mini/o1-mini/o3-mini, system prompt param
+
+### Codex MCP design rationale
+- `codex mcp-server` (native): full session support with `conversationId`/`threadId` for multi-turn
+- `codex-exec` (custom): wraps `codex exec -o <tmpfile> --ephemeral -a never` for clean non-interactive one-shot calls; `-o` flag captures last agent message to file instead of parsing JSONL
+- `codex-review` (custom): wraps `codex exec review` subcommand for git repo code review
 
 ---
 
