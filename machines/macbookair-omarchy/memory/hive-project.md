@@ -2,8 +2,8 @@
 name: Hive — Beeper Intelligence Platform
 description: Composable plugin ecosystem for Beeper. Monorepo at ~/repos/hive/ with 4 plugins, CLI, HTTP gateway (Hono), Beeper Desktop widget (Next.js), and Chrome extension. 41 MCP tools, 586 tests, all features complete.
 type: project
+originSessionId: c956b914-80a2-4cc7-b346-99cd5d940423
 ---
-
 Hive is a composable plugin ecosystem and CLI for Beeper — transforms the Desktop API into a personal AI-powered messaging copilot.
 
 **Why:** beeper-extended has only 11 basic MCP tools, no intelligence, no KB integration, hardcoded port 23373. Hive replaces it with 34 MCP tools, semantic search, automation, bridge management, and a copilot.
@@ -135,11 +135,41 @@ Note: hive_ask + hive_discover require ANTHROPIC_API_KEY (auto-discovered from e
 - Verified authenticated API call: 7 Beeper accounts visible
 - Template updated in sync repo (`universal/claude/claude-desktop-config.template.json`)
 
+## What's been done (session 2026-04-11 — Auth refresh + TS fixes)
+
+### OAuth auto-refresh system
+- Added `getStoredTokenInfo()` to `shared/src/oauth.ts` — returns token + expired bool + hoursLeft
+- Added `getStoredTokenInfo` to `shared/src/index.ts` exports
+- Added `hive auth refresh` subcommand (`cli/src/commands/auth.ts`):
+  - `runAuthRefresh()` verifies token against live Beeper API (not just local `expires_at`)
+  - `sendDesktopNotification()` uses `notify-send` with explicit `DBUS_SESSION_BUS_ADDRESS` env
+  - `--no-browser` flag: sends desktop notification + exits code 2 instead of launching browser
+  - Falls back to `runAuthLogin()` in interactive mode
+- Added `generateAuthRefreshUnits()` to `auto/src/systemd.ts`:
+  - `hive-auth-refresh.timer`: `OnBootSec=2min`, `OnUnitActiveSec=20h`, `Persistent=true`
+  - `hive-auth-refresh.service`: `hive auth refresh --no-browser`, `PassEnvironment` for DISPLAY/WAYLAND/DBUS/XDG
+- Updated `installSystemdUnits()` to write **5 units** (was 3): adds timer + service
+- Updated `cli/src/commands/services.ts`: `UNIT_NAMES` expanded to 5, status uses `UNIT_NAMES.map()`, enable/disable/stop all 5
+
+### Fixed all @hive/auto TypeScript errors (build now clean)
+- **EventCallback contravariance**: `(...args: unknown[]) => void` incompatible with `(buffered: BufferedEvent) => void`. Fixed by rewriting `event-types.ts` to import `BufferedEvent` directly from `@hive/shared` and define `EventCallback = (event: BufferedEvent) => void`
+- **Null narrowing in index.ts**: `EventStreamLike | null` not narrowed after reassignment. Fixed with intermediate `const instance` pattern
+- **Discriminated union in event-handler.ts**: `event.message` doesn't exist on all `WsEvent` variants. Fixed by checking `event.type !== "message.upserted"` first (narrows to `WsMessageUpsertedEvent`), then casting `event.message` as `Record<string, unknown>`
+- **`extractMessageBody` signature**: Changed parameter from `BufferedEvent["event"]` context to explicit type guard pattern
+
+### Waybar workspace fix
+- Created missing `~/.config/waybar/modules.jsonc` (file was referenced but didn't exist — caused all modules to silently fail)
+- Added `persistent-workspaces: { "1": [], ..., "9": [] }` so empty workspaces show in bar
+
+### MacBook Air keyboard
+- Diagnosed: firmware NVRAM switched keyboard from USB mode (hid_apple, works) to SPI mode (applespi, broken on kernel 6.19)
+- Created `/etc/systemd/system/applespi-reload.service` (system-level, After=multi-user.target)
+- This is a palliative measure only — **real fix is SMC reset** (see macbook-keyboard.md)
+
 ## What's next (remaining)
-- **Run `hive install-services`**: Install systemd units on the machine
+- **MacBook Air keyboard SMC reset**: Physical fix required — Left Shift + Left Control + Left Option + Power, 10s while shut down
 - **Test widget in Beeper Desktop**: Add http://localhost:3000 as widget, verify all tabs
 - **Load extension in Chrome Canary**: chrome://extensions → Developer mode → Load unpacked
 - **Live WebSocket test**: Send message from phone, verify event arrives
 - **KB harvest**: Run `hive harvest` to update stale data (last: 2026-04-03)
 - **beeper-extended plugin removal**: Still installed as Claude Code plugin
-- **OAuth token refresh**: Token expires daily — consider cron for `hive auth login`
