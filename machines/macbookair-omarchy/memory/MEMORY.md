@@ -125,7 +125,11 @@ On 2026-04-06 a session replaced `~/.config/hypr/workspace-window-rules.conf` wi
 A callback typed as `(...args: unknown[]) => void` is NOT assignable to `(event: SpecificType) => void` — TypeScript enforces function parameter contravariance. When defining event callback interfaces that must accept typed listeners, define the callback as `(event: SpecificType) => void` (not `...args: unknown[]`). This bit `@hive/auto`'s `EventCallback` type when `EventStreamLike.on()` was called with a typed handler.
 
 ### MacBook Air 2015 Keyboard Stopped Working
-If keyboard is dead at LUKS/boot password screen: firmware switched to SPI mode (broken on kernel 6.19). **Fix: SMC reset** — shut down → hold Left Shift + Left Control + Left Option + Power for 10 seconds → release → boot. See [macbook-keyboard.md](macbook-keyboard.md) for full diagnosis and verification steps.
+Firmware switched to SPI mode (SPI broken at hardware level — IRQ 21 never fires, NOT a kernel regression). **Quick fix (no SMC reset needed):**
+```bash
+sudo bash -c 'modprobe acpi_call; echo "\_SB.PCI0.SPI1.SPIT.UIEN 0x01" > /proc/acpi/call'
+```
+Permanent fix already installed (2026-04-11): `/etc/modprobe.d/apple-keyboard-usb.conf` + `apple-keyboard-usb-resume.service`. See [macbook-keyboard.md](macbook-keyboard.md) for full ACPI/GPIO diagnosis.
 
 ## System Info
 - Machine: MacBook Air (2015), Arch Linux, Hyprland/Omarchy, user: rob
