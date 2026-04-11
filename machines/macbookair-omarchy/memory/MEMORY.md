@@ -118,6 +118,15 @@ On 2026-04-06 a session replaced `~/.config/hypr/workspace-window-rules.conf` wi
 ### Hyprland `CHyprError` in Log is NOT a Config Error
 `DEBUG ]: Creating the CHyprError!` appears in every Hyprland startup log — it's just class instantiation of the error-display overlay. Actual config errors appear via `hyprctl configerrors`. The EGL `eglQueryDevicesEXT EGL_BAD_ALLOC` errors from aquamarine are harmless Mesa init noise on Intel Broadwell — Hyprland works fine with them.
 
+### Waybar: Missing `modules.jsonc` = Silent Module Failure
+`~/.config/waybar/config.jsonc` includes `~/.config/waybar/modules.jsonc`. If that file doesn't exist, ALL module-specific configs silently fail to load — waybar starts but all custom module formats/settings are missing. If modules look wrong, check the include file exists. Fix: create the file with `{}` minimum, or with proper module configs.
+
+### TypeScript: EventCallback Function Contravariance
+A callback typed as `(...args: unknown[]) => void` is NOT assignable to `(event: SpecificType) => void` — TypeScript enforces function parameter contravariance. When defining event callback interfaces that must accept typed listeners, define the callback as `(event: SpecificType) => void` (not `...args: unknown[]`). This bit `@hive/auto`'s `EventCallback` type when `EventStreamLike.on()` was called with a typed handler.
+
+### MacBook Air 2015 Keyboard Stopped Working
+If keyboard is dead at LUKS/boot password screen: firmware switched to SPI mode (broken on kernel 6.19). **Fix: SMC reset** — shut down → hold Left Shift + Left Control + Left Option + Power for 10 seconds → release → boot. See [macbook-keyboard.md](macbook-keyboard.md) for full diagnosis and verification steps.
+
 ## System Info
 - Machine: MacBook Air (2015), Arch Linux, Hyprland/Omarchy, user: rob
 - Claude Code: v2.1.91 via official standalone installer (`~/.local/bin/claude` → `~/.local/share/claude/`)
