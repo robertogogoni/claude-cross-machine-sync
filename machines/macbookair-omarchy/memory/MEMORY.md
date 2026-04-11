@@ -107,6 +107,13 @@ Flags come from TWO sources: (1) `chrome://flags` saved in `~/.config/google-chr
 - `memory` — ghost project, zero deployments (delete candidate)
 - Duplicates: `github-trophies` vs `github-profile-trophy` (consolidate)
 
+### Multi-AI Workflow (OpenAI MCP) — IN PROGRESS
+> Full reference: [multi-ai-workflow.md](multi-ai-workflow.md)
+- **Goal**: GPT-4o callable as native MCP tool inside Claude Code sessions
+- **Pending**: add `OPENAI_API_KEY` to `~/.bashrc`, add `mcp-openai` server to `~/.claude.json`, restart session
+- **Verify package name first**: `npm info mcp-openai` (also check `@openai/mcp-server-openai`)
+- Playwright MCP already fixed for Chrome Canary (ready after session restart)
+
 ### Claude Desktop MCP: Use Absolute Node Paths
 Claude Desktop is an Electron app launched by the window manager, NOT a login shell. It doesn't source `~/.bashrc` or `~/.zshrc`, so `mise` shims aren't in PATH. Always use absolute paths like `/home/rob/.local/share/mise/installs/node/25.1.0/bin/node` in `claude_desktop_config.json`. Bare `node` or `npx` may silently fail.
 
