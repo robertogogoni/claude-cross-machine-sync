@@ -1,6 +1,6 @@
 ---
-name: Multi-AI Workflow — OpenAI MCP Setup
-description: Plan and current state for adding GPT-4o/OpenAI as a callable MCP tool within Claude Code sessions
+name: Multi-AI Workflow — OpenAI + Codex MCP
+description: OpenAI MCP (ask-openai/list-openai-models) and Codex MCP (codex/codex-reply/codex-exec/codex-review) — both registered, require session restart to activate
 type: project
 originSessionId: 52524d78-338b-4022-96b3-43c4e0136e00
 ---

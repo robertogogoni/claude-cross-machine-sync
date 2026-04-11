@@ -18,6 +18,8 @@
 | [macbook-keyboard.md](macbook-keyboard.md) | MacBook Air 2015 keyboard — UIEN(1) ACPI call forces USB mode (no SMC reset); full GPIO/DSDT mechanism, permanent fix via modprobe hook + system-sleep hook |
 | [multi-ai-workflow.md](multi-ai-workflow.md) | Multi-AI: OpenAI MCP (`ask-openai`/`list-openai-models`), Codex MCP (`codex`/`codex-reply`/`codex-exec`/`codex-review`), Playwright MCP (Chrome Canary) |
 | [feedback_bypass_file_permissions.md](feedback_bypass_file_permissions.md) | Never ask for authorization before modifying/creating files |
+| [mcp-cli-tool.md](mcp-cli-tool.md) | `mcp` CLI (mcptools Go binary at `~/.local/bin/mcp`) — on-demand MCP server discovery and tool invocation |
+| [codex-cli.md](codex-cli.md) | Codex CLI v0.120.0 — capabilities, exec flags, MCP servers, auth modes, own memory/skills system at `~/.codex/` |
 
 ## Session Patterns & Gotchas
 
