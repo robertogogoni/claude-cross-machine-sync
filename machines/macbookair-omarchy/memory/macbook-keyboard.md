@@ -45,23 +45,27 @@ install applespi /sbin/modprobe --ignore-install acpi_call 2>/dev/null; \
   /sbin/modprobe --ignore-install applespi "$@"
 ```
 
-### 2. `/etc/systemd/system/apple-keyboard-usb-resume.service`
-Re-fires UIEN(1) after every suspend/hibernate (the likely trigger for mode switches).
+### 2. `/etc/systemd/system-sleep/apple-keyboard-usb.sh`
+Re-fires UIEN(1) after every suspend/hibernate resume via the systemd-sleep hook mechanism.
+This is the **correct** approach — hooks in `/etc/systemd/system-sleep/` are called by systemd-sleep
+with `post` argument after every resume, regardless of sleep type (suspend/hibernate/hybrid-sleep).
 
-```ini
-[Unit]
-Description=Force Apple keyboard to USB mode after suspend
-After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
-
-[Service]
-Type=oneshot
-ExecStart=/sbin/modprobe acpi_call
-ExecStart=/bin/sh -c 'echo "\\_SB.PCI0.SPI1.SPIT.UIEN 0x01" > /proc/acpi/call'
-
-[Install]
-WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+```bash
+#!/bin/bash
+# Called by systemd-sleep with args: pre/post suspend/hibernate/hybrid-sleep
+# We only care about "post" (after resume)
+case "$1" in
+    post)
+        /sbin/modprobe acpi_call 2>/dev/null
+        echo "\_SB.PCI0.SPI1.SPIT.UIEN 0x01" > /proc/acpi/call 2>/dev/null
+        ;;
+esac
 ```
-Enabled via: `systemctl enable apple-keyboard-usb-resume.service`
+Must be executable: `chmod +x /etc/systemd/system-sleep/apple-keyboard-usb.sh`
+
+> **Note**: The old `/etc/systemd/system/apple-keyboard-usb-resume.service` still exists on disk
+> but is **disabled**. It had a fatal timing bug: `WantedBy=suspend.target` + `After=suspend.target`
+> runs the service PRE-suspend (system going down), NOT post-resume. The system-sleep hook replaces it.
 
 ### 3. `/etc/modules-load.d/acpi_call.conf`
 Ensures `acpi_call` module loads at boot (needed by the modprobe hook).
