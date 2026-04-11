@@ -32,6 +32,18 @@
 ### Codex CLI Auth: API Key vs OAuth Are Independent
 `codex login status` shows "Not logged in" but that's the OAuth flow (ChatGPT Plus account). API key mode via `OPENAI_API_KEY` env var works entirely independently — "not logged in" does NOT mean Codex is broken. Pass `OPENAI_API_KEY` in MCP server env to ensure it's always available.
 
+### Codex CLI: `-a never` Does NOT Exist (v0.120.0)
+`codex exec -a never` is an invalid flag — silently passed but unrecognized. The correct way to bypass approvals is `--dangerously-bypass-approvals-and-sandbox`. This flag also overrides the `-s` sandbox policy entirely. For non-interactive MCP use, always use this flag instead of any `-a` variant.
+
+### `codex-mini-latest` Requires OAuth, Not API Key
+`codex-mini-latest` (the Codex CLI's default model for its own product) returns "model does not exist" when called via API key. It is ONLY accessible through `codex login` (ChatGPT Plus / OpenAI account OAuth). The API key gives access to o-series and GPT-4.x models but NOT the `codex-*` namespace.
+
+### MCP Tool: `z.enum()` Blocks at Schema Level Before API Call
+When an MCP tool uses `z.enum(["model-a", "model-b"])` for a string parameter, passing ANY value not in the enum is rejected at the MCP schema validation layer — the handler function is never called and no API request is made. To allow any string (e.g. any model name), use `z.string()` with `.describe()` listing examples. This silently blocked all non-listed OpenAI models in `ask-openai` until fixed.
+
+### Codex CLI: Feature Flags Reveal Unreleased Capabilities
+`codex features list` shows all flags. Key ones to know: `undo` (stable but OFF by default — enable to undo last action), `js_repl` (experimental JS REPL tool), `memories` (under development — Codex's own memory), `guardian_approval` (experimental gating), `codex_git_commit` (auto commits, under development), `multi_agent_v2` (next-gen, under development). Enable with `codex --enable <feature>` per-session or set in `~/.codex/config.toml`.
+
 ### Bash Tool: Never Pipe Daemon Output
 When starting daemons (fcitx5, waybar, etc.) from the Bash tool, NEVER pipe their output (`cmd 2>&1 | tail`). This creates pipe deadlocks because the daemon stays alive indefinitely. Always redirect: `cmd > /dev/null 2>&1` or `cmd 2>/dev/null`.
 
