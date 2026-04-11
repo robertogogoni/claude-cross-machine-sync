@@ -129,7 +129,7 @@ Firmware switched to SPI mode (SPI broken at hardware level — IRQ 21 never fir
 ```bash
 sudo bash -c 'modprobe acpi_call; echo "\_SB.PCI0.SPI1.SPIT.UIEN 0x01" > /proc/acpi/call'
 ```
-Permanent fix already installed (2026-04-11): `/etc/modprobe.d/apple-keyboard-usb.conf` + `apple-keyboard-usb-resume.service`. See [macbook-keyboard.md](macbook-keyboard.md) for full ACPI/GPIO diagnosis.
+Permanent fix installed (2026-04-11): `/etc/modprobe.d/apple-keyboard-usb.conf` (boot hook) + `/etc/systemd/system-sleep/apple-keyboard-usb.sh` (resume hook). The resume hook uses the system-sleep mechanism — NOT a systemd service, which fires at the wrong time (pre-suspend, not post-resume). See [macbook-keyboard.md](macbook-keyboard.md) for full ACPI/GPIO diagnosis.
 
 ## System Info
 - Machine: MacBook Air (2015), Arch Linux, Hyprland/Omarchy, user: rob
