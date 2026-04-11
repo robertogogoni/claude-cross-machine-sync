@@ -74,8 +74,9 @@ Ensures `acpi_call` module loads at boot (needed by the modprobe hook).
 acpi_call
 ```
 
-### Old workaround — removed
+### Old workarounds — removed/disabled
 - `applespi-reload.service` — disabled 2026-04-11 (useless: module reload can't unstick SPI bus)
+- `apple-keyboard-usb-resume.service` — disabled 2026-04-11 (wrong timing: `WantedBy=suspend.target` fires PRE-suspend, not post-resume; replaced by system-sleep hook)
 
 ---
 
