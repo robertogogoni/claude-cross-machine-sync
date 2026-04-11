@@ -23,6 +23,15 @@
 
 ## Session Patterns & Gotchas
 
+### Codex CLI: `-o <file>` is Cleaner than `--json` for MCP Wrappers
+`codex exec --json` dumps all agent events as JSONL to stdout — you have to parse event types to find the final message. `codex exec -o <file>` writes ONLY the last agent message to a file, skipping all intermediate events. Always use `-o` in non-interactive MCP wrappers; use `--json` only when you need to stream or process intermediate events.
+
+### Codex Has Its Own Memory and Skills System
+`~/.codex/memories/` and `~/.codex/skills/` are Codex CLI's own persistent memory/skill directories — separate from Claude Code's `~/.claude/`. If teaching Codex repeatable patterns, save them there. The `~/.codex/config.toml` doesn't exist by default; Codex uses built-in defaults until you create it.
+
+### Codex CLI Auth: API Key vs OAuth Are Independent
+`codex login status` shows "Not logged in" but that's the OAuth flow (ChatGPT Plus account). API key mode via `OPENAI_API_KEY` env var works entirely independently — "not logged in" does NOT mean Codex is broken. Pass `OPENAI_API_KEY` in MCP server env to ensure it's always available.
+
 ### Bash Tool: Never Pipe Daemon Output
 When starting daemons (fcitx5, waybar, etc.) from the Bash tool, NEVER pipe their output (`cmd 2>&1 | tail`). This creates pipe deadlocks because the daemon stays alive indefinitely. Always redirect: `cmd > /dev/null 2>&1` or `cmd 2>/dev/null`.
 
