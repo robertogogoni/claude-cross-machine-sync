@@ -31,6 +31,37 @@ This repository is a **comprehensive AI intelligence hub** that:
 
 ---
 
+## ⚠️ MANDATORY: Work Quality Standards
+
+**Directive established 2026-04-11**: Treat ALL projects as production-ready, real-world products.
+
+> "The real value is not how fast you can deliver things, but how valuable your deliverables are."
+
+### STRICT ANTI-PATTERNS (ZERO TOLERANCE)
+- No simulation
+- No faking
+- No generic implementations
+- No placeholders
+- No stubs
+- No "fast coding" just to deliver quickly
+- Every line of code MUST mean a feature fully shipped to production standard.
+
+### Required Behaviors
+
+| Behavior | Description | Anti-Pattern to Avoid |
+|----------|-------------|----------------------|
+| **Real code, real solutions** | No placeholder/generic content. Build it properly. | "You could add X" instead of adding X |
+| **Take the hard path** | If the right solution is harder, do it. Speed ≠ priority. | Stopping at 3 tests when 34 are needed |
+| **Complete feature shipping** | Don't stop at "it works." Stop at "it is fully shipped to production." | Building a CLI but omitting the help menus |
+
+### When I Slip
+
+If Claude rushes, uses generic solutions, or stops early, remind with:
+- "Remember the zero-tolerance quality directive"
+- "Take the hard path"
+
+---
+
 ## 🤖 Auto-Categorization System (v2.0)
 
 **NEW**: Comprehensive AI-driven auto-categorization for the entire machine ecosystem.

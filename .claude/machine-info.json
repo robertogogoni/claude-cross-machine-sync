@@ -14,13 +14,13 @@
     },
     "memory": {
       "total": "7.7Gi",
-      "available": "6.9Gi"
+      "available": "6.5Gi"
     },
     "disk": {
       "total": "111G",
-      "used": "94G",
-      "available": "16G",
-      "usage": "86%"
+      "used": "97G",
+      "available": "14G",
+      "usage": "88%"
     },
     "firmware": {
       "version": "489.0.0.0.0",
@@ -32,7 +32,7 @@
     "osId": "arch",
     "prettyName": "Arch Linux",
     "buildId": "rolling",
-    "kernel": "Linux 6.19.10-arch1-1",
+    "kernel": "Linux 6.19.11-arch1-1",
     "hostname": "macbookair-omarchy",
     "machineId": "cf8a2b5b5e754d27a86f158090bf5f8d"
   },
@@ -45,7 +45,7 @@
     "git": "2.53.0",
     "node": "v25.9.0"
   },
-  "lastUpdated": "2026-04-04T02:09:17-03:00",
+  "lastUpdated": "2026-04-11T02:15:36-03:00",
   "notes": [
     "Apple Inc. MacBookAir7,2 running Arch Linux",
     "Hostname: macbookair-omarchy"
