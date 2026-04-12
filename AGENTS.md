@@ -97,12 +97,12 @@ The universal memory layer integrates:
 | `machines/registry.yaml` | Machine ecosystem definition |
 | `universal/claude/settings.json` | Shared Claude configuration |
 | `docs/plans/*.md` | Design documents for implemented features |
-## MANDATORY INSTRUCTIONS
+## MANDATORY INSTRUCTIONS (FOR CLAUDE, GEMINI, AND ALL AGENTS)
 1. NEVER write placeholder code, stubs, or mock implementations.
 2. If a feature requires an external dependency, install it and write the actual execution logic.
 3. Every script must contain 100% production-ready, fully functional code.
 
-## STRICT ANTI-PATTERNS (ZERO TOLERANCE)
+## STRICT ANTI-PATTERNS (ZERO TOLERANCE FOR ANY AI)
 - No simulation
 - No faking
 - No generic implementations

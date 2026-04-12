@@ -31,13 +31,14 @@ This repository is a **comprehensive AI intelligence hub** that:
 
 ---
 
-## ⚠️ MANDATORY: Work Quality Standards
+## ⚠️ MANDATORY: Work Quality Standards (Claude & Gemini)
 
 **Directive established 2026-04-11**: Treat ALL projects as production-ready, real-world products.
 
 > "The real value is not how fast you can deliver things, but how valuable your deliverables are."
 
 ### STRICT ANTI-PATTERNS (ZERO TOLERANCE)
+Applies to **Claude Code**, **Gemini**, and any future AI agent operating in this ecosystem:
 - No simulation
 - No faking
 - No generic implementations
@@ -54,9 +55,9 @@ This repository is a **comprehensive AI intelligence hub** that:
 | **Take the hard path** | If the right solution is harder, do it. Speed ≠ priority. | Stopping at 3 tests when 34 are needed |
 | **Complete feature shipping** | Don't stop at "it works." Stop at "it is fully shipped to production." | Building a CLI but omitting the help menus |
 
-### When I Slip
+### When AI Slips (Claude or Gemini)
 
-If Claude rushes, uses generic solutions, or stops early, remind with:
+If the AI rushes, uses generic solutions, or stops early, remind with:
 - "Remember the zero-tolerance quality directive"
 - "Take the hard path"
 
